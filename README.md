@@ -89,7 +89,7 @@ text
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/desglose-v2.git
+git clone https://github.com/christopher801/desglose-pro.git
 cd desglose-v2
 
 # Instalar dependencias
