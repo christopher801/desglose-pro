@@ -1,0 +1,237 @@
+/* Table styles like v1 */
+.table-container {
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: inset 0 2px 4px white, 0 12px 24px -8px rgba(0,0,0,0.2);
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.table-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e2b3c;
+  margin-bottom: 1rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.table-professional {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  border: 1px solid #cbd5e1;
+  background: white;
+}
+
+.table-professional th {
+  text-align: center;
+  padding: 0.75rem;
+  background: #1e2b3c;
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border: 1px solid #2c3e50;
+}
+
+.table-professional th[colspan] {
+  background: #2c3e50;
+}
+
+.table-professional td {
+  padding: 0.6rem 0.5rem;
+  border: 1px solid #cbd5e1;
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+  color: #0f1a24;
+  text-align: center;
+  background: white;
+}
+
+.table-professional tr:nth-child(even) td {
+  background: #f8f9fa;
+}
+
+.table-professional tr:hover td {
+  background: #f1f5f9;
+}
+
+/* Button styles like v1 */
+.btn-print, .btn-pdf {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 4px 4px 8px #d9dde2, -4px -4px 8px #ffffff;
+}
+
+.btn-print {
+  background: #ecf0f3;
+  color: #2c3e50;
+}
+
+.btn-print:hover {
+  background: #e1e8f0;
+  transform: translateY(-2px);
+}
+
+.btn-pdf {
+  background: #2c3e50;
+  color: white;
+}
+
+.btn-pdf:hover {
+  background: #3a5068;
+  transform: translateY(-2px);
+}
+
+/* Card styles like v1 */
+.card-modern {
+  background: #f8fafd;
+  border-radius: 24px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Input styles like v1 */
+.input-group-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group-custom label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-group-custom input,
+.input-group-custom select {
+  padding: 0.9rem 1.2rem;
+  border: none;
+  background: white;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a2634;
+  box-shadow: 4px 4px 8px #d9dde2, -4px -4px 8px #ffffff;
+  transition: all 0.2s;
+}
+
+.input-group-custom input:focus,
+.input-group-custom select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+ 
+  /* Table styles - more compact */
+.table-container {
+  background: white;
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: inset 0 2px 4px white, 0 12px 24px -8px rgba(0,0,0,0.2);
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.table-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e2b3c;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.table-professional {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;  /* Pi piti */
+  border: 1px solid #cbd5e1;
+  background: white;
+}
+
+.table-professional th {
+  text-align: center;
+  padding: 0.4rem 0.3rem;  /* Pi piti */
+  background: #1e2b3c;
+  color: white;
+  font-weight: 600;
+  font-size: 0.7rem;  /* Pi piti */
+  text-transform: uppercase;
+  border: 1px solid #2c3e50;
+}
+
+.table-professional th[colspan] {
+  background: #2c3e50;
+}
+
+.table-professional td {
+  padding: 0.3rem 0.25rem;  /* Pi piti */
+  border: 1px solid #cbd5e1;
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+  color: #0f1a24;
+  text-align: center;
+  background: white;
+  font-size: 0.7rem;  /* Pi piti */
+}
+
+.table-professional tr:nth-child(even) td {
+  background: #f8f9fa;
+}
+
+.table-professional tr:hover td {
+  background: #f1f5f9;
+}
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table-title {
+    font-size: 1.2rem;
+  }
+  
+  .table-professional {
+    font-size: 0.7rem;
+  }
+  
+  .table-professional th,
+  .table-professional td {
+    padding: 0.4rem 0.2rem;
+  }
+  
+  .btn-print, .btn-pdf {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+}
