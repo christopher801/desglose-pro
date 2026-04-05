@@ -114,10 +114,7 @@ vite.config.ts.timestamp-*
 *.log
 *.tmp
 
-# Screenshots
-screenshots/
-*.png
-*.jpg
+
 
 # Backup files
 *.backup

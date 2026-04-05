@@ -1,67 +1,99 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from 'react-bootstrap'
 
 const InstallButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showButton, setShowButton] = useState(false)
+  const [isIOS, setIsIOS] = useState(false)
 
   useEffect(() => {
-    // Koute evenman beforeinstallprompt
-    const handler = (e) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
-      setShowButton(true)
-      console.log('Install prompt available')
-    }
+    // Detekte si se iOS
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+    setIsIOS(iOS)
 
-    window.addEventListener('beforeinstallprompt', handler)
+    // Sèlman pou navigatè ki sipòte beforeinstallprompt (Chrome, Edge, Android)
+    if (!iOS) {
+      const handler = (e) => {
+        e.preventDefault()
+        setDeferredPrompt(e)
+        setShowButton(true)
+      }
 
-    // Tcheke si aplikasyon an deja enstale
-    window.addEventListener('appinstalled', () => {
-      setShowButton(false)
-      setDeferredPrompt(null)
-      console.log('App was installed')
-    })
+      window.addEventListener('beforeinstallprompt', handler)
 
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handler)
+      window.addEventListener('appinstalled', () => {
+        setShowButton(false)
+        setDeferredPrompt(null)
+      })
+
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handler)
+      }
     }
   }, [])
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return
-
     deferredPrompt.prompt()
-
     const { outcome } = await deferredPrompt.userChoice
-    console.log(`User response: ${outcome}`)
-
     if (outcome === 'accepted') {
       setShowButton(false)
     }
     setDeferredPrompt(null)
   }
 
+  // Pou iOS - montre mesaj esplikasyon
+  if (isIOS) {
+    return (
+      <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}>
+        <button
+          onClick={() => alert('📱 Para instalar en iPhone:\n\n1. Toca el botón "Compartir"\n2. Selecciona "Agregar a pantalla de inicio"')}
+          style={{
+            background: '#1e3b5c',
+            border: 'none',
+            borderRadius: '50px',
+            padding: '10px 20px',
+            fontWeight: '600',
+            fontSize: '13px',
+            color: 'white',
+            cursor: 'pointer',
+            boxShadow: '4px 4px 12px rgba(0,0,0,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+        >
+          <span>📱</span>
+          INSTALAR
+        </button>
+      </div>
+    )
+  }
+
   if (!showButton) return null
 
   return (
-    <Button
-      variant="success"
-      size="sm"
-      onClick={handleInstallClick}
-      className="ms-2"
-      style={{
-        background: '#28a745',
-        border: 'none',
-        borderRadius: '50px',
-        padding: '0.5rem 1rem',
-        fontWeight: '600',
-        fontSize: '0.8rem',
-        boxShadow: '4px 4px 8px #d9dde2, -4px -4px 8px #ffffff'
-      }}
-    >
-      📲 INSTALL APP
-    </Button>
+    <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}>
+      <button
+        onClick={handleInstallClick}
+        style={{
+          background: '#1e3b5c',
+          border: 'none',
+          borderRadius: '50px',
+          padding: '10px 20px',
+          fontWeight: '600',
+          fontSize: '13px',
+          color: 'white',
+          cursor: 'pointer',
+          boxShadow: '4px 4px 12px rgba(0,0,0,0.2)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}
+      >
+        <span>📲</span>
+        INSTALAR
+      </button>
+    </div>
   )
 }
 
