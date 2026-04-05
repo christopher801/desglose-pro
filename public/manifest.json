@@ -1,7 +1,7 @@
 {
   "name": "Desglose Pro - Calculadora de Aluminio",
   "short_name": "Desglose Pro",
-  "description": "Sistema profesional de cálculo para carpintería de aluminio. Calcula ventanas P-92, P-65, Tradicional y Puertas Comerciales.",
+  "description": "Sistema profesional de cálculo para carpintería de aluminio",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#1e3b5c",

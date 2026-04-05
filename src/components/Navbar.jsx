@@ -3,6 +3,7 @@ import { Navbar, Nav, Container, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { logoutUser } from '../services/authService'
+import InstallButton from './InstallButton'
 
 const AppNavbar = () => {
   const { user, userData, isAuthenticated } = useAuth()
@@ -32,6 +33,7 @@ const AppNavbar = () => {
                 <Nav.Link className="text-info">
                   👤 {userData?.nombre || user?.email}
                 </Nav.Link>
+                <InstallButton />
                 <Button 
                   variant="outline-light" 
                   size="sm" 
