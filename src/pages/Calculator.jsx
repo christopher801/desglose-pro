@@ -43,6 +43,8 @@ const Calculator = () => {
       setSelectedSystem(systemParam)
       if (systemParam === 'puerta') {
         setFormData(prev => ({ ...prev, hojas: 1 }))
+      } else {
+        setFormData(prev => ({ ...prev, hojas: 2 }))
       }
     }
   }, [searchParams])
@@ -71,55 +73,64 @@ const Calculator = () => {
   }
 
   const handleAdd = () => {
-    setError('')
-    
-    if (!formData.ancho || !formData.alto) {
-      setError('❌ Ingrese ANCHO y ALTO')
-      return
-    }
-    
-    const anchoDec = FractionUtils.parseFraction(formData.ancho)
-    const altoDec = FractionUtils.parseFraction(formData.alto)
-    
-    if (anchoDec <= 0 || altoDec <= 0) {
-      setError('❌ Las medidas deben ser mayores a 0')
-      return
-    }
-    
-    const currentSystem = systemsList.find(s => s.value === selectedSystem)
-    let hojas = parseInt(formData.hojas, 10)
-    
-    if (selectedSystem === 'puerta') {
+  setError('')
+  
+  if (!formData.ancho || !formData.alto) {
+    setError('❌ Ingrese ANCHO y ALTO')
+    return
+  }
+  
+  const anchoDec = FractionUtils.parseFraction(formData.ancho)
+  const altoDec = FractionUtils.parseFraction(formData.alto)
+  
+  if (anchoDec <= 0 || altoDec <= 0) {
+    setError('❌ Las medidas deben ser mayores a 0')
+    return
+  }
+  
+  const currentSystem = systemsList.find(s => s.value === selectedSystem)
+  let hojas = parseInt(formData.hojas, 10)
+  
+  // Validasyon selon sistèm
+  if (selectedSystem === 'puerta') {
+    if (hojas !== 1 && hojas !== 2) {
       hojas = 1
     }
-    
-    const parts = currentSystem.calcular(anchoDec, altoDec, hojas)
-    const formatted = currentSystem.format(parts, hojas)
-    
-    const newResult = {
-      hueco: formData.hueco,
-      sistema: currentSystem.label,
-      ancho: formData.ancho,
-      alto: formData.alto,
-      hojas: selectedSystem === 'puerta' ? 'Simple' : `${hojas} hojas`,
-      cabAlf: formatted.cabAlf,
-      jambas: formatted.jambas,
-      marco: formatted.marco,
-      latMarco: formatted.latMarco,
-      vidrioAncho: formatted.vidrioAncho,
-      vidrioAlto: formatted.vidrioAlto,
-      vidrioMedio: formatted.vidrioMedio
+  } else {
+    if (hojas < 2 || hojas > 4) {
+      hojas = 2
     }
-    
-    setResults([...results, newResult])
-    
-    setFormData({
-      hueco: formData.hueco + 1,
-      ancho: '',
-      alto: '',
-      hojas: selectedSystem === 'puerta' ? 1 : 2
-    })
   }
+  
+  const parts = currentSystem.calcular(anchoDec, altoDec, hojas)
+  const formatted = currentSystem.format(parts, hojas)
+  
+  // Kreye newResult la
+  const newResult = {
+    hueco: formData.hueco,
+    sistema: currentSystem.label,
+    ancho: formData.ancho,
+    alto: formData.alto,
+    hojas: hojas,  // <--- KRITER: Mete valè hojas (1 oswa 2 pou puerta)
+    cabAlf: formatted.cabAlf,
+    jambas: formatted.jambas,
+    marco: formatted.marco,
+    latMarco: formatted.latMarco,
+    vidrioAncho: formatted.vidrioAncho,
+    vidrioAlto: formatted.vidrioAlto,
+    vidrioMedio: formatted.vidrioMedio
+  }
+  
+  setResults([...results, newResult])
+  
+  // Re-inisyalize fòm nan
+  setFormData({
+    hueco: formData.hueco + 1,
+    ancho: '',
+    alto: '',
+    hojas: selectedSystem === 'puerta' ? 1 : 2
+  })
+}
 
   const handleReset = () => {
     setResults([])
@@ -356,7 +367,7 @@ const Calculator = () => {
           </tr>
         `
       })
-      tableHtml += `</tbody></table>`
+      tableHtml += `</tbody><td>`
     } else {
       const hasVidrioMedio = results.some(r => r.vidrioMedio !== null && r.vidrioMedio !== '—')
       tableHtml = `

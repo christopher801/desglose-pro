@@ -1,17 +1,29 @@
 import FractionUtils from '../utils/fraction'
 
-export const puertaCalcular = (ancho, alto, hojas = 1) => {
+export const puertaCalcular = (ancho, alto, hojas) => {
   const parts = []
   
-  // SIMPLE DOOR (always 1 hoja)
-  parts.push(
-    { pieza: 'CAB-ALF', medida: ancho - 8 },
-    { pieza: 'JAMBAS', medida: alto - (2 + 3/4) },
-    { pieza: 'CAB-MARCO', medida: ancho - (3 + 5/8) },
-    { pieza: 'LATERAL-MARCO', medida: alto - (1/8) },
-    { pieza: 'VIDRIO_ANCHO', medida: ancho - (8 + 1/4) },
-    { pieza: 'VIDRIO_ALTO', medida: alto - 8 }
-  )
+  if (hojas === 1) {
+    // SIMPLE DOOR (1 hoja)
+    parts.push(
+      { pieza: 'CAB-ALF', medida: ancho - 8 },
+      { pieza: 'JAMBAS', medida: alto - (2 + 3/4) },
+      { pieza: 'CAB-MARCO', medida: ancho - (3 + 5/8) },
+      { pieza: 'LATERAL-MARCO', medida: alto - (1/8) },
+      { pieza: 'VIDRIO_ANCHO', medida: ancho - (8 + 1/4) },
+      { pieza: 'VIDRIO_ALTO', medida: alto - 8 }
+    )
+  } else {
+    // DOUBLE DOOR (2 hojas)
+    parts.push(
+      { pieza: 'CAB-ALF', medida: (ancho - 12.1) / 2 },
+      { pieza: 'JAMBAS', medida: alto - (2 + 3/4) },
+      { pieza: 'CAB-MARCO', medida: ancho - (3 + 5/8) },
+      { pieza: 'LATERAL-MARCO', medida: alto - (1/8) },
+      { pieza: 'VIDRIO_ANCHO', medida: (ancho - 12.625) / 2 },
+      { pieza: 'VIDRIO_ALTO', medida: alto - 8 }
+    )
+  }
   
   return parts
 }

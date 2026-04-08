@@ -16,43 +16,45 @@ const TableResults = ({ results, onPrint, onExportPDF, systemName }) => {
   const isPuerta = systemName === 'PUERTA COMERCIAL'
   const hasVidrioMedio = results[0]?.vidrioMedio !== undefined && results[0]?.vidrioMedio !== null && !isPuerta
 
-  // For puerta, only 9 columns
+  // For puerta - 10 columns (ajoute hojas)
   if (isPuerta) {
     return (
       <div className="table-container">
         <div className="table-title">{systemName}</div>
         <div className="table-responsive" style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-          <table className="table-professional" style={{ minWidth: '900px' }}>
+          <table className="table-professional" style={{ minWidth: '950px' }}>
             <thead>
               <tr>
                 <th rowSpan="2">hueco</th>
                 <th rowSpan="2">ancho</th>
                 <th rowSpan="2">alto</th>
+                <th rowSpan="2">hojas</th>
                 <th colSpan="2">HOJA</th>
                 <th colSpan="2">MARCO</th>
                 <th colSpan="2">VIDRIO</th>
-               </tr>
-               <tr>
+              </tr>
+              <tr>
                 <th>Cab-alf</th>
                 <th>jambas</th>
                 <th>Cab-marco</th>
                 <th>Lat-marco</th>
                 <th>ancho</th>
                 <th>alto</th>
-               </tr>
+              </tr>
             </thead>
             <tbody>
               {results.map((row, idx) => (
                 <tr key={idx}>
-                  <td>{row.hueco}</td>
-                  <td>{row.ancho}</td>
-                  <td>{row.alto}</td>
-                  <td>{row.cabAlf}</td>
-                  <td>{row.jambas}</td>
-                  <td>{row.marco}</td>
-                  <td>{row.latMarco}</td>
-                  <td>{row.vidrioAncho}</td>
-                  <td>{row.vidrioAlto}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.hueco}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.ancho}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.alto}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.hojas === 1 ? 'Simple' : row.hojas === 2 ? 'Doble' : row.hojas}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.cabAlf}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.jambas}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.marco}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.latMarco}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.vidrioAncho}</td>
+                  <td style={{ padding: '0.25rem' }}>{row.vidrioAlto}</td>
                 </tr>
               ))}
             </tbody>
@@ -78,30 +80,30 @@ const TableResults = ({ results, onPrint, onExportPDF, systemName }) => {
               <th colSpan="2">DEL MARCO</th>
               <th colSpan="2">VIDRIO</th>
               <th rowSpan="2">V. MEDIO</th>
-             </tr>
-             <tr>
+            </tr>
+            <tr>
               <th>Cab-alf</th>
               <th>jambas</th>
               <th>Cab-riel</th>
               <th>Lat-marco</th>
               <th>ancho</th>
               <th>alto</th>
-             </tr>
+            </tr>
           </thead>
           <tbody>
             {results.map((row, idx) => (
               <tr key={idx}>
-                <td>{row.hueco}</td>
-                <td>{row.ancho}</td>
-                <td>{row.alto}</td>
-                <td>{row.hojas}</td>
-                <td>{row.cabAlf}</td>
-                <td>{row.jambas}</td>
-                <td>{row.marco}</td>
-                <td>{row.latMarco}</td>
-                <td>{row.vidrioAncho}</td>
-                <td>{row.vidrioAlto}</td>
-                <td>{row.vidrioMedio || '—'}</td>
+                <td style={{ padding: '0.25rem' }}>{row.hueco}</td>
+                <td style={{ padding: '0.25rem' }}>{row.ancho}</td>
+                <td style={{ padding: '0.25rem' }}>{row.alto}</td>
+                <td style={{ padding: '0.25rem' }}>{row.hojas}</td>
+                <td style={{ padding: '0.25rem' }}>{row.cabAlf}</td>
+                <td style={{ padding: '0.25rem' }}>{row.jambas}</td>
+                <td style={{ padding: '0.25rem' }}>{row.marco}</td>
+                <td style={{ padding: '0.25rem' }}>{row.latMarco}</td>
+                <td style={{ padding: '0.25rem' }}>{row.vidrioAncho}</td>
+                <td style={{ padding: '0.25rem' }}>{row.vidrioAlto}</td>
+                <td style={{ padding: '0.25rem' }}>{row.vidrioMedio || '—'}</td>
               </tr>
             ))}
           </tbody>

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Form, Row, Col, Button } from 'react-bootstrap'
 
 const FormInputs = ({ 
   formData, 
@@ -14,7 +13,7 @@ const FormInputs = ({
   onSystemChange
 }) => {
   return (
-    <div className="card-modern">
+    <div className="card-modern" style={{ padding: '1.5rem' }}>
       {/* Project Information Section */}
       <div style={{ 
         background: '#f8f9fa', 
@@ -23,57 +22,106 @@ const FormInputs = ({
         marginBottom: '1.5rem',
         border: '1px solid #e2e8f0'
       }}>
-        <h6 style={{ marginBottom: '1rem', color: '#1e2b3c', fontWeight: '600' }}>📋 INFORMACIÓN DEL PROYECTO</h6>
+        <h6 style={{ marginBottom: '1rem', color: '#1e2b3c', fontWeight: '600', fontSize: '0.9rem' }}>📋 INFORMACIÓN DEL PROYECTO</h6>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
           <div className="input-group-custom">
-            <label>CUENTA</label>
+            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>CUENTA</label>
             <input
               type="text"
               name="cuenta"
               value={projectInfo.cuenta}
               onChange={onProjectInfoChange}
               placeholder=""
+              style={{ 
+                padding: '0.75rem 1rem', 
+                fontSize: '0.9rem', 
+                border: 'none',
+                background: 'white',
+                borderRadius: '12px',
+                width: '100%',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
+              }}
             />
           </div>
           <div className="input-group-custom">
-            <label>OBRA</label>
+            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>OBRA</label>
             <input
               type="text"
               name="obra"
               value={projectInfo.obra}
               onChange={onProjectInfoChange}
               placeholder=""
+              style={{ 
+                padding: '0.75rem 1rem', 
+                fontSize: '0.9rem', 
+                border: 'none',
+                background: 'white',
+                borderRadius: '12px',
+                width: '100%',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
+              }}
             />
           </div>
           <div className="input-group-custom">
-            <label>COLOR</label>
+            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>COLOR</label>
             <input
               type="text"
               name="color"
               value={projectInfo.color}
               onChange={onProjectInfoChange}
               placeholder=""
+              style={{ 
+                padding: '0.75rem 1rem', 
+                fontSize: '0.9rem', 
+                border: 'none',
+                background: 'white',
+                borderRadius: '12px',
+                width: '100%',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
+              }}
             />
           </div>
         </div>
       </div>
       
       {/* Input Section */}
-      <div className="input-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         <div className="input-group-custom">
-          <label>HUECO #</label>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>HUECO #</label>
           <input
             type="number"
             name="hueco"
             value={formData.hueco}
             onChange={onChange}
             placeholder="1"
+            style={{ 
+              padding: '0.75rem 1rem', 
+              fontSize: '0.9rem', 
+              border: 'none',
+              background: 'white',
+              borderRadius: '12px',
+              width: '100%',
+              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
+            }}
           />
         </div>
         
         <div className="input-group-custom">
-          <label>SISTEMA</label>
-          <select value={selectedSystem} onChange={(e) => onSystemChange(e.target.value)}>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>SISTEMA</label>
+          <select 
+            value={selectedSystem} 
+            onChange={(e) => onSystemChange(e.target.value)}
+            style={{ 
+              padding: '0.75rem 1rem', 
+              fontSize: '0.9rem', 
+              border: 'none',
+              background: 'white',
+              borderRadius: '12px',
+              width: '100%',
+              cursor: 'pointer',
+              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
+            }}
+          >
             {systems.map(sys => (
               <option key={sys.value} value={sys.value}>
                 {sys.label}
@@ -83,56 +131,89 @@ const FormInputs = ({
         </div>
         
         <div className="input-group-custom">
-          <label>ANCHO</label>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>ANCHO</label>
           <input
             type="text"
             name="ancho"
             value={formData.ancho}
             onChange={onChange}
             placeholder="ej: 91 1/2"
+            style={{ 
+              padding: '0.75rem 1rem', 
+              fontSize: '0.9rem', 
+              border: 'none',
+              background: 'white',
+              borderRadius: '12px',
+              width: '100%',
+              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
+            }}
           />
         </div>
         
         <div className="input-group-custom">
-          <label>ALTO</label>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>ALTO</label>
           <input
             type="text"
             name="alto"
             value={formData.alto}
             onChange={onChange}
             placeholder="ej: 74 7/8"
+            style={{ 
+              padding: '0.75rem 1rem', 
+              fontSize: '0.9rem', 
+              border: 'none',
+              background: 'white',
+              borderRadius: '12px',
+              width: '100%',
+              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
+            }}
           />
         </div>
         
         <div className="input-group-custom">
-          <label>HOJAS</label>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>
+            {selectedSystem === 'puerta' ? 'TIPO PUERTA' : 'HOJAS'}
+          </label>
           <select
             name="hojas"
             value={formData.hojas}
             onChange={onChange}
-            disabled={selectedSystem === 'puerta'}
+            style={{ 
+              padding: '0.75rem 1rem', 
+              fontSize: '0.9rem', 
+              border: 'none',
+              background: 'white',
+              borderRadius: '12px',
+              width: '100%',
+              cursor: 'pointer',
+              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
+            }}
           >
-            <option value="2">2 HOJAS</option>
-            <option value="3">3 HOJAS</option>
-            <option value="4">4 HOJAS</option>
+            {selectedSystem === 'puerta' ? (
+              <>
+                <option value="1">1 HOJA (Simple)</option>
+                <option value="2">2 HOJAS (Doble)</option>
+              </>
+            ) : (
+              <>
+                <option value="2">2 HOJAS</option>
+                <option value="3">3 HOJAS</option>
+                <option value="4">4 HOJAS</option>
+              </>
+            )}
           </select>
-          {selectedSystem === 'puerta' && (
-            <small style={{ fontSize: '0.7rem', color: '#6c757d' }}>
-              Puerta Comercial: Simple (1 hoja)
-            </small>
-          )}
         </div>
       </div>
       
-      <div className="button-bar" style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', justifyContent: 'flex-end', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
+      <div className="button-bar" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
         <button 
           onClick={onAdd} 
           style={{
             background: '#1e3b5c',
             color: 'white',
             border: 'none',
-            padding: '0.7rem 1.5rem',
-            borderRadius: '50px',
+            padding: '0.75rem 1.8rem',
+            borderRadius: '40px',
             fontWeight: '600',
             fontSize: '0.85rem',
             cursor: 'pointer',
@@ -156,8 +237,8 @@ const FormInputs = ({
           style={{
             background: '#ecf0f3',
             border: 'none',
-            padding: '0.6rem 1.5rem',
-            borderRadius: '50px',
+            padding: '0.75rem 1.8rem',
+            borderRadius: '40px',
             fontWeight: '600',
             fontSize: '0.85rem',
             cursor: 'pointer',
@@ -182,8 +263,8 @@ const FormInputs = ({
             background: '#2c3e50',
             color: 'white',
             border: 'none',
-            padding: '0.6rem 1.5rem',
-            borderRadius: '50px',
+            padding: '0.75rem 1.8rem',
+            borderRadius: '40px',
             fontWeight: '600',
             fontSize: '0.85rem',
             cursor: 'pointer',
