@@ -32,7 +32,7 @@ const Welcome = () => {
                 <div style={{ fontSize: '64px', marginBottom: '20px' }}>🪟</div>
                 <h1 style={{ color: '#1e2b3c', marginBottom: '10px', fontSize: '2rem' }}>DESGLOSE PRO</h1>
                 <h2 style={{ color: '#4a5c6e', fontSize: '1rem', fontWeight: '400', marginBottom: '30px' }}>
-                  Sistema profesional de cálculo para carpintería de aluminio
+                  Sistema profesional par el desblose de puertas y ventanas
                 </h2>
                 
                 <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginBottom: '30px' }}>
@@ -87,7 +87,7 @@ const Welcome = () => {
                 </div>
                 
                 <div style={{ marginTop: '30px', fontSize: '12px', color: '#94a3b8' }}>
-                  <p>KREYE PA CHRISTOPHER</p>
+                  <p>Desarrollado por Christopher</p>
                 </div>
               </Card.Body>
             </Card>
