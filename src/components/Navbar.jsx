@@ -18,7 +18,7 @@ const AppNavbar = () => {
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
       <Container>
         <Navbar.Brand as={Link} to="/">
-          🪟 DESGLOSE PRO V2
+          🪟 DESGLOSE PRO
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -26,7 +26,6 @@ const AppNavbar = () => {
             {isAuthenticated ? (
               <>
                 <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
-                <Nav.Link as={Link} to="/calculator">Calculadora</Nav.Link>
                 {userData?.role === 'admin' && (
                   <Nav.Link as={Link} to="/admin">Admin</Nav.Link>
                 )}

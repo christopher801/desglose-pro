@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,10 +7,11 @@ const Dashboard = () => {
   const { userData, isActive, isAdmin } = useAuth()
 
   const systems = [
-    { name: 'VENTANA P-92', icon: '🪟', color: '#1e3b5c', path: '/calculator?system=p92' },
-    { name: 'VENTANA P-65', icon: '🪟', color: '#2c5a7a', path: '/calculator?system=p65' },
-    { name: 'VENTANA TRADICIONAL', icon: '🪟', color: '#3a6e8c', path: '/calculator?system=tradicional' },
-    { name: 'PUERTA COMERCIAL', icon: '🚪', color: '#4a7c9e', path: '/calculator?system=puerta' }
+    { name: 'VENTANA P-92', icon: '🪟', color: '#1e3b5c', path: '/p92', nuevo: false },
+    { name: 'VENTANA P-65', icon: '🪟', color: '#2c5a7a', path: '/p65', nuevo: false },
+    { name: 'VENTANA TRADICIONAL', icon: '🪟', color: '#3a6e8c', path: '/tradicional', nuevo: false },
+    { name: 'VENTANA PROYECTADA P-40', icon: '🪟', color: '#4a7c9e', path: '/proyectada-p40', nuevo: true },
+    { name: 'PUERTA COMERCIAL', icon: '🚪', color: '#5a8cae', path: '/puerta-comercial', nuevo: false }
   ]
 
   return (
@@ -46,7 +47,26 @@ const Dashboard = () => {
           <Row>
             {systems.map((sys, idx) => (
               <Col md={6} lg={3} key={idx} className="mb-3">
-                <Card className="card-modern text-center h-100">
+                <Card className="card-modern text-center h-100" style={{ position: 'relative' }}>
+                  {sys.nuevo && (
+                    <Badge 
+                      bg="warning" 
+                      style={{ 
+                        position: 'absolute', 
+                        top: '10px', 
+                        right: '10px',
+                        borderRadius: '20px',
+                        padding: '5px 10px',
+                        fontSize: '10px',
+                        fontWeight: 'bold',
+                        background: '#ffc107',
+                        color: '#1e2b3c',
+                        zIndex: 1
+                      }}
+                    >
+                      ⭐ NUEVO
+                    </Badge>
+                  )}
                   <Card.Body>
                     <div style={{ fontSize: '48px' }}>{sys.icon}</div>
                     <h6 className="mt-2">{sys.name}</h6>
