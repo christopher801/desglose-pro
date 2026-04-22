@@ -8,7 +8,6 @@ const Welcome = () => {
   const { isAuthenticated, isActive } = useAuth()
 
   useEffect(() => {
-    // Si deja konekte, ale nan dashboard
     if (isAuthenticated && isActive) {
       navigate('/dashboard')
     } else if (isAuthenticated && !isActive) {
