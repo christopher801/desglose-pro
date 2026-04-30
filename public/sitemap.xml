@@ -4,74 +4,82 @@
   <!-- Home page -->
   <url>
     <loc>https://desglose-pro.vercel.app/</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  
+  <!-- Welcome page -->
+  <url>
+    <loc>https://desglose-pro.vercel.app/welcome</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   
   <!-- Authentication pages -->
   <url>
     <loc>https://desglose-pro.vercel.app/login</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://desglose-pro.vercel.app/register</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   
   <!-- Dashboard -->
   <url>
     <loc>https://desglose-pro.vercel.app/dashboard</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   
-  <!-- Calculator pages -->
+  <!-- Systems pages V3 (direct routes) -->
   <url>
-    <loc>https://desglose-pro.vercel.app/calculator</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://desglose-pro.vercel.app/calculator?system=p92</loc>
-    <lastmod>2026-04-02</lastmod>
+    <loc>https://desglose-pro.vercel.app/p92</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://desglose-pro.vercel.app/calculator?system=p65</loc>
-    <lastmod>2026-04-02</lastmod>
+    <loc>https://desglose-pro.vercel.app/p65</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://desglose-pro.vercel.app/calculator?system=tradicional</loc>
-    <lastmod>2026-04-02</lastmod>
+    <loc>https://desglose-pro.vercel.app/tradicional</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://desglose-pro.vercel.app/calculator?system=puerta</loc>
-    <lastmod>2026-04-02</lastmod>
+    <loc>https://desglose-pro.vercel.app/proyectada-p40</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
-  <!-- Admin page (optional - can be removed if you don't want it indexed) -->
+  <url>
+    <loc>https://desglose-pro.vercel.app/puerta-comercial</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Admin page (not recommended to index) -->
   <url>
     <loc>https://desglose-pro.vercel.app/admin</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>never</changefreq>
     <priority>0.3</priority>
   </url>
