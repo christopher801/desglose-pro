@@ -13,19 +13,19 @@ const FormInputs = ({
   onSystemChange
 }) => {
   return (
-    <div className="card-modern" style={{ padding: '1.5rem', border: '1px solid #a855f7', background: 'white' }}>
+    <div className="card-modern" style={{ padding: '1.5rem' }}>
       {/* Project Information Section */}
       <div style={{ 
-        background: '#e9d5ff', 
+        background: '#f8f9fa', 
         borderRadius: '16px', 
         padding: '1rem', 
         marginBottom: '1.5rem',
-        border: '1px solid #a855f7'
+        border: '1px solid #e2e8f0'
       }}>
-        <h6 style={{ marginBottom: '1rem', color: '#4a0e78', fontWeight: '600', fontSize: '0.9rem' }}>📋 INFORMACIÓN DEL PROYECTO</h6>
+        <h6 style={{ marginBottom: '1rem', color: '#1e2b3c', fontWeight: '600', fontSize: '0.9rem' }}>📋 INFORMACIÓN DEL PROYECTO</h6>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
           <div className="input-group-custom">
-            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4a0e78' }}>CUENTA</label>
+            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>CUENTA</label>
             <input
               type="text"
               name="cuenta"
@@ -35,7 +35,7 @@ const FormInputs = ({
               style={{ 
                 padding: '0.75rem 1rem', 
                 fontSize: '0.9rem', 
-                border: '1px solid #a855f7',
+                border: 'none',
                 background: 'white',
                 borderRadius: '12px',
                 width: '100%',
@@ -44,7 +44,7 @@ const FormInputs = ({
             />
           </div>
           <div className="input-group-custom">
-            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4a0e78' }}>OBRA</label>
+            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>OBRA</label>
             <input
               type="text"
               name="obra"
@@ -54,7 +54,7 @@ const FormInputs = ({
               style={{ 
                 padding: '0.75rem 1rem', 
                 fontSize: '0.9rem', 
-                border: '1px solid #a855f7',
+                border: 'none',
                 background: 'white',
                 borderRadius: '12px',
                 width: '100%',
@@ -63,7 +63,7 @@ const FormInputs = ({
             />
           </div>
           <div className="input-group-custom">
-            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4a0e78' }}>COLOR</label>
+            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>COLOR</label>
             <input
               type="text"
               name="color"
@@ -73,7 +73,7 @@ const FormInputs = ({
               style={{ 
                 padding: '0.75rem 1rem', 
                 fontSize: '0.9rem', 
-                border: '1px solid #a855f7',
+                border: 'none',
                 background: 'white',
                 borderRadius: '12px',
                 width: '100%',
@@ -87,7 +87,7 @@ const FormInputs = ({
       {/* Input Section */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         <div className="input-group-custom">
-          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4a0e78' }}>HUECO #</label>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>HUECO #</label>
           <input
             type="number"
             name="hueco"
@@ -97,7 +97,7 @@ const FormInputs = ({
             style={{ 
               padding: '0.75rem 1rem', 
               fontSize: '0.9rem', 
-              border: '1px solid #a855f7',
+              border: 'none',
               background: 'white',
               borderRadius: '12px',
               width: '100%',
@@ -107,20 +107,19 @@ const FormInputs = ({
         </div>
         
         <div className="input-group-custom">
-          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4a0e78' }}>SISTEMA</label>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>SISTEMA</label>
           <select 
             value={selectedSystem} 
             onChange={(e) => onSystemChange(e.target.value)}
             style={{ 
               padding: '0.75rem 1rem', 
               fontSize: '0.9rem', 
-              border: '1px solid #a855f7',
+              border: 'none',
               background: 'white',
               borderRadius: '12px',
               width: '100%',
               cursor: 'pointer',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)',
-              color: '#4a0e78'
+              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
             }}
           >
             {systems.map(sys => (
@@ -132,7 +131,7 @@ const FormInputs = ({
         </div>
         
         <div className="input-group-custom">
-          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4a0e78' }}>ANCHO</label>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>ANCHO</label>
           <input
             type="text"
             name="ancho"
@@ -142,7 +141,7 @@ const FormInputs = ({
             style={{ 
               padding: '0.75rem 1rem', 
               fontSize: '0.9rem', 
-              border: '1px solid #a855f7',
+              border: 'none',
               background: 'white',
               borderRadius: '12px',
               width: '100%',
@@ -152,7 +151,7 @@ const FormInputs = ({
         </div>
         
         <div className="input-group-custom">
-          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4a0e78' }}>ALTO</label>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>ALTO</label>
           <input
             type="text"
             name="alto"
@@ -162,7 +161,7 @@ const FormInputs = ({
             style={{ 
               padding: '0.75rem 1rem', 
               fontSize: '0.9rem', 
-              border: '1px solid #a855f7',
+              border: 'none',
               background: 'white',
               borderRadius: '12px',
               width: '100%',
@@ -172,7 +171,7 @@ const FormInputs = ({
         </div>
         
         <div className="input-group-custom">
-          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#4a0e78' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2c3e50' }}>
             {selectedSystem === 'puerta' ? 'TIPO PUERTA' : 'HOJAS'}
           </label>
           <select
@@ -182,13 +181,12 @@ const FormInputs = ({
             style={{ 
               padding: '0.75rem 1rem', 
               fontSize: '0.9rem', 
-              border: '1px solid #a855f7',
+              border: 'none',
               background: 'white',
               borderRadius: '12px',
               width: '100%',
               cursor: 'pointer',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)',
-              color: '#4a0e78'
+              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)'
             }}
           >
             {selectedSystem === 'puerta' ? (
@@ -207,28 +205,28 @@ const FormInputs = ({
         </div>
       </div>
       
-      <div className="button-bar" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end', borderTop: '1px solid #a855f7', paddingTop: '1.5rem' }}>
+      <div className="button-bar" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
         <button 
           onClick={onAdd} 
           style={{
-            background: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
-            color: '#fef3c7',
+            background: '#1e3b5c',
+            color: 'white',
             border: 'none',
             padding: '0.75rem 1.8rem',
             borderRadius: '40px',
             fontWeight: '600',
             fontSize: '0.85rem',
             cursor: 'pointer',
-            boxShadow: '0 4px 10px rgba(139, 92, 246, 0.3)',
+            boxShadow: '4px 4px 8px #d9dde2, -4px -4px 8px #ffffff',
             transition: 'all 0.2s'
           }}
           onMouseEnter={(e) => {
+            e.target.style.background = '#264d73'
             e.target.style.transform = 'translateY(-2px)'
-            e.target.style.boxShadow = '0 6px 15px rgba(139, 92, 246, 0.4)'
           }}
           onMouseLeave={(e) => {
+            e.target.style.background = '#1e3b5c'
             e.target.style.transform = 'translateY(0)'
-            e.target.style.boxShadow = '0 4px 10px rgba(139, 92, 246, 0.3)'
           }}
         >
           ➕ AGREGAR
@@ -237,23 +235,22 @@ const FormInputs = ({
         <button 
           onClick={onReset} 
           style={{
-            background: '#fef3c7',
-            border: '1px solid #a855f7',
+            background: '#ecf0f3',
+            border: 'none',
             padding: '0.75rem 1.8rem',
             borderRadius: '40px',
             fontWeight: '600',
             fontSize: '0.85rem',
             cursor: 'pointer',
-            color: '#4a0e78',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
+            boxShadow: '4px 4px 8px #d9dde2, -4px -4px 8px #ffffff',
             transition: 'all 0.2s'
           }}
           onMouseEnter={(e) => {
-            e.target.style.background = '#e9d5ff'
+            e.target.style.background = '#e1e8f0'
             e.target.style.transform = 'translateY(-2px)'
           }}
           onMouseLeave={(e) => {
-            e.target.style.background = '#fef3c7'
+            e.target.style.background = '#ecf0f3'
             e.target.style.transform = 'translateY(0)'
           }}
         >
@@ -263,23 +260,23 @@ const FormInputs = ({
         <button 
           onClick={onPrint} 
           style={{
-            background: '#4a0e78',
-            color: '#fef3c7',
+            background: '#2c3e50',
+            color: 'white',
             border: 'none',
             padding: '0.75rem 1.8rem',
             borderRadius: '40px',
             fontWeight: '600',
             fontSize: '0.85rem',
             cursor: 'pointer',
-            boxShadow: '0 4px 10px rgba(74, 14, 120, 0.3)',
+            boxShadow: '4px 4px 8px #d9dde2, -4px -4px 8px #ffffff',
             transition: 'all 0.2s'
           }}
           onMouseEnter={(e) => {
-            e.target.style.background = '#5b21b6'
+            e.target.style.background = '#3a5068'
             e.target.style.transform = 'translateY(-2px)'
           }}
           onMouseLeave={(e) => {
-            e.target.style.background = '#4a0e78'
+            e.target.style.background = '#2c3e50'
             e.target.style.transform = 'translateY(0)'
           }}
         >
