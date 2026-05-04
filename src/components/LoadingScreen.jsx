@@ -9,7 +9,7 @@ const LoadingScreen = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(145deg, #1e2b3c, #0f1a24)',
+      background: 'linear-gradient(145deg, #4a0e78, #2e1065)',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -20,13 +20,14 @@ const LoadingScreen = () => {
         background: 'rgba(255,255,255,0.95)',
         padding: '3rem 4rem',
         borderRadius: '32px',
-        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)'
+        boxShadow: '0 25px 50px -12px rgba(139, 92, 246, 0.3)',
+        border: '1px solid #a855f7'
       }}>
         <div style={{ fontSize: '64px', marginBottom: '20px' }}>🪟</div>
-        <h2 style={{ color: '#1e2b3c', marginBottom: '10px' }}>DESGLOSE PRO</h2>
-        <p style={{ color: '#4a5c6e', marginBottom: '20px' }}>Sistema profesional de cálculo</p>
-        <Spinner animation="border" variant="primary" style={{ color: '#1e3b5c' }} />
-        <p style={{ color: '#64748b', marginTop: '20px', fontSize: '12px' }}>Cargando...</p>
+        <h2 style={{ color: '#4a0e78', marginBottom: '10px' }}>DESGLOSE PRO</h2>
+        <p style={{ color: '#6b21a5', marginBottom: '20px' }}>Sistema profesional de cálculo</p>
+        <Spinner animation="border" style={{ color: '#8b5cf6' }} />
+        <p style={{ color: '#8b5cf6', marginTop: '20px', fontSize: '12px' }}>Cargando...</p>
       </div>
     </div>
   )

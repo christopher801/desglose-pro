@@ -15,36 +15,54 @@ const AppNavbar = () => {
   }
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
+    <Navbar expand="lg" className="mb-4" style={{
+      background: 'linear-gradient(135deg, #4a0e78, #2e1065)',
+      boxShadow: '0 4px 20px rgba(139, 92, 246, 0.2)'
+    }}>
       <Container>
-        <Navbar.Brand as={Link} to="/">
+        <Navbar.Brand as={Link} to="/" style={{ color: '#fef3c7', fontWeight: 'bold' }}>
           🪟 DESGLOSE PRO
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ borderColor: '#a855f7' }} />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             {isAuthenticated ? (
               <>
-                <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
+                <Nav.Link as={Link} to="/dashboard" style={{ color: '#e9d5ff' }}>Dashboard</Nav.Link>
                 {userData?.role === 'admin' && (
-                  <Nav.Link as={Link} to="/admin">Admin</Nav.Link>
+                  <Nav.Link as={Link} to="/admin" style={{ color: '#e9d5ff' }}>Admin</Nav.Link>
                 )}
-                <Nav.Link className="text-info">
+                <Nav.Link style={{ color: '#a855f7', fontWeight: 'bold' }}>
                   👤 {userData?.nombre || user?.email}
                 </Nav.Link>
                 <InstallButton />
                 <Button 
-                  variant="outline-light" 
                   size="sm" 
                   onClick={handleLogout}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid #a855f7',
+                    color: '#a855f7',
+                    borderRadius: '50px',
+                    padding: '5px 15px',
+                    fontWeight: '600'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = '#a855f7'
+                    e.target.style.color = '#fef3c7'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'transparent'
+                    e.target.style.color = '#a855f7'
+                  }}
                 >
                   Salir
                 </Button>
               </>
             ) : (
               <>
-                <Nav.Link as={Link} to="/login">Login</Nav.Link>
-                <Nav.Link as={Link} to="/register">Register</Nav.Link>
+                <Nav.Link as={Link} to="/login" style={{ color: '#e9d5ff' }}>Login</Nav.Link>
+                <Nav.Link as={Link} to="/register" style={{ color: '#e9d5ff' }}>Register</Nav.Link>
               </>
             )}
           </Nav>

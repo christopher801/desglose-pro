@@ -45,12 +45,20 @@ const Register = () => {
   }
 
   return (
-    <Container className="d-flex justify-content-center align-items-center min-vh-100">
-      <Card className="card-modern" style={{ width: '100%', maxWidth: '500px' }}>
+    <Container className="d-flex justify-content-center align-items-center min-vh-100" style={{
+      background: 'linear-gradient(145deg, #4a0e78, #2e1065)',
+      minHeight: '100vh'
+    }}>
+      <Card className="card-modern" style={{ 
+        width: '100%', 
+        maxWidth: '500px',
+        border: '1px solid #a855f7',
+        boxShadow: '0 25px 50px -12px rgba(139, 92, 246, 0.3)'
+      }}>
         <Card.Body className="p-4">
           <div className="text-center mb-4">
-            <h2 className="mb-2">📝 DESGLOSE PRO</h2>
-            <p className="text-muted">Crea tu cuenta profesional</p>
+            <h2 className="mb-2" style={{ color: '#4a0e78' }}>📝 DESGLOSE PRO</h2>
+            <p style={{ color: '#6b21a5' }}>Crea tu cuenta profesional</p>
           </div>
           
           {error && <Alert variant="danger">{error}</Alert>}
@@ -58,66 +66,96 @@ const Register = () => {
           
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Nombre completo</Form.Label>
+              <Form.Label style={{ color: '#4a0e78', fontWeight: '600' }}>Nombre completo</Form.Label>
               <Form.Control
                 type="text"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 required
                 placeholder="Tu nombre"
+                style={{
+                  border: '1px solid #a855f7',
+                  borderRadius: '12px',
+                  padding: '12px'
+                }}
               />
             </Form.Group>
             
             <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
+              <Form.Label style={{ color: '#4a0e78', fontWeight: '600' }}>Email</Form.Label>
               <Form.Control
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="usuario@ejemplo.com"
+                style={{
+                  border: '1px solid #a855f7',
+                  borderRadius: '12px',
+                  padding: '12px'
+                }}
               />
             </Form.Group>
             
             <Form.Group className="mb-3">
-              <Form.Label>Contraseña</Form.Label>
+              <Form.Label style={{ color: '#4a0e78', fontWeight: '600' }}>Contraseña</Form.Label>
               <Form.Control
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="•••••••• (mínimo 6 caracteres)"
+                style={{
+                  border: '1px solid #a855f7',
+                  borderRadius: '12px',
+                  padding: '12px'
+                }}
               />
             </Form.Group>
             
             <Form.Group className="mb-4">
-              <Form.Label>Confirmar contraseña</Form.Label>
+              <Form.Label style={{ color: '#4a0e78', fontWeight: '600' }}>Confirmar contraseña</Form.Label>
               <Form.Control
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 placeholder="••••••••"
+                style={{
+                  border: '1px solid #a855f7',
+                  borderRadius: '12px',
+                  padding: '12px'
+                }}
               />
             </Form.Group>
             
             <Button 
               type="submit" 
               variant="primary" 
-              className="w-100 btn-primary-custom"
+              className="w-100"
               disabled={loading}
+              style={{
+                background: '#8b5cf6',
+                border: 'none',
+                borderRadius: '50px',
+                padding: '12px',
+                fontWeight: '600',
+                fontSize: '16px'
+              }}
+              onMouseEnter={(e) => e.target.style.background = '#a855f7'}
+              onMouseLeave={(e) => e.target.style.background = '#8b5cf6'}
             >
               {loading ? 'Registrando...' : 'Registrarse'}
             </Button>
           </Form>
           
           <div className="text-center mt-3">
-            <Link to="/login" className="text-decoration-none">
+            <Link to="/login" style={{ color: '#8b5cf6', textDecoration: 'none' }}>
               ¿Ya tienes cuenta? Inicia sesión
             </Link>
           </div>
           
-          <div className="text-center mt-3 small text-muted">
+          <div className="text-center mt-3 small" style={{ color: '#6b21a5' }}>
             <p>⚠️ Después de registrarte, tu cuenta será activada por el administrador.</p>
           </div>
         </Card.Body>

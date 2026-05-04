@@ -48,18 +48,27 @@ const InstallButton = () => {
         <button
           onClick={() => alert('📱 Para instalar en iPhone:\n\n1. Toca el botón "Compartir"\n2. Selecciona "Agregar a pantalla de inicio"')}
           style={{
-            background: '#1e3b5c',
+            background: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
             border: 'none',
             borderRadius: '50px',
             padding: '10px 20px',
             fontWeight: '600',
             fontSize: '13px',
-            color: 'white',
+            color: '#fef3c7',
             cursor: 'pointer',
-            boxShadow: '4px 4px 12px rgba(0,0,0,0.2)',
+            boxShadow: '0 4px 15px rgba(139, 92, 246, 0.4)',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px'
+            gap: '8px',
+            transition: 'transform 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'scale(1.05)'
+            e.target.style.boxShadow = '0 6px 20px rgba(139, 92, 246, 0.5)'
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'scale(1)'
+            e.target.style.boxShadow = '0 4px 15px rgba(139, 92, 246, 0.4)'
           }}
         >
           <span>📱</span>
@@ -76,18 +85,27 @@ const InstallButton = () => {
       <button
         onClick={handleInstallClick}
         style={{
-          background: '#1e3b5c',
+          background: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
           border: 'none',
           borderRadius: '50px',
           padding: '10px 20px',
           fontWeight: '600',
           fontSize: '13px',
-          color: 'white',
+          color: '#fef3c7',
           cursor: 'pointer',
-          boxShadow: '4px 4px 12px rgba(0,0,0,0.2)',
+          boxShadow: '0 4px 15px rgba(139, 92, 246, 0.4)',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px'
+          gap: '8px',
+          transition: 'transform 0.2s'
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.transform = 'scale(1.05)'
+          e.target.style.boxShadow = '0 6px 20px rgba(139, 92, 246, 0.5)'
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = 'scale(1)'
+          e.target.style.boxShadow = '0 4px 15px rgba(139, 92, 246, 0.4)'
         }}
       >
         <span>📲</span>
