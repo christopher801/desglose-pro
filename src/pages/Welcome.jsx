@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Container, Row, Col, Button, Card } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -16,83 +16,51 @@ const Welcome = () => {
   }, [isAuthenticated, isActive, navigate])
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(145deg, #1e2b3c, #0f1a24)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <Container>
-        <Row className="justify-content-center">
-          <Col md={8} lg={6}>
-            <Card className="card-modern text-center">
-              <Card.Body style={{ padding: '3rem' }}>
-                <div style={{ fontSize: '64px', marginBottom: '20px' }}>🪟</div>
-                <h1 style={{ color: '#1e2b3c', marginBottom: '10px', fontSize: '2rem' }}>DESGLOSE PRO</h1>
-                <h2 style={{ color: '#4a5c6e', fontSize: '1rem', fontWeight: '400', marginBottom: '30px' }}>
-                  Sistema profesional para el desblose de puertas y ventanas
-                </h2>
-                
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginBottom: '30px' }}>
-                  <Button 
-                    variant="primary" 
-                    onClick={() => navigate('/login')}
-                    style={{
-                      background: '#1e3b5c',
-                      border: 'none',
-                      padding: '12px 30px',
-                      borderRadius: '50px',
-                      fontWeight: '600'
-                    }}
-                  >
-                    Iniciar Sesión
-                  </Button>
-                  <Button 
-                    variant="outline-secondary" 
-                    onClick={() => navigate('/register')}
-                    style={{
-                      border: '2px solid #1e3b5c',
-                      color: '#1e3b5c',
-                      padding: '12px 30px',
-                      borderRadius: '50px',
-                      fontWeight: '600',
-                      background: 'transparent'
-                    }}
-                  >
-                    Registrarse
-                  </Button>
-                </div>
-                
-                <hr style={{ margin: '20px 0' }} />
-                
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <div style={{ textAlign: 'center', padding: '10px' }}>
-                    <div style={{ fontSize: '24px' }}>🪟</div>
-                    <small style={{ color: '#64748b' }}>Ventanas P-92</small>
-                  </div>
-                  <div style={{ textAlign: 'center', padding: '10px' }}>
-                    <div style={{ fontSize: '24px' }}>🪟</div>
-                    <small style={{ color: '#64748b' }}>Ventanas P-65</small>
-                  </div>
-                  <div style={{ textAlign: 'center', padding: '10px' }}>
-                    <div style={{ fontSize: '24px' }}>🪟</div>
-                    <small style={{ color: '#64748b' }}>Ventana Tradicional</small>
-                  </div>
-                  <div style={{ textAlign: 'center', padding: '10px' }}>
-                    <div style={{ fontSize: '24px' }}>🚪</div>
-                    <small style={{ color: '#64748b' }}>Puerta Comercial</small>
-                  </div>
-                </div>
-                
-                <div style={{ marginTop: '30px', fontSize: '12px', color: '#94a3b8' }}>
-                  <p>Desarrollado por Christopher</p>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+    <div className="welcome-container">
+      <div className="welcome-card">
+        <div className="welcome-icon">🏢</div>
+        <h1 className="welcome-title">DESGLOSE PRO</h1>
+        <p className="welcome-subtitle">
+          Sistema profesional de cálculo<br />
+          de Ventanas y Puertas de Aluminio
+        </p>
+        
+        <div className="welcome-buttons">
+          <button 
+            className="btn-professional btn-professional-primary"
+            onClick={() => navigate('/login')}
+          >
+            Iniciar Sesión
+          </button>
+          <button 
+            className="btn-professional btn-professional-outline"
+            onClick={() => navigate('/register')}
+          >
+            Registrarse
+          </button>
+        </div>
+        
+        <hr className="my-4" />
+        
+        <div className="d-flex justify-content-center gap-3 flex-wrap">
+          <div className="text-center">
+            <div style={{ fontSize: '1.5rem' }}>🪟</div>
+            <small className="text-muted">Ventanas</small>
+          </div>
+          <div className="text-center">
+            <div style={{ fontSize: '1.5rem' }}>🚪</div>
+            <small className="text-muted">Puertas</small>
+          </div>
+          <div className="text-center">
+            <div style={{ fontSize: '1.5rem' }}>📐</div>
+            <small className="text-muted">Cálculo preciso</small>
+          </div>
+        </div>
+        
+        <div className="mt-4">
+          <small className="text-muted">Desarrollado por Christopher</small>
+        </div>
+      </div>
     </div>
   )
 }

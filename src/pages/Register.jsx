@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap'
+import { Container, Alert } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { registerUser } from '../services/authService'
 
@@ -45,84 +45,86 @@ const Register = () => {
   }
 
   return (
-    <Container className="d-flex justify-content-center align-items-center min-vh-100">
-      <Card className="card-modern" style={{ width: '100%', maxWidth: '500px' }}>
-        <Card.Body className="p-4">
-          <div className="text-center mb-4">
-            <h2 className="mb-2">📝 DESGLOSE PRO</h2>
-            <p className="text-muted">Crea tu cuenta profesional</p>
+    <div className="welcome-container">
+      <div className="welcome-card" style={{ maxWidth: '480px' }}>
+        <div className="welcome-icon">📝</div>
+        <h1 className="welcome-title">Registrarse</h1>
+        <p className="welcome-subtitle">Crea tu cuenta profesional</p>
+        
+        {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
+        {success && <Alert variant="success" className="mb-4">{success}</Alert>}
+        
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label text-muted small fw-medium">Nombre completo</label>
+            <input
+              type="text"
+              className="input-professional"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+              placeholder="Tu nombre"
+            />
           </div>
           
-          {error && <Alert variant="danger">{error}</Alert>}
-          {success && <Alert variant="success">{success}</Alert>}
-          
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Nombre completo</Form.Label>
-              <Form.Control
-                type="text"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-                placeholder="Tu nombre"
-              />
-            </Form.Group>
-            
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="usuario@ejemplo.com"
-              />
-            </Form.Group>
-            
-            <Form.Group className="mb-3">
-              <Form.Label>Contraseña</Form.Label>
-              <Form.Control
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="•••••••• (mínimo 6 caracteres)"
-              />
-            </Form.Group>
-            
-            <Form.Group className="mb-4">
-              <Form.Label>Confirmar contraseña</Form.Label>
-              <Form.Control
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-              />
-            </Form.Group>
-            
-            <Button 
-              type="submit" 
-              variant="primary" 
-              className="w-100 btn-primary-custom"
-              disabled={loading}
-            >
-              {loading ? 'Registrando...' : 'Registrarse'}
-            </Button>
-          </Form>
-          
-          <div className="text-center mt-3">
-            <Link to="/login" className="text-decoration-none">
-              ¿Ya tienes cuenta? Inicia sesión
-            </Link>
+          <div className="mb-3">
+            <label className="form-label text-muted small fw-medium">Email</label>
+            <input
+              type="email"
+              className="input-professional"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="usuario@ejemplo.com"
+            />
           </div>
           
-          <div className="text-center mt-3 small text-muted">
-            <p>⚠️ Después de registrarte, tu cuenta será activada por el administrador.</p>
+          <div className="mb-3">
+            <label className="form-label text-muted small fw-medium">Contraseña</label>
+            <input
+              type="password"
+              className="input-professional"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="•••••••• (mínimo 6 caracteres)"
+            />
           </div>
-        </Card.Body>
-      </Card>
-    </Container>
+          
+          <div className="mb-4">
+            <label className="form-label text-muted small fw-medium">Confirmar contraseña</label>
+            <input
+              type="password"
+              className="input-professional"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
+          </div>
+          
+          <button 
+            type="submit" 
+            className="btn-professional btn-professional-primary w-100"
+            disabled={loading}
+          >
+            {loading ? 'Registrando...' : 'Registrarse'}
+          </button>
+        </form>
+        
+        <div className="mt-4 text-center">
+          <Link to="/login" className="text-decoration-none" style={{ fontSize: '0.875rem', color: 'var(--primary)' }}>
+            ¿Ya tienes cuenta? Inicia sesión
+          </Link>
+        </div>
+        
+        <div className="mt-3 text-center">
+          <small className="text-muted">
+            ⚠️ Después de registrarte, tu cuenta será activada por el administrador.
+          </small>
+        </div>
+      </div>
+    </div>
   )
 }
 

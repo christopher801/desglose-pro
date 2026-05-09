@@ -6,6 +6,7 @@ import {
 } from 'firebase/auth'
 import { auth, db } from './firebase'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { createNewUserNotification } from './notificationService'
 
 export const registerUser = async (email, password, nombre) => {
   try {
@@ -19,6 +20,9 @@ export const registerUser = async (email, password, nombre) => {
       isActive: false,
       createdAt: new Date().toISOString()
     })
+    
+    // Kreye notifikasyon pou admin
+    await createNewUserNotification(user.uid, email, nombre)
     
     return { success: true, user }
   } catch (error) {

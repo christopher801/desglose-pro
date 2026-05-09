@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap'
+import { Container, Alert } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginUser } from '../services/authService'
 import { useAuth } from '../context/AuthContext'
@@ -34,57 +34,55 @@ const Login = () => {
   }
 
   return (
-    <Container className="d-flex justify-content-center align-items-center min-vh-100">
-      <Card className="card-modern" style={{ width: '100%', maxWidth: '450px' }}>
-        <Card.Body className="p-4">
-          <div className="text-center mb-4">
-            <h2 className="mb-2">🔑 DESGLOSE PRO</h2>
-            <p className="text-muted">Inicia sesión en tu cuenta</p>
+    <div className="welcome-container">
+      <div className="welcome-card" style={{ maxWidth: '420px' }}>
+        <div className="welcome-icon">🔐</div>
+        <h1 className="welcome-title">Iniciar Sesión</h1>
+        <p className="welcome-subtitle">Ingresa a tu cuenta profesional</p>
+        
+        {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
+        
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label text-muted small fw-medium">Email</label>
+            <input
+              type="email"
+              className="input-professional"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="usuario@ejemplo.com"
+            />
           </div>
           
-          {error && <Alert variant="danger">{error}</Alert>}
-          
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="usuario@ejemplo.com"
-              />
-            </Form.Group>
-            
-            <Form.Group className="mb-4">
-              <Form.Label>Contraseña</Form.Label>
-              <Form.Control
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-              />
-            </Form.Group>
-            
-            <Button 
-              type="submit" 
-              variant="primary" 
-              className="w-100 btn-primary-custom"
-              disabled={loading}
-            >
-              {loading ? 'Cargando...' : 'Iniciar Sesión'}
-            </Button>
-          </Form>
-          
-          <div className="text-center mt-3">
-            <Link to="/register" className="text-decoration-none">
-              ¿No tienes cuenta? Regístrate aquí
-            </Link>
+          <div className="mb-4">
+            <label className="form-label text-muted small fw-medium">Contraseña</label>
+            <input
+              type="password"
+              className="input-professional"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
           </div>
-        </Card.Body>
-      </Card>
-    </Container>
+          
+          <button 
+            type="submit" 
+            className="btn-professional btn-professional-primary w-100"
+            disabled={loading}
+          >
+            {loading ? 'Cargando...' : 'Ingresar'}
+          </button>
+        </form>
+        
+        <div className="mt-4 text-center">
+          <Link to="/register" className="text-decoration-none" style={{ fontSize: '0.875rem', color: 'var(--primary)' }}>
+            ¿No tienes cuenta? Regístrate aquí
+          </Link>
+        </div>
+      </div>
+    </div>
   )
 }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,108 +7,93 @@ const Dashboard = () => {
   const { userData, isActive, isAdmin } = useAuth()
 
   const systems = [
-    { name: 'VENTANA P-92', icon: '🪟', color: '#1e3b5c', path: '/p92', nuevo: false },
-    { name: 'VENTANA P-65', icon: '🪟', color: '#2c5a7a', path: '/p65', nuevo: false },
-    { name: 'VENTANA TRADICIONAL', icon: '🪟', color: '#3a6e8c', path: '/tradicional', nuevo: false },
-    { name: 'VENTANA PROYECTADA P-40', icon: '🪟', color: '#4a7c9e', path: '/proyectada-p40', nuevo: true },
-    { name: 'PUERTA COMERCIAL', icon: '🚪', color: '#5a8cae', path: '/puerta-comercial', nuevo: false }
+    { name: 'VENTANA P-92', icon: '🪟', color: '#1a56db', path: '/p92', nuevo: false },
+    { name: 'VENTANA P-65', icon: '🪟', color: '#1a56db', path: '/p65', nuevo: false },
+    { name: 'VENTANA TRADICIONAL', icon: '🪟', color: '#1a56db', path: '/tradicional', nuevo: false },
+    { name: 'VENTANA PROYECTADA P-40', icon: '🪟', color: '#1a56db', path: '/proyectada-p40', nuevo: true },
+    { name: 'PUERTA COMERCIAL', icon: '🚪', color: '#1a56db', path: '/puerta-comercial', nuevo: false }
   ]
 
   return (
     <Container className="py-4">
-      {/* Welcome Card with background */}
-      <Card className="card-modern mb-4" style={{ background: 'linear-gradient(135deg, #1e2b3c 0%, #2c3e50 100%)', border: 'none' }}>
-        <Card.Body>
-          <h1 style={{ color: 'white', marginBottom: '10px' }}>👋 Hola, {userData?.nombre || 'Usuario'}</h1>
-          <p style={{ color: '#cbd5e1', marginBottom: '0' }}>
-            {isActive 
-              ? '✅ Tu cuenta está activa. ¡Puedes usar todos los sistemas!' 
-              : '🔒 Tu cuenta está pendiente de activación. Contacta al administrador.'}
-          </p>
-        </Card.Body>
-      </Card>
+      {/* Welcome Card */}
+      <div className="card-modern p-4 mb-4">
+        <div className="d-flex justify-content-between align-items-start">
+          <div>
+            <h1 className="h3 mb-2" style={{ color: 'var(--gray-900)' }}>
+              👋 Hola, {userData?.nombre || 'Usuario'}
+            </h1>
+            <p className="text-muted mb-0">
+              {isActive 
+                ? '✅ Tu cuenta está activa. Puedes usar todos los sistemas' 
+                : '🔒 Tu cuenta está pendiente de activación'}
+            </p>
+          </div>
+          {!isActive && (
+            <span className="badge-professional badge-inactive">Pendiente</span>
+          )}
+          {isActive && (
+            <span className="badge-professional badge-active">Activo</span>
+          )}
+        </div>
+      </div>
       
       {!isActive && (
-        <Card className="card-modern mb-4 border-warning">
-          <Card.Body className="text-center">
-            <div style={{ fontSize: '48px' }}>🔒</div>
-            <h5 className="mb-3">Cuenta Bloqueada</h5>
-            <p className="text-muted">
-              Tu cuenta aún no ha sido activada. Por favor espera a que el administrador 
-              active tu cuenta para poder utilizar el sistema de cálculos.
-            </p>
-          </Card.Body>
-        </Card>
+        <div className="card-modern p-4 mb-4 text-center" style={{ borderLeft: `4px solid var(--warning)` }}>
+          <p className="text-muted mb-0">
+            Tu cuenta aún no ha sido activada. Contacta al administrador para poder utilizar el sistema.
+          </p>
+        </div>
       )}
       
       <Row>
-        <Col md={8}>
-          <h3 style={{ color: '#1e2b3c', marginBottom: '20px' }}>📐 Sistemas Disponibles</h3>
-          <Row>
+        <Col lg={8}>
+          <h5 className="mb-3" style={{ color: 'var(--gray-700)' }}>📐 Sistemas Disponibles</h5>
+          <div className="product-grid">
             {systems.map((sys, idx) => (
-              <Col md={6} lg={3} key={idx} className="mb-3">
-                <Card className="card-modern text-center h-100" style={{ position: 'relative' }}>
-                  {sys.nuevo && (
-                    <Badge 
-                      bg="warning" 
-                      style={{ 
-                        position: 'absolute', 
-                        top: '10px', 
-                        right: '10px',
-                        borderRadius: '20px',
-                        padding: '5px 10px',
-                        fontSize: '10px',
-                        fontWeight: 'bold',
-                        background: '#ffc107',
-                        color: '#1e2b3c',
-                        zIndex: 1
-                      }}
-                    >
-                      ⭐ NUEVO
-                    </Badge>
-                  )}
-                  <Card.Body>
-                    <div style={{ fontSize: '48px' }}>{sys.icon}</div>
-                    <h6 className="mt-2">{sys.name}</h6>
-                    {isActive ? (
-                      <Button 
-                        as={Link} 
-                        to={sys.path}
-                        variant="primary" 
-                        size="sm" 
-                        className="mt-2"
-                        style={{ background: sys.color, border: 'none' }}
-                      >
-                        Usar
-                      </Button>
-                    ) : (
-                      <Button variant="secondary" size="sm" className="mt-2" disabled>
-                        🔒 Bloqueado
-                      </Button>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
+              <Link to={sys.path} key={idx} className="product-card">
+                {sys.nuevo && (
+                  <div className="badge-professional" style={{ 
+                    position: 'absolute', 
+                    top: '0.75rem', 
+                    right: '0.75rem',
+                    background: '#fef3c7',
+                    color: '#b45309',
+                    fontSize: '0.65rem'
+                  }}>
+                    Nuevo
+                  </div>
+                )}
+                <div className="product-icon">{sys.icon}</div>
+                <div className="product-title">{sys.name}</div>
+                <div className="product-desc">Usar sistema</div>
+              </Link>
             ))}
-          </Row>
+          </div>
         </Col>
         
-        <Col md={4}>
-          <Card className="card-modern">
-            <Card.Body>
-              <h5 className="mb-3">ℹ️ Información</h5>
-              <hr />
-              <p><strong>Estado:</strong> {isActive ? '✅ Activo' : '🔒 Bloqueado'}</p>
-              <p><strong>Rol:</strong> {isAdmin ? 'Administrador' : 'Usuario'}</p>
-              <p><strong>Email:</strong> {userData?.email}</p>
-              <hr />
-              <small className="text-muted">
-                {isActive 
-                  ? 'Puedes usar todos los sistemas de cálculo disponibles.' 
-                  : 'Necesitas activación para usar el sistema.'}
-              </small>
-            </Card.Body>
-          </Card>
+        <Col lg={4}>
+          <div className="card-modern p-4">
+            <h6 className="text-muted mb-3">ℹ️ Información</h6>
+            <div className="mb-2">
+              <small className="text-muted">Estado</small>
+              <p className="mb-0 fw-medium">{isActive ? 'Activo' : 'Bloqueado'}</p>
+            </div>
+            <div className="mb-2">
+              <small className="text-muted">Rol</small>
+              <p className="mb-0 fw-medium">{isAdmin ? 'Administrador' : 'Usuario'}</p>
+            </div>
+            <div className="mb-2">
+              <small className="text-muted">Email</small>
+              <p className="mb-0 fw-medium">{userData?.email}</p>
+            </div>
+            <hr />
+            <small className="text-muted">
+              {isActive 
+                ? 'Todos los sistemas están disponibles' 
+                : 'Necesitas activación para usar el sistema'}
+            </small>
+          </div>
         </Col>
       </Row>
     </Container>

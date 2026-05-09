@@ -1,5 +1,4 @@
 import React from 'react'
-import { Spinner } from 'react-bootstrap'
 
 const LoadingScreen = () => {
   return (
@@ -9,24 +8,32 @@ const LoadingScreen = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(145deg, #1e2b3c, #0f1a24)',
+      background: 'var(--gray-50)',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       zIndex: 9999
     }}>
       <div style={{
-        textAlign: 'center',
-        background: 'rgba(255,255,255,0.95)',
-        padding: '3rem 4rem',
-        borderRadius: '32px',
-        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)'
+        textAlign: 'center'
       }}>
-        <div style={{ fontSize: '64px', marginBottom: '20px' }}>🪟</div>
-        <h2 style={{ color: '#1e2b3c', marginBottom: '10px' }}>DESGLOSE PRO</h2>
-        <p style={{ color: '#4a5c6e', marginBottom: '20px' }}>Sistema profesional de cálculo</p>
-        <Spinner animation="border" variant="primary" style={{ color: '#1e3b5c' }} />
-        <p style={{ color: '#64748b', marginTop: '20px', fontSize: '12px' }}>Cargando...</p>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          border: '3px solid var(--gray-200)',
+          borderTopColor: 'var(--primary)',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite',
+          marginBottom: '1rem'
+        }} />
+        <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>Cargando...</p>
+        <style>
+          {`
+            @keyframes spin {
+              to { transform: rotate(360deg); }
+            }
+          `}
+        </style>
       </div>
     </div>
   )
