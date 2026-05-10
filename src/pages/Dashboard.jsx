@@ -2,6 +2,7 @@ import React from 'react'
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import AdBanner from '../components/AdBanner'
 
 const Dashboard = () => {
   const { userData, isActive, isAdmin } = useAuth()
@@ -37,6 +38,9 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+
+       {/* 📍 POZISYON 1: BANZYÈ ANBA WELCOME CARD */}
+      <AdBanner adSlot="1234567890" adFormat="horizontal" />
       
       {!isActive && (
         <div className="card-modern p-4 mb-4 text-center" style={{ borderLeft: `4px solid var(--warning)` }}>
@@ -70,6 +74,10 @@ const Dashboard = () => {
               </Link>
             ))}
           </div>
+
+           {/* 📍 POZISYON 2: BANZYÈ ANBA SISTÈM YO */}
+          <AdBanner adSlot="1234567891" adFormat="auto" />
+
         </Col>
         
         <Col lg={4}>
@@ -94,8 +102,16 @@ const Dashboard = () => {
                 : 'Necesitas activación para usar el sistema'}
             </small>
           </div>
+
+           {/* 📍 POZISYON 3: BANZYÈ NAN SIDEBAR */}
+          <AdBanner adSlot="1234567892" adFormat="rectangle" />
+
         </Col>
       </Row>
+
+      {/* 📍 POZISYON 4: BANZYÈ ANBA PAG LA */}
+      <AdBanner adSlot="1234567893" adFormat="horizontal" />
+      
     </Container>
   )
 }
