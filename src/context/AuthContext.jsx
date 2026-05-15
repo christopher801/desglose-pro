@@ -1,13 +1,13 @@
 import React, { createContext, useState, useEffect, useContext } from 'react'
-import { onAuthChange, getUserData } from '../services/authService'
+import { onAuthChange } from '../services/authService'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { db } from '../services/firebase'
 
 const AuthContext = createContext()
 
 export const useAuth = () => {
   const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider')
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider')
   return context
 }
 
@@ -17,21 +17,35 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsubscribe = onAuthChange(async (firebaseUser) => {
+    let unsubscribeSnapshot = null
+
+    const unsubscribeAuth = onAuthChange((firebaseUser) => {
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot()
+        unsubscribeSnapshot = null
+      }
+
       if (firebaseUser) {
         setUser(firebaseUser)
-        const result = await getUserData(firebaseUser.uid)
-        if (result.success) {
-          setUserData(result.data)
-        }
+        // onSnapshot: si admin chanje isActive, user wè chanjman an otomatikman
+        const userRef = doc(db, 'users', firebaseUser.uid)
+        unsubscribeSnapshot = onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setUserData(docSnap.data())
+          }
+          setLoading(false)
+        })
       } else {
         setUser(null)
         setUserData(null)
+        setLoading(false)
       }
-      setLoading(false)
     })
 
-    return () => unsubscribe()
+    return () => {
+      unsubscribeAuth()
+      if (unsubscribeSnapshot) unsubscribeSnapshot()
+    }
   }, [])
 
   const value = {
@@ -45,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   )
 }

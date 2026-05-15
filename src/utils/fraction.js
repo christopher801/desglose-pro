@@ -1,43 +1,29 @@
 const FractionUtils = {
-  parseFraction(input) {
-    if (typeof input === 'number') return input
-    if (!input || input.trim() === '') return 0
-    
-    const str = input.trim()
-    
-    if (str.includes('/') && !str.includes(' ')) {
-      const [num, den] = str.split('/').map(Number)
-      return num / den
-    }
-    
-    const parts = str.split(' ')
-    let total = 0
-    
-    for (const part of parts) {
-      if (part.includes('/')) {
-        const [num, den] = part.split('/').map(Number)
-        total += num / den
-      } else {
-        total += parseFloat(part) || 0
-      }
-    }
-    
-    return total
+  parseFraction(str) {
+    if (!str) return 0
+    str = String(str).trim()
+    const mixed = str.match(/^(\d+)\s+(\d+)\/(\d+)$/)
+    if (mixed) return parseInt(mixed[1]) + parseInt(mixed[2]) / parseInt(mixed[3])
+    const frac = str.match(/^(\d+)\/(\d+)$/)
+    if (frac) return parseInt(frac[1]) / parseInt(frac[2])
+    const num = parseFloat(str)
+    return isNaN(num) ? 0 : num
   },
-  
-  toSixteenths(decimal) {
-    const rounded = Math.round(decimal * 16) / 16
-    const whole = Math.floor(rounded)
-    const fraction = rounded - whole
-    
-    if (Math.abs(fraction) < 0.001) return `${whole}`
-    
-    const numerator = Math.round(fraction * 16)
-    
-    if (numerator === 16) return `${whole + 1}`
-    if (whole === 0) return `${numerator}/16`
-    
-    return `${whole} ${numerator}/16`
+
+  toSixteenths(dec) {
+    if (dec < 0) return 'ERROR'
+    const totalSixteenths = Math.round(dec * 16)
+    const wholeInches = Math.floor(totalSixteenths / 16)
+    const rem = totalSixteenths % 16
+    if (rem === 0) return `${wholeInches}"`
+    let num = rem, den = 16
+    const g = this.gcd(num, den)
+    num /= g; den /= g
+    return `${wholeInches} ${num}/${den}"`
+  },
+
+  gcd(a, b) {
+    return b === 0 ? a : this.gcd(b, a % b)
   }
 }
 

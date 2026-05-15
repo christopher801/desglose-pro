@@ -1,119 +1,101 @@
 import React from 'react'
-import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import AdBanner from '../components/AdBanner'
+import Layout from '../components/Layout'
 
-const Dashboard = () => {
+const systems = [
+  { name: 'Ventana P-92', icon: '🪟', path: '/desglose/p92', nuevo: false },
+  { name: 'Ventana P-65', icon: '🪟', path: '/desglose/p65', nuevo: false },
+  { name: 'Ventana Tradicional', icon: '🪟', path: '/desglose/tradicional', nuevo: false },
+  { name: 'Ventana P-40', icon: '🪟', path: '/desglose/p40', nuevo: true },
+  { name: 'Puerta Comercial', icon: '🚪', path: '/desglose/puerta', nuevo: false },
+  { name: 'Glass Optimizer', icon: '🔢', path: '/glass-optimizer', nuevo: true },
+]
+
+export default function Dashboard() {
   const { userData, isActive, isAdmin } = useAuth()
 
-  const systems = [
-    { name: 'VENTANA P-92', icon: '🪟', color: '#1a56db', path: '/p92', nuevo: false },
-    { name: 'VENTANA P-65', icon: '🪟', color: '#1a56db', path: '/p65', nuevo: false },
-    { name: 'VENTANA TRADICIONAL', icon: '🪟', color: '#1a56db', path: '/tradicional', nuevo: false },
-    { name: 'VENTANA PROYECTADA P-40', icon: '🪟', color: '#1a56db', path: '/proyectada-p40', nuevo: true },
-    { name: 'PUERTA COMERCIAL', icon: '🚪', color: '#1a56db', path: '/puerta-comercial', nuevo: false }
-  ]
-
   return (
-    <Container className="py-4">
-      {/* Welcome Card */}
-      <div className="card-modern p-4 mb-4">
-        <div className="d-flex justify-content-between align-items-start">
-          <div>
-            <h1 className="h3 mb-2" style={{ color: 'var(--gray-900)' }}>
-              👋 Hola, {userData?.nombre || 'Usuario'}
-            </h1>
-            <p className="text-muted mb-0">
-              {isActive 
-                ? '✅ Tu cuenta está activa. Puedes usar todos los sistemas' 
-                : '🔒 Tu cuenta está pendiente de activación'}
-            </p>
+    <Layout>
+      <div className="page-content">
+
+        {/* Welcome */}
+        <div className="card-modern mb-4">
+          <div className="dashboard-welcome">
+            <div>
+              <h1 className="dashboard-greeting">
+                Hola, {userData?.nombre || 'Usuario'}
+              </h1>
+              <p className="dashboard-sub">
+                {isActive
+                  ? 'Tu cuenta está activa. Todos los sistemas disponibles.'
+                  : 'Tu cuenta está pendiente de activación.'}
+              </p>
+            </div>
+            <span className={`badge ${isActive ? 'badge-active' : 'badge-inactive'}`}>
+              {isActive ? 'Activo' : 'Pendiente'}
+            </span>
           </div>
-          {!isActive && (
-            <span className="badge-professional badge-inactive">Pendiente</span>
-          )}
-          {isActive && (
-            <span className="badge-professional badge-active">Activo</span>
-          )}
         </div>
+
+        {/* Stats — solo si admin */}
+        {isAdmin && (
+          <div className="dashboard-stats mb-4">
+            <div className="stat-card">
+              <div className="stat-card-title">Sistemas</div>
+              <div className="stat-card-value">{systems.length}</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-card-title">Tu rol</div>
+              <div className="stat-card-value" style={{ fontSize: '1.2rem' }}>Admin</div>
+            </div>
+          </div>
+        )}
+
+        {/* Advertencia si no activo */}
+        {!isActive && (
+          <div className="alert-warning mb-4">
+            Tu cuenta aún no ha sido activada. Contacta al administrador.
+          </div>
+        )}
+
+        {/* Sistemas */}
+        {isActive && (
+          <>
+            <h2 className="section-title">Sistemas disponibles</h2>
+            <div className="product-grid">
+              {systems.map((sys, idx) => (
+                <Link to={sys.path} key={idx} className="product-card">
+                  {sys.nuevo && <span className="product-badge">Nuevo</span>}
+                  <div className="product-icon">{sys.icon}</div>
+                  <div className="product-title">{sys.name}</div>
+                  <div className="product-desc">Abrir sistema →</div>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Info card */}
+        <div className="card-modern mt-4">
+          <h3 className="info-card-title">Información de cuenta</h3>
+          <div className="info-row">
+            <span className="info-label">Estado</span>
+            <span className={`badge ${isActive ? 'badge-active' : 'badge-inactive'}`}>
+              {isActive ? 'Activo' : 'Bloqueado'}
+            </span>
+          </div>
+          <div className="info-row">
+            <span className="info-label">Rol</span>
+            <span className="info-value">{isAdmin ? 'Administrador' : 'Usuario'}</span>
+          </div>
+          <div className="info-row">
+            <span className="info-label">Email</span>
+            <span className="info-value">{userData?.email}</span>
+          </div>
+        </div>
+
       </div>
-
-       {/* 📍 POZISYON 1: BANZYÈ ANBA WELCOME CARD */}
-      <AdBanner adSlot="1234567890" adFormat="horizontal" />
-      
-      {!isActive && (
-        <div className="card-modern p-4 mb-4 text-center" style={{ borderLeft: `4px solid var(--warning)` }}>
-          <p className="text-muted mb-0">
-            Tu cuenta aún no ha sido activada. Contacta al administrador para poder utilizar el sistema.
-          </p>
-        </div>
-      )}
-      
-      <Row>
-        <Col lg={8}>
-          <h5 className="mb-3" style={{ color: 'var(--gray-700)' }}>📐 Sistemas Disponibles</h5>
-          <div className="product-grid">
-            {systems.map((sys, idx) => (
-              <Link to={sys.path} key={idx} className="product-card">
-                {sys.nuevo && (
-                  <div className="badge-professional" style={{ 
-                    position: 'absolute', 
-                    top: '0.75rem', 
-                    right: '0.75rem',
-                    background: '#fef3c7',
-                    color: '#b45309',
-                    fontSize: '0.65rem'
-                  }}>
-                    Nuevo
-                  </div>
-                )}
-                <div className="product-icon">{sys.icon}</div>
-                <div className="product-title">{sys.name}</div>
-                <div className="product-desc">Usar sistema</div>
-              </Link>
-            ))}
-          </div>
-
-           {/* 📍 POZISYON 2: BANZYÈ ANBA SISTÈM YO */}
-          <AdBanner adSlot="1234567891" adFormat="auto" />
-
-        </Col>
-        
-        <Col lg={4}>
-          <div className="card-modern p-4">
-            <h6 className="text-muted mb-3">ℹ️ Información</h6>
-            <div className="mb-2">
-              <small className="text-muted">Estado</small>
-              <p className="mb-0 fw-medium">{isActive ? 'Activo' : 'Bloqueado'}</p>
-            </div>
-            <div className="mb-2">
-              <small className="text-muted">Rol</small>
-              <p className="mb-0 fw-medium">{isAdmin ? 'Administrador' : 'Usuario'}</p>
-            </div>
-            <div className="mb-2">
-              <small className="text-muted">Email</small>
-              <p className="mb-0 fw-medium">{userData?.email}</p>
-            </div>
-            <hr />
-            <small className="text-muted">
-              {isActive 
-                ? 'Todos los sistemas están disponibles' 
-                : 'Necesitas activación para usar el sistema'}
-            </small>
-          </div>
-
-           {/* 📍 POZISYON 3: BANZYÈ NAN SIDEBAR */}
-          <AdBanner adSlot="1234567892" adFormat="rectangle" />
-
-        </Col>
-      </Row>
-
-      {/* 📍 POZISYON 4: BANZYÈ ANBA PAG LA */}
-      <AdBanner adSlot="1234567893" adFormat="horizontal" />
-      
-    </Container>
+    </Layout>
   )
 }
-
-export default Dashboard
