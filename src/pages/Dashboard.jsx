@@ -9,7 +9,6 @@ const systems = [
   { name: 'Ventana Tradicional', icon: '🪟', path: '/desglose/tradicional', nuevo: false },
   { name: 'Ventana P-40', icon: '🪟', path: '/desglose/p40', nuevo: true },
   { name: 'Puerta Comercial', icon: '🚪', path: '/desglose/puerta', nuevo: false },
-  { name: 'Glass Optimizer', icon: '🔢', path: '/glass-optimizer', nuevo: true },
 ]
 
 export default function Dashboard() {

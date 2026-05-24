@@ -1,7 +1,3 @@
-/* ========================================
-   DESGLOSE PRO V2 — MAIN CSS
-   ======================================== */
-
 :root {
   --primary: #1a56db;
   --primary-dark: #1e40af;
@@ -60,7 +56,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ========= SIDEBAR ========= */
 .sidebar {
   width: var(--sidebar-width);
   background: white;
@@ -170,7 +165,6 @@ body {
   z-index: 199;
 }
 
-/* ========= TOPBAR ========= */
 .topbar {
   height: var(--topbar-height);
   background: white;
@@ -226,10 +220,8 @@ body {
   padding: 0 3px;
 }
 
-/* ========= BOTTOM NAV — oculto en desktop ========= */
 .bottom-nav { display: none; }
 
-/* ========= PAGE CONTENT ========= */
 .page-content {
   padding: 20px 24px;
   max-width: 1200px;
@@ -254,7 +246,6 @@ body {
 .text-center { text-align: center; }
 .text-muted { color: var(--gray-500); }
 
-/* ========= CARDS ========= */
 .card-modern {
   background: white;
   border-radius: var(--radius-lg);
@@ -263,7 +254,6 @@ body {
   padding: 1.25rem;
 }
 
-/* ========= BADGES ========= */
 .badge {
   display: inline-flex; align-items: center;
   padding: 3px 10px;
@@ -275,7 +265,6 @@ body {
 .badge-admin    { background: #e0e7ff; color: #3730a3; }
 .badge-user     { background: var(--gray-100); color: var(--gray-600); }
 
-/* ========= ALERTS ========= */
 .auth-error {
   background: #fef2f2;
   border: 1px solid #fecaca;
@@ -316,7 +305,6 @@ body {
   display: flex; align-items: center; gap: 8px;
 }
 
-/* ========= AUTH PAGES ========= */
 .auth-page {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
@@ -415,7 +403,6 @@ body {
 .auth-link { color: var(--primary); font-weight: 600; text-decoration: none; }
 .auth-link:hover { text-decoration: underline; }
 
-/* ========= WELCOME PAGE ========= */
 .welcome-page {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
@@ -516,7 +503,6 @@ body {
   color: var(--gray-700);
 }
 
-/* ========= DASHBOARD ========= */
 .dashboard-welcome {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
 }
@@ -547,7 +533,6 @@ body {
 
 .stat-card-value { font-size: 1.8rem; font-weight: 800; color: var(--gray-900); }
 
-/* ========= PRODUCT GRID ========= */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -581,7 +566,6 @@ body {
   padding: 2px 6px; border-radius: 8px;
 }
 
-/* ========= INFO CARD ========= */
 .info-card-title {
   font-size: 13px; font-weight: 600;
   color: var(--gray-700);
@@ -666,7 +650,6 @@ body {
 .notif-item-date  { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
 .notif-item-actions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
 
-/* ========= DESGLOSE ========= */
 .desglose-header {
   display: flex; align-items: center; gap: 12px;
   margin-bottom: 1.25rem;
@@ -691,7 +674,6 @@ body {
 
 .form-actions { display: flex; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 8px; }
 
-/* Table desglose - igual que v1 */
 .table-container {
   background: white;
   border-radius: 20px;
@@ -737,7 +719,6 @@ body {
 .table-professional tr:nth-child(even) td { background: var(--gray-50); }
 .table-professional tr:hover td { background: #f1f5f9; }
 
-/* ========= PROFILE ========= */
 .profile-avatar-section {
   display: flex; align-items: center; gap: 1rem;
   margin-bottom: 0.5rem;
@@ -756,7 +737,6 @@ body {
 .profile-name  { font-size: 16px; font-weight: 700; color: var(--gray-900); }
 .profile-email { font-size: 13px; color: var(--gray-500); margin-bottom: 6px; }
 
-/* ========= BUTTONS ========= */
 .btn-primary-sm {
   padding: 7px 14px;
   background: var(--primary); color: white;
@@ -841,15 +821,12 @@ body {
   }
 }
 
-/* ========= RESPONSIVE — TABLET ========= */
 @media (max-width: 900px) {
   .form-grid-4 { grid-template-columns: repeat(2, 1fr); }
   .form-grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ========= RESPONSIVE — MOBILE ========= */
 @media (max-width: 768px) {
-  /* Sidebar vire drawer sou mobil */
   .sidebar {
     transform: translateX(-100%);
   }
@@ -858,13 +835,10 @@ body {
   }
   .sidebar-overlay { display: block; }
 
-  /* Main okipe tout espas la */
   .layout-main { margin-left: 0; }
 
-  /* Topbar — montre bouton menu */
   .topbar-menu-btn { display: flex; }
 
-  /* Bottom nav — vizib sou mobil */
   .bottom-nav {
     display: flex;
     position: fixed;
@@ -895,45 +869,34 @@ body {
     border-radius: 50%; background: var(--danger);
   }
 
-  /* Padding pou bottom nav */
   .layout-content { padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0)); }
 
-  /* Content padding mobil */
   .page-content { padding: 14px 14px; }
 
-  /* Stats 2 kolòn */
   .dashboard-stats { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 
-  /* Product grid 2 kolòn */
   .product-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .product-card { padding: 1rem; }
   .product-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
   .product-title { font-size: 12px; }
 
-  /* Form grids */
   .form-grid-4 { grid-template-columns: repeat(2, 1fr); }
   .form-grid-3 { grid-template-columns: 1fr; }
 
-  /* Auth card */
   .auth-card { padding: 1.5rem; }
 
-  /* Welcome */
   .welcome-card { padding: 1.75rem; }
   .welcome-title { font-size: 1.5rem; }
 
-  /* Admin tabs scroll */
   .admin-tabs { width: 100%; overflow-x: auto; }
 
-  /* Table desglose scroll horizontal */
   .table-professional { font-size: 0.75rem; }
   .table-professional th,
   .table-professional td { padding: 5px 4px; }
 
-  /* Desglose header */
   .desglose-header { flex-wrap: wrap; gap: 8px; }
 }
 
-/* ========= ABOUT PAGE ========= */
 .about-logo {
   width: 56px; height: 56px;
   border-radius: 14px;
@@ -1044,7 +1007,6 @@ body {
   .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ========= INSTALL BUTTON ========= */
 .install-btn {
   position: fixed;
   bottom: calc(var(--bottom-nav-height) + 12px);
@@ -1067,12 +1029,10 @@ body {
 }
 .install-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
-/* Sou desktop — kache */
 @media (min-width: 769px) {
   .install-btn { display: none; }
 }
 
-/* iOS Hint */
 .ios-hint-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.5);

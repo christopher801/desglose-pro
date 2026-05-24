@@ -18,7 +18,6 @@ const systems = [
   { name: 'Ventana Tradicional', nuevo: false },
   { name: 'Ventana P-40 Proyectada', nuevo: true },
   { name: 'Puerta Comercial', nuevo: false },
-  { name: 'Glass Cutting Optimizer', nuevo: true },
 ]
 
 const techInfo = [
