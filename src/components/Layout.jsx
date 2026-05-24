@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { logoutUser } from '../services/authService'
+import InstallButton from './InstallButton'
 
 const navItems = [
   { path: '/dashboard', icon: '⊞', label: 'Inicio' },
@@ -122,6 +123,9 @@ export default function Layout({ children, unreadCount = 0 }) {
           ))}
         </nav>
       </div>
+      
+      {/* InstallButton — deyò layout-main pou pa gen konflì ak bottom-nav */}
+      <InstallButton />
     </div>
   )
 }
