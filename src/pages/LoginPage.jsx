@@ -37,7 +37,13 @@ export default function LoginPage() {
     <div className="auth-page">
       <div className="auth-card">
         <Link to="/" className="auth-logo-wrap">
-          <div className="auth-logo">DP</div>
+        <div className="auth-logo">
+         <img 
+            src="/icons/icon-384x384.png" 
+            alt="Desglose Pro" 
+            style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px' }}
+            />
+        </div>
           <span className="auth-logo-name">Desglose Pro</span>
         </Link>
 

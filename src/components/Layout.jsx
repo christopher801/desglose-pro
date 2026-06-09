@@ -33,7 +33,13 @@ export default function Layout({ children, unreadCount = 0 }) {
       {/* SIDEBAR — desktop */}
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">DP</div>
+          <div className="sidebar-logo-icon">
+           <img 
+              src="/icons/icon-384x384.png" 
+               alt="Desglose Pro" 
+              style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px' }}
+           />
+          </div> 
           <div>
             <div className="sidebar-logo-name">Desglose Pro</div>
             <div className="sidebar-logo-ver">v2.0.0</div>

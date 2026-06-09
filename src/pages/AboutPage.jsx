@@ -35,7 +35,13 @@ export default function AboutPage() {
 
         {/* Hero */}
         <div className="card-modern mb-4" style={{ textAlign: 'center', padding: '2rem 1.5rem' }}>
-          <div className="about-logo">DP</div>
+          <div className="about-logo">
+  <img 
+    src="/icons/icon-384x384.png" 
+    alt="Desglose Pro" 
+    style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px' }}
+  />
+</div>
           <h1 className="about-app-name">Desglose Pro</h1>
           <span className="badge badge-active" style={{ marginBottom: '0.75rem', display: 'inline-block' }}>
             v2.0.0
