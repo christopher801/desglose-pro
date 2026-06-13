@@ -7,7 +7,7 @@ const systems = [
   { name: 'Ventana P-92', icon: '🪟', path: '/desglose/p92', nuevo: false },
   { name: 'Ventana P-65', icon: '🪟', path: '/desglose/p65', nuevo: false },
   { name: 'Ventana Tradicional', icon: '🪟', path: '/desglose/tradicional', nuevo: false },
-  { name: 'Ventana P-40', icon: '🪟', path: '/desglose/p40', nuevo: true },
+  { name: 'Ventana P-40', icon: '🪟', path: '/desglose/p40', nuevo: false },
   { name: 'Puerta Comercial', icon: '🚪', path: '/desglose/puerta', nuevo: false },
 ]
 

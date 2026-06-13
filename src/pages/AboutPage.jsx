@@ -73,7 +73,7 @@ export default function AboutPage() {
             <div key={i} className="about-sys-row">
               <div className="about-sys-dot" />
               <span className="about-sys-name">{s.name}</span>
-              {s.nuevo && <span className="product-badge" style={{ position: 'static' }}>Nuevo</span>}
+              {s.nuevo && <span className="product-badge" style={{ position: 'static' }}></span>}
             </div>
           ))}
         </div>
@@ -104,7 +104,7 @@ export default function AboutPage() {
         </div>
         {/* Footer */}
         <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--gray-400)', paddingBottom: '1rem' }}>
-          © 2026 Christopher — Todos los derechos reservados
+          © 2026 Desglose Pro — Todos los derechos reservados
         </p>
 
       </div>
