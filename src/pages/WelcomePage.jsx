@@ -1,7 +1,15 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function WelcomePage() {
+  const { isAuthenticated, isActive } = useAuth()
+
+  // Si deja konekte — redirije dirèkteman, pa montre Welcome page
+  if (isAuthenticated) {
+    return <Navigate to={isActive ? '/dashboard' : '/pending'} replace />
+  }
+
   return (
     <div className="welcome-page">
       <div className="welcome-card">
