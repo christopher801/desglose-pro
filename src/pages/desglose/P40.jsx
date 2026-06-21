@@ -3,26 +3,42 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/Layout'
 import FractionUtils from '../../utils/fraction'
 
-// P-40 Proyectada — 1 hoja sèlman, pa gen hojas option
-const calcular = (ancho, alto) => {
+// P-40 Proyectada — 1 oswa 2 hojas
+const calcular = (ancho, alto, hojas) => {
+  if (hojas === 1) {
     return {
       cabVen: ancho - 2,
       latVen: alto - 2,
       marco: ancho - (1/8),
       latMarco: alto - (1/8),
       vidrioAncho: ancho - (6 + 3/8),
-      vidrioAlto: alto - (6 + 1/4)
+      vidrioAlto: alto - (6 + 1/4),
+      divisor: null
+    }
+  } else {
+    // 2 hojas
+    const divisor = (ancho - 10.875) // 22.9375 pou egzamp lan
+    return {
+      cabVen: (ancho - 2.875) / 2,
+      latVen: alto - 2,
+      marco: ancho - (1/8),
+      latMarco: alto - (1/8),
+      vidrioAncho: divisor / 2,
+      vidrioAlto: alto - 6,
+      divisor: divisor
     }
   }
+}
 
 const buildPrintHtml = (projectInfo, results) => {
   const date = new Date().toLocaleDateString('es-DO')
   const rows = results.map(row => `
     <tr>
-      <td>${row.hueco}</td><td>${row.ancho}</td><td>${row.alto}</td>
+      <td>${row.hueco}</td><td>${row.ancho}</td><td>${row.alto}</td><td>${row.hojas}</td>
       <td>${row.cabVen}</td><td>${row.latVen}</td>
       <td>${row.marco}</td><td>${row.latMarco}</td>
       <td>${row.vidrioAncho}</td><td>${row.vidrioAlto}</td>
+      <td>${row.divisor || '—'}</td>
     </tr>`).join('')
   return `<!DOCTYPE html><html><head><title>VENTANA PROYECTADA P-40</title>
   <style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:.5in;background:white}
@@ -44,10 +60,10 @@ const buildPrintHtml = (projectInfo, results) => {
   </div>
   <table><thead>
     <tr>
-      <th rowspan="2">Hueco</th><th rowspan="2">Ancho</th><th rowspan="2">Alto</th>
-      <th colspan="2">Hoja</th><th colspan="2">Marco</th><th colspan="2">Vidrio</th>
+      <th rowspan="2">Hueco</th><th rowspan="2">Ancho</th><th rowspan="2">Alto</th><th rowspan="2">Hojas</th>
+      <th colspan="2">Hoja</th><th colspan="2">Marco</th><th colspan="2">Vidrio</th><th rowspan="2">Divisor</th>
     </tr>
-    <tr><th>Cab-ven</th><th>Lat-ven</th><th>Cab-marco</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th></tr>
+    <tr><th>Cab-ven</th><th>Lat-ven</th><th>Cab-marco</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th>
   </thead><tbody>${rows}</tbody></table>
   <div class="footer"><span>© 2026 - Christopher</span><span>${date}</span></div>
   </body></html>`
@@ -55,7 +71,7 @@ const buildPrintHtml = (projectInfo, results) => {
 
 export default function P40() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ hueco: 1, ancho: '', alto: '' })
+  const [form, setForm] = useState({ hueco: 1, ancho: '', alto: '', hojas: 1 })
   const [results, setResults] = useState([])
   const [projectInfo, setProjectInfo] = useState({ cuenta: '', obra: '', color: '' })
   const [error, setError] = useState('')
@@ -69,24 +85,27 @@ export default function P40() {
     const anchoDec = FractionUtils.parseFraction(form.ancho)
     const altoDec = FractionUtils.parseFraction(form.alto)
     if (anchoDec <= 0 || altoDec <= 0) { setError('❌ Las medidas deben ser mayores a 0'); return }
-    const calc = calcular(anchoDec, altoDec)
+    const hojas = parseInt(form.hojas, 10)
+    const calc = calcular(anchoDec, altoDec, hojas)
     setResults([...results, {
       hueco: form.hueco,
       ancho: form.ancho,
       alto: form.alto,
+      hojas: hojas === 1 ? '1 Hoja' : '2 Hojas',
       cabVen: FractionUtils.toSixteenths(calc.cabVen),
       latVen: FractionUtils.toSixteenths(calc.latVen),
       marco: FractionUtils.toSixteenths(calc.marco),
       latMarco: FractionUtils.toSixteenths(calc.latMarco),
       vidrioAncho: FractionUtils.toSixteenths(calc.vidrioAncho),
-      vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto)
+      vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto),
+      divisor: calc.divisor ? FractionUtils.toSixteenths(calc.divisor) : null
     }])
-    setForm({ hueco: parseInt(form.hueco) + 1, ancho: '', alto: '' })
+    setForm({ hueco: parseInt(form.hueco) + 1, ancho: '', alto: '', hojas: form.hojas })
   }
 
   const handleReset = () => {
     setResults([]); setError('')
-    setForm({ hueco: 1, ancho: '', alto: '' })
+    setForm({ hueco: 1, ancho: '', alto: '', hojas: 1 })
     setProjectInfo({ cuenta: '', obra: '', color: '' })
   }
 
@@ -122,8 +141,7 @@ export default function P40() {
         </div>
 
         <div className="card-modern mb-4">
-          {/* P-40 pa gen hojas — sèlman Hueco, Ancho, Alto */}
-          <div className="form-grid-3">
+          <div className="form-grid-4">
             <div className="auth-field">
               <label className="auth-label">Hueco #</label>
               <input type="number" name="hueco" value={form.hueco} onChange={handleFormChange} className="auth-input" />
@@ -135,6 +153,13 @@ export default function P40() {
             <div className="auth-field">
               <label className="auth-label">Alto</label>
               <input type="text" name="alto" value={form.alto} onChange={handleFormChange} placeholder='ej: 27 15/16"' className="auth-input" />
+            </div>
+            <div className="auth-field">
+              <label className="auth-label">Hojas</label>
+              <select name="hojas" value={form.hojas} onChange={handleFormChange} className="auth-input">
+                <option value={1}>1 Hoja</option>
+                <option value={2}>2 Hojas</option>
+              </select>
             </div>
           </div>
           {error && <div className="auth-error" style={{ marginTop: '0.5rem' }}>{error}</div>}
@@ -148,11 +173,11 @@ export default function P40() {
           <div className="table-container">
             <div className="table-title">VENTANA PROYECTADA P-40</div>
             <div className="table-responsive">
-              <table className="table-professional" style={{ minWidth: '780px' }}>
+              <table className="table-professional" style={{ minWidth: '950px' }}>
                 <thead>
                   <tr>
-                    <th rowSpan="2">Hueco</th><th rowSpan="2">Ancho</th><th rowSpan="2">Alto</th>
-                    <th colSpan="2">Hoja</th><th colSpan="2">Marco</th><th colSpan="2">Vidrio</th>
+                    <th rowSpan="2">Hueco</th><th rowSpan="2">Ancho</th><th rowSpan="2">Alto</th><th rowSpan="2">Hojas</th>
+                    <th colSpan="2">Hoja</th><th colSpan="2">Marco</th><th colSpan="2">Vidrio</th><th rowSpan="2">Divisor</th>
                   </tr>
                   <tr>
                     <th>Cab-ven</th><th>Lat-ven</th><th>Cab-marco</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th>
@@ -161,10 +186,11 @@ export default function P40() {
                 <tbody>
                   {results.map((row, idx) => (
                     <tr key={idx}>
-                      <td>{row.hueco}</td><td>{row.ancho}</td><td>{row.alto}</td>
+                      <td>{row.hueco}</td><td>{row.ancho}</td><td>{row.alto}</td><td>{row.hojas}</td>
                       <td>{row.cabVen}</td><td>{row.latVen}</td>
                       <td>{row.marco}</td><td>{row.latMarco}</td>
                       <td>{row.vidrioAncho}</td><td>{row.vidrioAlto}</td>
+                      <td>{row.divisor || '—'}</td>
                     </tr>
                   ))}
                 </tbody>
