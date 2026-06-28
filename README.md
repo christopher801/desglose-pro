@@ -1,4 +1,4 @@
-# 🪟 DESGLOSE PRO V2.0.0
+# 🪟 DESGLOSE PRO V3.0.0
 
 **Sistema profesional de cálculo para carpintería de aluminio**
 
@@ -39,110 +39,7 @@ Aplicación profesional para talleres de aluminio que calcula automáticamente t
 | Bootstrap | 5.3.3 | UI Components |
 | html2pdf.js | 0.10.1 | Exportación PDF |
 
-## 📁 Estructura del proyecto
-
-desglose-v2/
-├── public/
-│ ├── favicon.svg
-│ ├── manifest.json
-│ ├── sw.js
-│ └── robots.txt
-├── src/
-│ ├── app/
-│ │ ├── App.jsx
-│ │ └── routes.jsx
-│ ├── components/
-│ │ ├── Navbar.jsx
-│ │ ├── FormInputs.jsx
-│ │ ├── TableResults.jsx
-│ │ └── ProtectedRoute.jsx
-│ ├── pages/
-│ │ ├── Login.jsx
-│ │ ├── Register.jsx
-│ │ ├── Dashboard.jsx
-│ │ ├── Calculator.jsx
-│ │ └── Admin.jsx
-│ ├── systems/
-│ │ ├── p92.js
-│ │ ├── p65.js
-│ │ ├── tradicional.js
-│ │ └── puerta-comercial.js
-│ ├── services/
-│ │ ├── firebase.js
-│ │ ├── authService.js
-│ │ └── userService.js
-│ ├── context/
-│ │ └── AuthContext.jsx
-│ ├── utils/
-│ │ └── fraction.js
-│ └── styles/
-│ └── main.css
-├── .env
-├── .gitignore
-├── package.json
-├── vite.config.js
-└── README.md
-
-text
-
-## 🛠️ Instalación
-
-```bash
-# Clonar el repositorio
-git clone https://github.com/christopher801/desglose-pro.git
-cd desglose-v2
-
-# Instalar dependencias
-npm install
-
-# Configurar Firebase (crear archivo .env)
-cp .env.example .env
-
-# Ejecutar en modo desarrollo
-npm run dev
-
-# Construir para producción
-npm run build
-
-# Vista previa de la construcción
-npm run preview
-🔧 Configuración de Firebase
-Crea un proyecto en Firebase Console
-
-Activa Authentication (Email/Password)
-
-Activa Firestore Database
-
-Copia la configuración en .env:
-
-env
-VITE_FIREBASE_API_KEY=tu_api_key
-VITE_FIREBASE_AUTH_DOMAIN=tu_auth_domain
-VITE_FIREBASE_PROJECT_ID=tu_project_id
-VITE_FIREBASE_STORAGE_BUCKET=tu_storage_bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=tu_messaging_sender_id
-VITE_FIREBASE_APP_ID=tu_app_id
-📱 Uso
-Para usuarios normales:
-Regístrate con email y contraseña
-
-Espera a que el administrador active tu cuenta
-
-Una vez activada, selecciona el sistema (P-92, P-65, TRADICIONAL o PUERTA)
-
-Ingresa las medidas (ANCHO y ALTO)
-
-Haz clic en AGREGAR para añadir al desglose
-
-Usa PRINT o EXPORT PDF para obtener el desglose profesional
-
-Para administradores:
-Inicia sesión con cuenta de administrador
-
-Ve al panel de administración (/admin)
-
-Activa o bloquea usuarios según sea necesario
-
+#
 
 👨‍💻 Autor
 Christopher

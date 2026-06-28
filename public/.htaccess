@@ -7,7 +7,6 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
-# Cache PWA files
 <FilesMatch "\.(js|css|html|json|svg|png)$">
   Header set Cache-Control "max-age=31536000, public"
 </FilesMatch>
