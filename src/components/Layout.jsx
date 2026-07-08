@@ -7,6 +7,7 @@ import InstallButton from './InstallButton'
 const navItems = [
   { path: '/dashboard', icon: '⊞', label: 'Inicio' },
   { path: '/desglose', icon: '📐', label: 'Sistemas' },
+  { path: '/finanzas', icon: '💰', label: 'Finanzas' },  // 👈 NOUVO
   { path: '/about', icon: 'ℹ️', label: 'Acerca de' },
   { path: '/perfil', icon: '👤', label: 'Perfil' },
 ]

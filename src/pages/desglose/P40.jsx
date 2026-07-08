@@ -65,7 +65,7 @@ const buildPrintHtml = (projectInfo, results) => {
     </tr>
     <tr><th>Cab-ven</th><th>Lat-ven</th><th>Cab-marco</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th>
   </thead><tbody>${rows}</tbody></table>
-  <div class="footer"><span>© 2026 - Christopher</span><span>${date}</span></div>
+  <div class="footer"><span>© 2026 - Desglose Pro</span><span>${date}</span></div>
   </body></html>`
 }
 
