@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Layout from '../components/Layout'
 
+// 👇 CHANJE EMOJI YO AK NON ICON BOOTSTRAP (SAN "bi")
 const systems = [
-  { name: 'Ventana P-92', icon: '🪟', path: '/desglose/p92', nuevo: false },
-  { name: 'Ventana P-65', icon: '🪟', path: '/desglose/p65', nuevo: false },
-  { name: 'Ventana Tradicional', icon: '🪟', path: '/desglose/tradicional', nuevo: false },
-  { name: 'Ventana P-40', icon: '🪟', path: '/desglose/p40', nuevo: false },
-  { name: 'Puerta Comercial', icon: '🚪', path: '/desglose/puerta', nuevo: false },
+  { name: 'Ventana P-92', icon: 'bi-window', path: '/desglose/p92', nuevo: false },
+  { name: 'Ventana P-65', icon: 'bi-window', path: '/desglose/p65', nuevo: false },
+  { name: 'Ventana Tradicional', icon: 'bi-window', path: '/desglose/tradicional', nuevo: false },
+  { name: 'Ventana P-40', icon: 'bi-window', path: '/desglose/p40', nuevo: false },
+  { name: 'Puerta Comercial', icon: 'bi-door-open', path: '/desglose/puerta', nuevo: false },
+  { name: 'Control de Gastos', icon: 'bi-cash-coin', path: '/Finanzas', nuevo: false },
 ]
 
 export default function Dashboard() {
@@ -66,9 +68,8 @@ export default function Dashboard() {
               {systems.map((sys, idx) => (
                 <Link to={sys.path} key={idx} className="product-card">
                   {sys.nuevo && <span className="product-badge">Nuevo</span>}
-                  <div className="product-icon">{sys.icon}</div>
+                  <i className={`bi ${sys.icon} product-icon`}></i>
                   <div className="product-title">{sys.name}</div>
-                  <div className="product-desc">Abrir sistema →</div>
                 </Link>
               ))}
             </div>

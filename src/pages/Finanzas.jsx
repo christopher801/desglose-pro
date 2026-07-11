@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../components/Layout'
 import { useFinance, CATEGORIAS } from '../context/FinanceContext'
-import GeneratePDF from '../components/GeneratePDF'  // 👈 Usaremos el nuevo componente
+import GeneratePDF from '../components/GeneratePDF'
 
 export default function Finanzas() {
   const {
@@ -61,7 +61,6 @@ export default function Finanzas() {
         categoria: form.categoria,
         fecha: form.fecha
       })
-      // Resetear formulario
       setForm(prev => ({
         ...prev,
         descripcion: '',
@@ -114,7 +113,10 @@ export default function Finanzas() {
     <Layout>
       <div className="page-content">
 
-        <h1 className="page-title">💰 Control de Finanzas</h1>
+        {/* 👇 CHANJE TIT LA AK ICON BOOTSTRAP */}
+        <h1 className="page-title">
+          <i className="bi bi-wallet2 me-2"></i> Control de Gastos
+        </h1>
 
         {/* Tarjetas de resumen */}
         <div className="dashboard-stats mb-4">
@@ -156,8 +158,8 @@ export default function Finanzas() {
                   className="auth-input"
                   required
                 >
-                  <option value="ingreso">💰 Ingreso</option>
-                  <option value="gasto">💸 Gasto</option>
+                  <option value="ingreso">Ingreso</option>   {/* 👈 WETE EMOJI */}
+                  <option value="gasto">Gasto</option>       {/* 👈 WETE EMOJI */}
                 </select>
               </div>
               <div className="auth-field">
@@ -223,9 +225,7 @@ export default function Finanzas() {
         {/* Filtros y tabla */}
         <div className="card-modern">
           <div className="admin-header">
-            <h3 className="section-title" style={{ marginBottom: 0 }}>Historial</h3>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {/* 👇 Usamos el nuevo componente GeneratePDF */}
               <GeneratePDF 
                 movimientos={movimientosFiltrados}
                 totalIngresos={totalFiltradoIngresos}
@@ -236,7 +236,7 @@ export default function Finanzas() {
                 onClick={handleLimpiarFiltros}
                 className="btn-secondary-sm"
               >
-                ↻ Limpiar
+                <i className="bi bi-arrow-counterclockwise me-1"></i> Limpiar  {/* 👈 CHANJE ↻ */}
               </button>
             </div>
           </div>
@@ -251,8 +251,8 @@ export default function Finanzas() {
                 className="auth-input"
               >
                 <option value="todos">Todos</option>
-                <option value="ingreso">💰 Ingresos</option>
-                <option value="gasto">💸 Gastos</option>
+                <option value="ingreso">Ingresos</option>   {/* 👈 WETE EMOJI */}
+                <option value="gasto">Gastos</option>       {/* 👈 WETE EMOJI */}
               </select>
             </div>
             <div className="auth-field">
@@ -305,7 +305,8 @@ export default function Finanzas() {
                       </td>
                       <td>
                         <span className={`badge ${m.tipo === 'ingreso' ? 'badge-active' : 'badge-inactive'}`}>
-                          {m.tipo === 'ingreso' ? '💰 Ingreso' : '💸 Gasto'}
+                          <i className={`bi ${m.tipo === 'ingreso' ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle'} me-1`}></i>
+                          {m.tipo === 'ingreso' ? 'Ingreso' : 'Gasto'}
                         </span>
                       </td>
                       <td>{m.categoria}</td>
@@ -323,7 +324,7 @@ export default function Finanzas() {
                           className="btn-danger-sm"
                           title="Eliminar"
                         >
-                          ✕
+                          <i className="bi bi-trash"></i>   
                         </button>
                       </td>
                     </tr>

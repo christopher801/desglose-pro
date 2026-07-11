@@ -4,12 +4,17 @@ import { useAuth } from '../context/AuthContext'
 import { logoutUser } from '../services/authService'
 import InstallButton from './InstallButton'
 
+const WHATSAPP_NUMBER = '18494850059'
+const WHATSAPP_MESSAGE = 'Hola, me comunico desde Desglose Pro 📐'
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
+
+// 👇 CHANJE NAVITEMS LA AVEC NON ICON BOOTSTRAP (SAN "bi")
 const navItems = [
-  { path: '/dashboard', icon: '⊞', label: 'Inicio' },
-  { path: '/desglose', icon: '📐', label: 'Sistemas' },
-  { path: '/finanzas', icon: '💰', label: 'Finanzas' },  // 👈 NOUVO
-  { path: '/about', icon: 'ℹ️', label: 'Acerca de' },
-  { path: '/perfil', icon: '👤', label: 'Perfil' },
+  { path: '/dashboard', icon: 'bi-grid', label: 'Inicio' },
+  { path: '/desglose', icon: 'bi-layers', label: 'Desglose' },
+  { path: '/finanzas', icon: 'bi-cash-coin', label: 'Gastos' },
+  { path: '/about', icon: 'bi-info-circle', label: 'Acerca de' },
+  { path: '/perfil', icon: 'bi-person', label: 'Perfil' },
 ]
 
 export default function Layout({ children, unreadCount = 0 }) {
@@ -25,8 +30,9 @@ export default function Layout({ children, unreadCount = 0 }) {
 
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/')
 
+  // 👇 Admin tou ajoute icon Bootstrap
   const allNavItems = isAdmin
-    ? [...navItems, { path: '/admin', icon: '🛡️', label: 'Admin', badge: unreadCount }]
+    ? [...navItems, { path: '/admin', icon: 'bi-shield-lock', label: 'Admin', badge: unreadCount }]
     : navItems
 
   return (
@@ -34,16 +40,9 @@ export default function Layout({ children, unreadCount = 0 }) {
       {/* SIDEBAR — desktop */}
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">
-           <img 
-              src="/icons/icon-384x384.png" 
-               alt="Desglose Pro" 
-              style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px' }}
-           />
-          </div> 
           <div>
-            <div className="sidebar-logo-name">Desglose Pro</div>
-            <div className="sidebar-logo-ver">v2.0.0</div>
+            <div className="sidebar-logo-name">DESGLOSE PRO</div>
+            <div className="sidebar-logo-ver">v4.9.0</div>
           </div>
         </div>
 
@@ -56,7 +55,7 @@ export default function Layout({ children, unreadCount = 0 }) {
               className={`sidebar-item ${isActive(item.path) ? 'sidebar-item-active' : ''}`}
               onClick={() => setSidebarOpen(false)}
             >
-              <span className="sidebar-item-icon">{item.icon}</span>
+              <i className={`bi ${item.icon}`}></i>
               <span className="sidebar-item-label">{item.label}</span>
               {item.badge > 0 && (
                 <span className="sidebar-badge">{item.badge}</span>
@@ -76,7 +75,7 @@ export default function Layout({ children, unreadCount = 0 }) {
             </div>
           </div>
           <button className="sidebar-logout" onClick={handleLogout} title="Cerrar sesión">
-            ⏻
+            <i className="bi bi-box-arrow-right"></i>
           </button>
         </div>
       </aside>
@@ -95,7 +94,7 @@ export default function Layout({ children, unreadCount = 0 }) {
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-label="Abrir menú"
           >
-            ☰
+            <i className={sidebarOpen ? "bi bi-x-lg" : "bi bi-list"}></i>
           </button>
           <div className="topbar-title">
             {allNavItems.find(i => isActive(i.path))?.label || 'Desglose Pro'}
@@ -103,11 +102,17 @@ export default function Layout({ children, unreadCount = 0 }) {
           <div className="topbar-right">
             {isAdmin && unreadCount > 0 && (
               <Link to="/admin" className="topbar-notif-btn" title="Notificaciones">
-                🔔
+                <i className="bi bi-bell"></i>  {/* 👇 Chanje 🔔 an icon Bootstrap */}
                 <span className="topbar-notif-dot">{unreadCount}</span>
               </Link>
             )}
           </div>
+          <a href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer" 
+            className="topbar-notif-btn">
+            <i className="bi bi-headset me-1"></i>
+          </a>
         </header>
 
         {/* Contenido */}
@@ -123,7 +128,8 @@ export default function Layout({ children, unreadCount = 0 }) {
               to={item.path}
               className={`bottom-nav-item ${isActive(item.path) ? 'bottom-nav-item-active' : ''}`}
             >
-              <span className="bottom-nav-icon">{item.icon}</span>
+              {/* 👇 CHANJE <span> an <i> POU ICON BOOTSTRAP */}
+              <i className={`bi ${item.icon}`}></i>
               <span className="bottom-nav-label">{item.label}</span>
               {item.badge > 0 && <span className="bottom-nav-dot" />}
             </Link>

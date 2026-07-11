@@ -35,20 +35,20 @@ export default function AdminPage() {
   const handleUnlock = async (userId) => {
     const result = await unlockUser(userId)
     if (result.success) {
-      showMessage('✅ Usuario activado exitosamente')
+      showMessage('✅ Usuario activado exitosamente')  // 👈 GARDE POU MESAJ (TÈKS)
       loadData()
     } else {
-      showMessage('❌ Error al activar usuario')
+      showMessage('❌ Error al activar usuario')       // 👈 GARDE POU MESAJ (TÈKS)
     }
   }
 
   const handleLock = async (userId) => {
     const result = await lockUser(userId)
     if (result.success) {
-      showMessage('🔒 Usuario bloqueado')
+      showMessage('🔒 Usuario bloqueado')              // 👈 GARDE POU MESAJ (TÈKS)
       loadData()
     } else {
-      showMessage('❌ Error al bloquear usuario')
+      showMessage('❌ Error al bloquear usuario')      // 👈 GARDE POU MESAJ (TÈKS)
     }
   }
 
@@ -67,7 +67,8 @@ export default function AdminPage() {
       <Layout>
         <div className="page-content">
           <div className="card-modern text-center p-5">
-            <div style={{ fontSize: '3rem' }}>⛔</div>
+            {/* 👇 CHANJE EMOJI AN ICON BOOTSTRAP */}
+            <i className="bi bi-shield-exclamation" style={{ fontSize: '3rem' }}></i>
             <h4 style={{ marginTop: '1rem' }}>Acceso denegado</h4>
             <p className="text-muted">No tienes permisos de administrador</p>
           </div>
@@ -86,14 +87,19 @@ export default function AdminPage() {
       <div className="page-content">
 
         <div className="admin-header">
-          <h1 className="page-title">Panel de administración</h1>
-          <button className="btn-secondary-sm" onClick={loadData}>↺ Actualizar</button>
+          <h1 className="page-title">
+            <i className="bi bi-shield-lock me-2"></i> Panel de administración
+          </h1>
+          <button className="btn-secondary-sm" onClick={loadData}>
+            <i className="bi bi-arrow-clockwise me-1"></i> Actualizar   {/* 👈 CHANJE ↺ */}
+          </button>
         </div>
 
         {/* Notif pendientes */}
         {pendingUsers > 0 && (
           <div className="notif-strip">
-            🔔 <strong>{pendingUsers}</strong> usuario{pendingUsers > 1 ? 's' : ''} esperando activación
+            <i className="bi bi-bell me-1"></i>   {/* 👈 CHANJE 🔔 */}
+            <strong>{pendingUsers}</strong> usuario{pendingUsers > 1 ? 's' : ''} esperando activación
           </div>
         )}
 
@@ -102,19 +108,27 @@ export default function AdminPage() {
         {/* Stats */}
         <div className="dashboard-stats mb-4">
           <div className="stat-card">
-            <div className="stat-card-title">Total usuarios</div>
+            <div className="stat-card-title">
+              <i className="bi bi-people me-1"></i> Total usuarios
+            </div>
             <div className="stat-card-value">{totalUsers}</div>
           </div>
           <div className="stat-card">
-            <div className="stat-card-title">Activos</div>
+            <div className="stat-card-title">
+              <i className="bi bi-check-circle me-1"></i> Activos
+            </div>
             <div className="stat-card-value" style={{ color: 'var(--success)' }}>{activeUsers}</div>
           </div>
           <div className="stat-card">
-            <div className="stat-card-title">Pendientes</div>
+            <div className="stat-card-title">
+              <i className="bi bi-clock-history me-1"></i> Pendientes
+            </div>
             <div className="stat-card-value" style={{ color: 'var(--warning)' }}>{pendingUsers}</div>
           </div>
           <div className="stat-card">
-            <div className="stat-card-title">Notificaciones</div>
+            <div className="stat-card-title">
+              <i className="bi bi-bell me-1"></i> Notificaciones
+            </div>
             <div className="stat-card-value" style={{ color: 'var(--primary)' }}>{unreadNotifs}</div>
           </div>
         </div>
@@ -125,13 +139,13 @@ export default function AdminPage() {
             className={`admin-tab ${tab === 'users' ? 'admin-tab-active' : ''}`}
             onClick={() => setTab('users')}
           >
-            👥 Usuarios ({totalUsers})
+            <i className="bi bi-people me-1"></i> Usuarios ({totalUsers})   {/* 👈 CHANJE 👥 */}
           </button>
           <button
             className={`admin-tab ${tab === 'notifs' ? 'admin-tab-active' : ''}`}
             onClick={() => setTab('notifs')}
           >
-            🔔 Notificaciones {unreadNotifs > 0 && `(${unreadNotifs})`}
+            <i className="bi bi-bell me-1"></i> Notificaciones {unreadNotifs > 0 && `(${unreadNotifs})`}   {/* 👈 CHANJE 🔔 */}
           </button>
         </div>
 
@@ -178,11 +192,11 @@ export default function AdminPage() {
                             {u.role !== 'admin' && (
                               !u.isActive ? (
                                 <button className="btn-success-sm" onClick={() => handleUnlock(u.id)}>
-                                  Activar
+                                  <i className="bi bi-unlock me-1"></i> Activar   {/* 👈 CHANJE BOUTON */}
                                 </button>
                               ) : (
                                 <button className="btn-warning-sm" onClick={() => handleLock(u.id)}>
-                                  Bloquear
+                                  <i className="bi bi-lock me-1"></i> Bloquear   {/* 👈 CHANJE BOUTON */}
                                 </button>
                               )
                             )}
@@ -217,11 +231,11 @@ export default function AdminPage() {
                         <div className="notif-item-actions">
                           {!n.read && (
                             <button className="btn-ghost-sm" onClick={() => handleMarkRead(n.id)}>
-                              Marcar leída
+                              <i className="bi bi-check-circle me-1"></i> Marcar leída   {/* 👈 AJOUTE ICON */}
                             </button>
                           )}
                           <button className="btn-danger-sm" onClick={() => handleDeleteNotif(n.id)}>
-                            Eliminar
+                            <i className="bi bi-trash me-1"></i> Eliminar   {/* 👈 CHANJE */}
                           </button>
                         </div>
                       </div>

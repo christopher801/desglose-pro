@@ -86,7 +86,7 @@ body {
   flex-shrink: 0;
 }
 
-.sidebar-logo-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+.sidebar-logo-name { font-size: 24px; font-weight: 800; color: var(--primary); }
 .sidebar-logo-ver  { font-size: 10px; color: var(--gray-400); }
 
 .sidebar-nav { flex: 1; padding: 12px 8px; overflow-y: auto; }
@@ -176,12 +176,18 @@ body {
 }
 
 .topbar-menu-btn {
-  display: none;
-  width: 36px; height: 36px;
+  display: flex;                
+  align-items: center; 
+  justify-content: center;
+  
+  width: 36px; 
+  height: 36px;
   border: 1px solid var(--gray-200);
   border-radius: 8px;
   background: transparent;
-  font-size: 18px;
+  font-size: 20px;          
+  line-height: 1;            
+  padding: 0;                   
   cursor: pointer;
   color: var(--gray-600);
   flex-shrink: 0;
@@ -201,12 +207,12 @@ body {
   border: 1px solid var(--gray-200);
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
+  font-size: 20px;
   text-decoration: none;
-  color: var(--gray-600);
-  transition: all 0.15s;
+  color: var(--shadow);
+  transition: all 0.2 ease;
 }
-.topbar-notif-btn:hover { background: var(--gray-50); }
+.topbar-notif-btn:hover { background: var(--success); }
 
 .topbar-notif-dot {
   position: absolute;
@@ -908,7 +914,7 @@ body {
 }
 
 .about-app-name {
-  font-size: 1.6rem; font-weight: 800;
+  font-size: 16px; font-weight: 800;
   color: var(--gray-900);
   margin-bottom: 0.5rem;
 }
@@ -1072,4 +1078,24 @@ body {
   border: none; border-radius: 10px;
   font-size: 14px; font-weight: 600;
   cursor: pointer; font-family: inherit;
+}
+
+.legal-content {
+  color: var(--gray-700);
+}
+
+.legal-content h2 {
+  color: var(--gray-800);
+}
+
+.legal-content ul {
+  margin: 0;
+}
+
+.legal-content li {
+  padding: 3px 0;
+}
+
+.legal-content strong {
+  color: var(--gray-800);
 }

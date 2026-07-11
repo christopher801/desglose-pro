@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
-import { FinanceProvider } from './context/FinanceContext'  // 👈 NUEVO
+import { FinanceProvider } from './context/FinanceContext'
 import { ProtectedRoute, AdminRoute, AuthRoute } from './components/ProtectedRoute'
 
 // Pages
@@ -14,7 +14,11 @@ import ProfilePage from './pages/ProfilePage'
 import AdminPage from './pages/AdminPage'
 import AboutPage from './pages/AboutPage'
 import GlassOptimizer from './pages/GlassOptimizer'
-import Finanzas from './pages/Finanzas'  // 👈 NUEVO
+import Finanzas from './pages/Finanzas'
+import PrivacyPolicy from './pages/legal/PrivacyPolicy'
+import TermsOfService from './pages/legal/TermsOfService'
+import CookiesPolicy from './pages/legal/CookiesPolicy'
+import License from './pages/legal/License'
 
 // Desglose
 import DesgloseIndex from './pages/desglose/DesgloseIndex'
@@ -28,20 +32,25 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        {/* 👇 FinanceProvider envuelve TODAS las rutas protegidas */}
         <FinanceProvider>
           <Routes>
-            {/* Paj piblik (sin FinanceProvider) */}
+            {/* ===== ROUT PIBLIK ===== */}
             <Route path="/" element={<WelcomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
 
-            {/* Paj pou user ki louvri men poko aktive */}
+            {/* ===== ROUT LEGAL (PIBLIK TOU) ===== */}
+            <Route path="/legal/privacidad" element={<PrivacyPolicy />} />
+            <Route path="/legal/terminos" element={<TermsOfService />} />
+            <Route path="/legal/cookies" element={<CookiesPolicy />} />
+            <Route path="/legal/licencia" element={<License />} />
+
+            {/* ===== ROUT POU USER POKO AKTIVE ===== */}
             <Route path="/pending" element={
               <AuthRoute><PendingPage /></AuthRoute>
             } />
 
-            {/* ===== RUTAS PROTEGIDAS (con FinanceProvider) ===== */}
+            {/* ===== ROUT PWOTEJE (REKOMANDE) ===== */}
             <Route path="/dashboard" element={
               <ProtectedRoute><Dashboard /></ProtectedRoute>
             } />
@@ -54,13 +63,11 @@ export default function App() {
             <Route path="/glass-optimizer" element={
               <ProtectedRoute><GlassOptimizer /></ProtectedRoute>
             } />
-
-            {/* FINANZAS — NUEVA RUTA */}
             <Route path="/finanzas" element={
               <ProtectedRoute><Finanzas /></ProtectedRoute>
             } />
 
-            {/* Sistèm desglose */}
+            {/* ===== DESGLOSE ===== */}
             <Route path="/desglose" element={
               <ProtectedRoute><DesgloseIndex /></ProtectedRoute>
             } />
@@ -80,12 +87,12 @@ export default function App() {
               <ProtectedRoute><PuertaComercial /></ProtectedRoute>
             } />
 
-            {/* Admin sèlman */}
+            {/* ===== ADMIN ===== */}
             <Route path="/admin" element={
               <AdminRoute><AdminPage /></AdminRoute>
             } />
 
-            {/* Redirect pou rout enkoni */}
+            {/* ===== REDIRECT SI WOUT ENKONI ===== */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </FinanceProvider>
