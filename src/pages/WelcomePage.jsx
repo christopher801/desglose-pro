@@ -3,6 +3,11 @@ import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function WelcomePage() {
+  const { isAuthenticated, isActive } = useAuth()
+
+  if (isAuthenticated) {
+    return <Navigate to={isActive ? '/dashboard' : '/pending'} replace />
+  }
   return (
     <>
       {/* ===== CSS ENTEGRE (responsif) ===== */}
