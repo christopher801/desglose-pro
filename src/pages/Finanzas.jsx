@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../components/Layout'
 import { useFinance, CATEGORIAS } from '../context/FinanceContext'
-import GeneratePDF from '../components/GeneratePDF'
+import GeneratePDF from '../components/finanzas/GeneratePDF'
 
 export default function Finanzas() {
   const {

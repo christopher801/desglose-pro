@@ -12,6 +12,7 @@ const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
 const navItems = [
   { path: '/dashboard', icon: 'bi-grid', label: 'Inicio' },
   { path: '/desglose', icon: 'bi-layers', label: 'Desglose' },
+  { path: '/glass-optimizer', icon: 'bi-square-half', label: 'Croquis' },   // 👈 nouvo antre
   { path: '/finanzas', icon: 'bi-cash-coin', label: 'Gastos' },
   { path: '/about', icon: 'bi-info-circle', label: 'Acerca de' },
   { path: '/perfil', icon: 'bi-person', label: 'Perfil' },
@@ -110,8 +111,15 @@ export default function Layout({ children, unreadCount = 0 }) {
           <a href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer" 
-            className="topbar-notif-btn">
+            className="topbar-notif-btn"
+            title="Ayuda y soporte">
             <i className="bi bi-headset me-1"></i>
+          </a>
+          <a href="#"
+          rel='noopener noreferrer'
+          className='topbar-notif-btn'
+          title="Historial">
+          <i className='bi bi-journal-text'></i>
           </a>
         </header>
 

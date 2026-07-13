@@ -212,7 +212,7 @@ body {
   color: var(--shadow);
   transition: all 0.2 ease;
 }
-.topbar-notif-btn:hover { background: var(--success); }
+.topbar-notif-btn:hover { background: var(--gray-300); }
 
 .topbar-notif-dot {
   position: absolute;

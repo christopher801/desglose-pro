@@ -17,6 +17,7 @@ const systems = [
   { name: 'Ventana P-40 Proyectada', nuevo: false },
   { name: 'Puerta Comercial', nuevo: false },
   { name: 'Control de Gastos', nuevo: false },
+  { name: 'Optimización de Corte de Vidrio', nuevo: true },
 ]
 
 export default function AboutPage() {
@@ -59,7 +60,7 @@ export default function AboutPage() {
             <div key={i} className="about-sys-row">
               <i className="bi bi-check-circle-fill"></i>
               <span className="about-sys-name">{s.name}</span>
-              {s.nuevo && <span className="product-badge" style={{ position: 'static' }}></span>}
+              {s.nuevo && <span className="product-badge" style={{ position: 'static' }}>Nuevo</span>}
             </div>
           ))}
         </div>
@@ -92,10 +93,19 @@ export default function AboutPage() {
         </div>
         
                 {/* Footer */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          gap: '1.5rem', 
+          flexWrap: 'wrap',
+          marginTop: '1.5rem',
+          paddingTop: '1.5rem',
+          borderTop: '1px solid var(--gray-200)'
+        }}>      
         <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--gray-400)', paddingBottom: '1rem' }}>
           © 2026 Desglose Pro — Todos los derechos reservados
         </p>
-
+        </div>
       </div>
     </Layout>
   )

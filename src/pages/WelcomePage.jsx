@@ -605,7 +605,7 @@ export default function WelcomePage() {
           <div className="landing-container">
             <nav className="landing-nav">
               <div className="landing-logo">
-                <span className="landing-logo-icon">📐</span>
+                <img className='landing-logo-icon' src="../public/icons/favicon-32x32.png" alt="logo" />
                 <span>Desglose Pro</span>
               </div>
               <div className="landing-nav-links">
@@ -762,6 +762,11 @@ export default function WelcomePage() {
                 <i className="bi bi-cash-coin"></i>
                 <h4>Control de Gastos</h4>
                 <p>Finanzas del taller</p>
+              </div>
+              <div className="landing-system-card">
+                <i className="bi bi-square-half"></i>
+                <h4>Croquins de vidrio</h4>
+                <p>Optimización de Corte de Vidrio</p>
               </div>
             </div>
           </div>
