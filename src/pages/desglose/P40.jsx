@@ -71,7 +71,7 @@ const buildPrintHtml = (projectInfo, results) => {
 
 export default function P40() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ hueco: 1, ancho: '', alto: '', hojas: 1 })
+  const [form, setForm] = useState({ hueco: '', ancho: '', alto: '', hojas: 1 })
   const [results, setResults] = useState([])
   const [projectInfo, setProjectInfo] = useState({ cuenta: '', obra: '', color: '' })
   const [error, setError] = useState('')
@@ -100,7 +100,8 @@ export default function P40() {
       vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto),
       divisor: calc.divisor ? FractionUtils.toSixteenths(calc.divisor) : null
     }])
-    setForm({ hueco: parseInt(form.hueco) + 1, ancho: '', alto: '', hojas: form.hojas })
+    setForm({ hueco: '', ancho: '', alto: '', hojas: form.hojas })
+
   }
 
   const handleReset = () => {
@@ -144,7 +145,7 @@ export default function P40() {
           <div className="form-grid-4">
             <div className="auth-field">
               <label className="auth-label">Hueco #</label>
-              <input type="number" name="hueco" value={form.hueco} onChange={handleFormChange} className="auth-input" />
+              <input type="text" name="hueco" value={form.hueco} onChange={handleFormChange} placeholder='ej: A-1' className="auth-input" />
             </div>
             <div className="auth-field">
               <label className="auth-label">Ancho</label>

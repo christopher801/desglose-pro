@@ -4,11 +4,6 @@ import { useAuth } from '../context/AuthContext'
 import { logoutUser } from '../services/authService'
 import InstallButton from './InstallButton'
 
-const WHATSAPP_NUMBER = '18494850059'
-const WHATSAPP_MESSAGE = 'Hola, me comunico desde Desglose Pro 📐'
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
-
-// 👇 CHANJE NAVITEMS LA AVEC NON ICON BOOTSTRAP (SAN "bi")
 const navItems = [
   { path: '/dashboard', icon: 'bi-grid', label: 'Inicio' },
   { path: '/desglose', icon: 'bi-layers', label: 'Desglose' },
@@ -20,6 +15,9 @@ const navItems = [
 
 export default function Layout({ children, unreadCount = 0 }) {
   const { userData, isAdmin } = useAuth()
+  const WHATSAPP_NUMBER = '18494850059'
+  const WHATSAPP_MESSAGE = `Hola, soy ${userData?.nombre || 'un usuario'} y me comunico desde Desglose Pro v4.9.0. Me gustaría recibir asistencia técnica.`
+  const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
   const location = useLocation()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -114,12 +112,6 @@ export default function Layout({ children, unreadCount = 0 }) {
             className="topbar-notif-btn"
             title="Ayuda y soporte">
             <i className="bi bi-headset me-1"></i>
-          </a>
-          <a href="#"
-          rel='noopener noreferrer'
-          className='topbar-notif-btn'
-          title="Historial">
-          <i className='bi bi-journal-text'></i>
           </a>
         </header>
 
