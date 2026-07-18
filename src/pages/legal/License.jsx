@@ -52,15 +52,15 @@ export default function License() {
               </p>
               <ul style={{ lineHeight: '2', color: 'var(--gray-600)', paddingLeft: '1.5rem' }}>
                 <li>
-                  <i className="bi bi-check-circle me-1" style={{ color: 'var(--success)' }}></i>
+                  <i className="bi bi-check-circle" style={{ color: 'var(--success)' }}></i>
                   Puedes utilizar el software en dispositivos autorizados.
                 </li>
                 <li>
-                  <i className="bi bi-check-circle me-1" style={{ color: 'var(--success)' }}></i>
+                  <i className="bi bi-check-circle" style={{ color: 'var(--success)' }}></i>
                   Puedes realizar copias de seguridad del software.
                 </li>
                 <li>
-                  <i className="bi bi-check-circle me-1" style={{ color: 'var(--success)' }}></i>
+                  <i className="bi bi-check-circle" style={{ color: 'var(--success)' }}></i>
                   Puedes instalar el software en múltiples dispositivos bajo una misma cuenta.
                 </li>
               </ul>
@@ -75,22 +75,22 @@ export default function License() {
               </p>
               <ul style={{ lineHeight: '2', color: 'var(--gray-600)', paddingLeft: '1.5rem' }}>
                 <li>
-                  <i className="bi bi-x-circle me-1" style={{ color: 'var(--danger)' }}></i>
+                  <i className="bi bi-x-circle" style={{ color: 'var(--danger)' }}></i>
                   <strong>Copiar o distribuir:</strong> No puedes copiar, distribuir, alquilar, vender 
                   o sublicenciar el software sin autorización expresa.
                 </li>
                 <li>
-                  <i className="bi bi-x-circle me-1" style={{ color: 'var(--danger)' }}></i>
+                  <i className="bi bi-x-circle" style={{ color: 'var(--danger)' }}></i>
                   <strong>Ingeniería inversa:</strong> No puedes realizar ingeniería inversa, descompilar 
                   o desensamblar el software.
                 </li>
                 <li>
-                  <i className="bi bi-x-circle me-1" style={{ color: 'var(--danger)' }}></i>
+                  <i className="bi bi-x-circle" style={{ color: 'var(--danger)' }}></i>
                   <strong>Eliminación de avisos:</strong> No puedes eliminar, alterar u ocultar avisos 
                   de derechos de autor o marcas comerciales.
                 </li>
                 <li>
-                  <i className="bi bi-x-circle me-1" style={{ color: 'var(--danger)' }}></i>
+                  <i className="bi bi-x-circle" style={{ color: 'var(--danger)' }}></i>
                   <strong>Uso ilegal:</strong> No puedes utilizar el software para fines ilegales o 
                   no autorizados.
                 </li>
@@ -139,7 +139,7 @@ export default function License() {
                 serán efectivos inmediatamente después de su publicación en la plataforma.
               </p>
               <p style={{ lineHeight: '1.8', color: 'var(--gray-600)', marginTop: '0.5rem' }}>
-                <i className="bi bi-clock me-1" style={{ color: 'var(--gray-500)' }}></i>
+                <i className="bi bi-clock" style={{ color: 'var(--gray-500)' }}></i>
                 Fecha de la última revisión: 10 de julio de 2026
               </p>
             </section>
@@ -155,11 +155,11 @@ export default function License() {
                 marginTop: '0.5rem'
               }}>
                 <p style={{ marginBottom: '0.25rem' }}>
-                  <i className="bi bi-envelope me-1" style={{ color: 'var(--primary)' }}></i>
+                  <i className="bi bi-envelope" style={{ color: 'var(--primary)' }}></i>
                   <strong>Email:</strong> softwaredesglosepro@gmail.com
                 </p>
                 <p style={{ marginBottom: 0 }}>
-                  <i className="bi bi-telephone me-1" style={{ color: 'var(--primary)' }}></i>
+                  <i className="bi bi-telephone" style={{ color: 'var(--primary)' }}></i>
                   <strong>Teléfono:</strong> +1 (849) 485-0059
                 </p>
               </div>
@@ -174,7 +174,7 @@ export default function License() {
             textAlign: 'center'
           }}>
             <Link to="/" className="btn-primary-sm">
-              <i className="bi bi-arrow-left me-1"></i>
+              <i className="bi bi-arrow-left"></i>
               Volver al inicio
             </Link>
           </div>

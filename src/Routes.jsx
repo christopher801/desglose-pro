@@ -15,7 +15,6 @@ import GlassOptimizer from './pages/GlassOptimizer'
 import Finanzas from './pages/Finanzas'
 import PrivacyPolicy from './pages/legal/PrivacyPolicy'
 import TermsOfService from './pages/legal/TermsOfService'
-import CookiesPolicy from './pages/legal/CookiesPolicy'
 import License from './pages/legal/License'
 
 // Desglose
@@ -25,6 +24,7 @@ import P65 from './pages/desglose/P65'
 import Tradicional from './pages/desglose/Tradicional'
 import P40 from './pages/desglose/P40'
 import PuertaComercial from './pages/desglose/PuertaComercial'
+import PuertaP40 from './pages/desglose/PuertaP40'
 
 export default function AppRoutes() {
   return (
@@ -37,7 +37,6 @@ export default function AppRoutes() {
       {/* ===== ROUT LEGAL (PIBLIK TOU) ===== */}
       <Route path="/legal/privacidad" element={<PrivacyPolicy />} />
       <Route path="/legal/terminos" element={<TermsOfService />} />
-      <Route path="/legal/cookies" element={<CookiesPolicy />} />
       <Route path="/legal/licencia" element={<License />} />
 
       {/* ===== ROUT POU USER POKO AKTIVE ===== */}
@@ -81,6 +80,9 @@ export default function AppRoutes() {
       <Route path="/desglose/puerta" element={
         <ProtectedRoute><PuertaComercial /></ProtectedRoute>
       } />
+      <Route path='/desglose/puertap40' element={
+        <ProtectedRoute><PuertaP40 /></ProtectedRoute>
+      }/>
 
       {/* ===== ADMIN ===== */}
       <Route path="/admin" element={

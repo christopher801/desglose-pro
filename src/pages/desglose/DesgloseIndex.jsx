@@ -8,6 +8,7 @@ const systems = [
   { name: 'Ventana Tradicional', path: '/desglose/tradicional', desc: 'Corredera 2, 3 o 4 hojas', icon: 'bi-window', nuevo: false },
   { name: 'Ventana P-40 Proyectada', path: '/desglose/p40', desc: 'Sistema proyectado', icon: 'bi-window-dock', nuevo: false },
   { name: 'Puerta Comercial', path: '/desglose/puerta', desc: 'Puertas de aluminio', icon: 'bi-door-open', nuevo: false },
+  { name: 'Puerta P40', path: '/desglose/puertap40', desc: 'Puertas de aluminio', icon: 'bi-door-open', nuevo: true },
 ]
 
 export default function DesgloseIndex() {

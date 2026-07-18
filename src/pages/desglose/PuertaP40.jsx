@@ -3,51 +3,29 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/Layout'
 import FractionUtils from '../../utils/fraction'
 
- const calcular = (ancho, alto, hojas) => {
-    if (hojas === 2) {
-      return {
-        cabAlf: (ancho / 2) - (4/16),
-        jambas: alto - (12/16),
-        marco: ancho - (2/16),
-        latMarco: alto - (1/2),
-        vidrioAncho: (ancho / 2) - (2 + 1/8),
-        vidrioAlto: alto - (3 + 13/16),
-        vidrioMedio: null
-      }
-    } else if (hojas === 3) {
-      return {
-        cabAlf: (ancho / 3) + (1/16),
-        jambas: alto - (12/16),
-        marco: ancho - (2/16),
-        latMarco: alto - (1/2),
-        vidrioAncho: (ancho / 3) - (1 + 12/16),
-        vidrioAlto: alto - (3 + 13/16),
-        vidrioMedio: (ancho / 3) - (15/16)
-      }
-    } else {
-      return {
-        cabAlf: (ancho / 4) - (3/16),
-        jambas: alto - (12/16),
-        marco: ancho - (1/8),
-        latMarco: alto - (1/2),
-        vidrioAncho: (ancho / 4) - (2 + 1/16),
-        vidrioAlto: alto - (3 + 13/16),
-        vidrioMedio: null
-      }
-    }
+// NOUVO PUERTA P40 — SIMPLE (1 hoja)
+const calcular = (ancho, alto) => {
+  return {
+    cabMarco: ancho - (1/8),
+    latMarco: alto - (1/8),
+    cabezal: ancho - (3 + 3/4),
+    alfeizar: ancho - (8 + 15/16),
+    jambas: alto - 2,
+    vidrioAncho: ancho - (9 + 1/4),
+    vidrioAlto: alto - (8 + 1/8)
   }
+}
 
-const buildPrintHtml = (title, projectInfo, results) => {
-  const hasVidrioMedio = results.some(r => r.vidrioMedio)
+const buildPrintHtml = (projectInfo, results) => {
   const date = new Date().toLocaleDateString('es-DO')
   const rows = results.map(row => `
     <tr>
-      <td>${row.hueco}</td><td>${row.ancho}</td><td>${row.alto}</td><td>${row.hojas}</td>
-      <td>${row.cabAlf}</td><td>${row.jambas}</td><td>${row.marco}</td><td>${row.latMarco}</td>
+      <td>${row.hueco}</td><td>${row.ancho}</td><td>${row.alto}</td>
+      <td>${row.cabMarco}</td><td>${row.latMarco}</td>
+      <td>${row.cabezal}</td><td>${row.alfeizar}</td><td>${row.jambas}</td>
       <td>${row.vidrioAncho}</td><td>${row.vidrioAlto}</td>
-      ${hasVidrioMedio ? `<td>${row.vidrioMedio || '—'}</td>` : ''}
     </tr>`).join('')
-  return `<!DOCTYPE html><html><head><title>${title}</title>
+  return `<!DOCTYPE html><html><head><title>NUEVO PUERTA P40</title>
   <style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:.5in;background:white}
   h1{font-size:18px;text-align:center;color:#1e2b3c;margin-bottom:4px}
   h2{font-size:11px;text-align:center;color:#555;font-weight:400;margin-bottom:12px}
@@ -59,7 +37,7 @@ const buildPrintHtml = (title, projectInfo, results) => {
   tr:nth-child(even) td{background:#f8f9fa}
   .footer{margin-top:12px;font-size:9px;color:#888;display:flex;justify-content:space-between;border-top:1px solid #ddd;padding-top:6px}
   @media print{th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head>
-  <body><h1>${title}</h1><h2>SISTEMA PROFESIONAL DE CÁLCULO</h2>
+  <body><h1>NUEVO PUERTA P40</h1><h2>SISTEMA PROFESIONAL DE CÁLCULO</h2>
   <div class="info">
     <span><strong>CUENTA:</strong> ${projectInfo.cuenta || '—'}</span>
     <span><strong>OBRA:</strong> ${projectInfo.obra || '—'}</span>
@@ -67,19 +45,18 @@ const buildPrintHtml = (title, projectInfo, results) => {
   </div>
   <table><thead>
     <tr>
-      <th rowspan="2">Hueco</th><th rowspan="2">Ancho</th><th rowspan="2">Alto</th><th rowspan="2">Hojas</th>
-      <th colspan="2">De la hoja</th><th colspan="2">Del marco</th><th colspan="2">Vidrio</th>
-      ${hasVidrioMedio ? '<th rowspan="2">V. Medio</th>' : ''}
+      <th rowspan="2">Hueco</th><th rowspan="2">Ancho</th><th rowspan="2">Alto</th>
+      <th colspan="2">Marco</th><th colspan="3">Hoja</th><th colspan="2">Vidrio</th>
     </tr>
-    <tr><th>Cab-alf</th><th>Jambas</th><th>Cab-riel</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th></tr>
+    <tr><th>Cab-marco</th><th>Lat-marco</th><th>Cabezal</th><th>Alféizar</th><th>Jambas</th><th>Ancho</th><th>Alto</th></tr>
   </thead><tbody>${rows}</tbody></table>
-  <div class="footer"><span>© 2026 - Desglose Pro</span><span>${date}</span></div>
+  <div class="footer"><span>© 2026 - Christopher</span><span>${date}</span></div>
   </body></html>`
 }
 
-export default function Tradicional() {
+export default function NuevoPuertaP40() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ hueco: '', ancho: '', alto: '', hojas: 2 })
+  const [form, setForm] = useState({ hueco: '', ancho: '', alto: '' })
   const [results, setResults] = useState([])
   const [projectInfo, setProjectInfo] = useState({ cuenta: '', obra: '', color: '' })
   const [error, setError] = useState('')
@@ -93,49 +70,44 @@ export default function Tradicional() {
     const anchoDec = FractionUtils.parseFraction(form.ancho)
     const altoDec = FractionUtils.parseFraction(form.alto)
     if (anchoDec <= 0 || altoDec <= 0) { setError('❌ Las medidas deben ser mayores a 0'); return }
-    const hojas = parseInt(form.hojas, 10)
-    const calc = calcular(anchoDec, altoDec, hojas)
+    const calc = calcular(anchoDec, altoDec)
     setResults([...results, {
       hueco: form.hueco,
       ancho: form.ancho,
       alto: form.alto,
-      hojas: `${hojas} hojas`,
-      cabAlf: FractionUtils.toSixteenths(calc.cabAlf),
-      jambas: FractionUtils.toSixteenths(calc.jambas),
-      marco: FractionUtils.toSixteenths(calc.marco),
+      cabMarco: FractionUtils.toSixteenths(calc.cabMarco),
       latMarco: FractionUtils.toSixteenths(calc.latMarco),
+      cabezal: FractionUtils.toSixteenths(calc.cabezal),
+      alfeizar: FractionUtils.toSixteenths(calc.alfeizar),
+      jambas: FractionUtils.toSixteenths(calc.jambas),
       vidrioAncho: FractionUtils.toSixteenths(calc.vidrioAncho),
-      vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto),
-      vidrioMedio: calc.vidrioMedio ? FractionUtils.toSixteenths(calc.vidrioMedio) : null
+      vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto)
     }])
     setForm({ hueco: '', ancho: '', alto: '', hojas: form.hojas })
   }
 
   const handleReset = () => {
     setResults([]); setError('')
-    setForm({ hueco: 1, ancho: '', alto: '', hojas: 2 })
+    setForm({ hueco: 1, ancho: '', alto: '' })
     setProjectInfo({ cuenta: '', obra: '', color: '' })
   }
 
   const handlePrint = () => {
     if (results.length === 0) { alert('No hay datos para imprimir'); return }
     const w = window.open('', '_blank')
-    w.document.write(buildPrintHtml('VENTANA TRADICIONAL', projectInfo, results))
+    w.document.write(buildPrintHtml(projectInfo, results))
     w.document.close()
     setTimeout(() => w.print(), 500)
   }
-
-  const hasVidrioMedio = results.some(r => r.vidrioMedio)
 
   return (
     <Layout>
       <div className="page-content">
         <div className="desglose-header">
           <button className="btn-back" onClick={() => navigate('/desglose')}><i className="bi bi-arrow-left" style={{ marginRight: '6px' }}></i>Volver</button>
-          <h1 className="page-title">Ventana Tradicional</h1>
+          <h1 className="page-title">Puerta P40</h1>
           <div className="desglose-header-actions">
-            {results.length > 0 && <button className="btn-primary-sm" onClick={handlePrint}><i className="bi bi-printer" style={{ marginRight: '6px' }}></i>Imprimir</button>}
-          </div>
+{results.length > 0 && <button className="btn-primary-sm" onClick={handlePrint}><i className="bi bi-printer" style={{ marginRight: '6px' }}></i>Imprimir</button>}          </div>
         </div>
 
         <div className="card-modern mb-4">
@@ -151,26 +123,18 @@ export default function Tradicional() {
         </div>
 
         <div className="card-modern mb-4">
-          <div className="form-grid-4">
+          <div className="form-grid-3">
             <div className="auth-field">
               <label className="auth-label">Hueco #</label>
-              <input type="text" name="hueco" value={form.hueco} onChange={handleFormChange} placeholder='ej: A-1' className="auth-input" />
+              <input type="text" name="hueco" value={form.hueco} onChange={handleFormChange} className="auth-input" />
             </div>
             <div className="auth-field">
               <label className="auth-label">Ancho</label>
-              <input type="text" name="ancho" value={form.ancho} onChange={handleFormChange} placeholder='ej: 91 1/2"' className="auth-input" />
+              <input type="text" name="ancho" value={form.ancho} onChange={handleFormChange} placeholder='ej: 35 1/2"' className="auth-input" />
             </div>
             <div className="auth-field">
               <label className="auth-label">Alto</label>
-              <input type="text" name="alto" value={form.alto} onChange={handleFormChange} placeholder='ej: 74 7/8"' className="auth-input" />
-            </div>
-            <div className="auth-field">
-              <label className="auth-label">Hojas</label>
-              <select name="hojas" value={form.hojas} onChange={handleFormChange} className="auth-input">
-                <option value={2}>2 hojas</option>
-                <option value={3}>3 hojas</option>
-                <option value={4}>4 hojas</option>
-              </select>
+              <input type="text" name="alto" value={form.alto} onChange={handleFormChange} placeholder='ej: 86"' className="auth-input" />
             </div>
           </div>
           {error && <div className="auth-error" style={{ marginTop: '0.5rem' }}>{error}</div>}
@@ -182,26 +146,25 @@ export default function Tradicional() {
 
         {results.length > 0 ? (
           <div className="table-container">
-            <div className="table-title">VENTANA TRADICIONAL</div>
+            <div className="table-title">PUERTA P40</div>
             <div className="table-responsive">
-              <table className="table-professional" style={{ minWidth: '900px' }}>
+              <table className="table-professional" style={{ minWidth: '820px' }}>
                 <thead>
                   <tr>
-                    <th rowSpan="2">Hueco</th><th rowSpan="2">Ancho</th><th rowSpan="2">Alto</th><th rowSpan="2">Hojas</th>
-                    <th colSpan="2">De la hoja</th><th colSpan="2">Del marco</th><th colSpan="2">Vidrio</th>
-                    {hasVidrioMedio && <th rowSpan="2">V. Medio</th>}
+                    <th rowSpan="2">Hueco</th><th rowSpan="2">Ancho</th><th rowSpan="2">Alto</th>
+                    <th colspan="2">Marco</th><th colspan="3">Hoja</th><th colspan="2">Vidrio</th>
                   </tr>
                   <tr>
-                    <th>Cab-alf</th><th>Jambas</th><th>Cab-riel</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th>
+                    <th>Cab-marco</th><th>Lat-marco</th><th>Cabezal</th><th>Alféizar</th><th>Jambas</th><th>Ancho</th><th>Alto</th>
                   </tr>
                 </thead>
                 <tbody>
                   {results.map((row, idx) => (
                     <tr key={idx}>
-                      <td>{row.hueco}</td><td>{row.ancho}</td><td>{row.alto}</td><td>{row.hojas}</td>
-                      <td>{row.cabAlf}</td><td>{row.jambas}</td><td>{row.marco}</td><td>{row.latMarco}</td>
+                      <td>{row.hueco}</td><td>{row.ancho}</td><td>{row.alto}</td>
+                      <td>{row.cabMarco}</td><td>{row.latMarco}</td>
+                      <td>{row.cabezal}</td><td>{row.alfeizar}</td><td>{row.jambas}</td>
                       <td>{row.vidrioAncho}</td><td>{row.vidrioAlto}</td>
-                      {hasVidrioMedio && <td>{row.vidrioMedio || '—'}</td>}
                     </tr>
                   ))}
                 </tbody>

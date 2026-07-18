@@ -15,6 +15,7 @@ const systems = [
   { name: 'Ventana P-65', nuevo: false },
   { name: 'Ventana Tradicional', nuevo: false },
   { name: 'Ventana P-40 Proyectada', nuevo: false },
+  { name: 'Puerta P-40', nuevo: true },
   { name: 'Puerta Comercial', nuevo: false },
   { name: 'Control de Gastos', nuevo: false },
   { name: 'Optimización de Corte de Vidrio', nuevo: true },
@@ -63,33 +64,6 @@ export default function AboutPage() {
               {s.nuevo && <span className="product-badge" style={{ position: 'static' }}>Nuevo</span>}
             </div>
           ))}
-        </div>
-                {/* Legal links */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '1.5rem', 
-          flexWrap: 'wrap',
-          marginTop: '1.5rem',
-          paddingTop: '1.5rem',
-          borderTop: '1px solid var(--gray-200)'
-        }}>
-          <Link to="/legal/privacidad" style={{ fontSize: '0.85rem', color: 'var(--gray-500)', textDecoration: 'none' }}>
-            <i className="bi bi-shield-lock me-1"></i>
-              Política de Privacidad
-          </Link>
-          <Link to="/legal/terminos" style={{ fontSize: '0.85rem', color: 'var(--gray-500)', textDecoration: 'none' }}>
-            <i className="bi bi-file-text me-1"></i>
-              Términos de Servicio
-          </Link>
-          <Link to="/legal/cookies" style={{ fontSize: '0.85rem', color: 'var(--gray-500)', textDecoration: 'none' }}>
-            <i className="bi bi-cookie me-1"></i>
-              Política de Cookies
-          </Link>
-          <Link to="/legal/licencia" style={{ fontSize: '0.85rem', color: 'var(--gray-500)', textDecoration: 'none' }}>
-            <i className="bi bi-file-earmark-check me-1"></i>
-              Licencia de Uso
-          </Link>
         </div>
         
                 {/* Footer */}

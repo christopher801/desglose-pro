@@ -132,18 +132,16 @@ export default function P92() {
 
         {/* Header */}
         <div className="desglose-header">
-          <button className="btn-back" onClick={() => navigate('/desglose')}>← Volver</button>
+          <button className="btn-back" onClick={() => navigate('/desglose')}><i className="bi bi-arrow-left" style={{ marginRight: '6px' }}></i>Volver</button>
           <h1 className="page-title">Ventana P-92</h1>
           <div className="desglose-header-actions">
-            {results.length > 0 && (
-              <button className="btn-primary-sm" onClick={handlePrint}>🖨️ Imprimir</button>
-            )}
+            {results.length > 0 && <button className="btn-primary-sm" onClick={handlePrint}><i className="bi bi-printer" style={{ marginRight: '6px' }}></i>Imprimir</button>}
           </div>
         </div>
 
         {/* Info proyecto */}
         <div className="card-modern mb-4">
-          <h3 className="info-card-title">📋 Información del proyecto</h3>
+          <h3 className="info-card-title"><i className="bi bi-clipboard" style={{ marginRight: '6px' }}></i>Información del proyecto</h3>
           <div className="form-grid-3">
             {[['cuenta', 'Cuenta'], ['obra', 'Obra'], ['color', 'Color']].map(([name, label]) => (
               <div className="auth-field" key={name}>
@@ -180,12 +178,8 @@ export default function P92() {
           </div>
           {error && <div className="auth-error" style={{ marginTop: '0.5rem' }}>{error}</div>}
           <div className="form-actions">
-            <button className="auth-btn" onClick={handleAdd}>➕ Agregar</button>
-            {results.length > 0 && (
-              <button className="btn-outline-lg" onClick={handleReset} style={{ marginLeft: '0.5rem' }}>
-                ↺ Reset
-              </button>
-            )}
+            <button className="auth-btn" onClick={handleAdd}><i className="bi bi-plus-circle" style={{ marginRight: '6px' }}></i>Agregar</button>
+            {results.length > 0 && <button className="btn-outline-lg" onClick={handleReset}><i className="bi bi-arrow-counterclockwise" style={{ marginRight: '6px' }}></i>Reset</button>}
           </div>
         </div>
 
