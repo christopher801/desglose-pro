@@ -31,10 +31,9 @@ export default function Layout({ children, unreadCount = 0 }) {
 
 
   const handleLogout = async () => {
-  await logoutUser(user?.uid, userData?.nombre, userData?.email)
-  navigate('/login')
-}
-
+      await logoutUser()
+      navigate('/login')
+    }
 
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/')
 

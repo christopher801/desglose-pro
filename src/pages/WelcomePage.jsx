@@ -755,6 +755,11 @@ export default function WelcomePage() {
               </div>
               <div className="landing-system-card">
                 <i className="bi bi-door-open"></i>
+                <h4>Puerta P40</h4>
+                <p>Puertas de aluminio</p>
+              </div>
+              <div className="landing-system-card">
+                <i className="bi bi-door-open"></i>
                 <h4>Puerta Comercial</h4>
                 <p>Puertas de aluminio</p>
               </div>
