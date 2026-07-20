@@ -18,7 +18,7 @@ export const registerUser = async (email, password, nombre) => {
       email,
       nombre,
       role: 'user',
-      isActive: false,
+      isActive: true,
       createdAt: new Date().toISOString()
     })
 
