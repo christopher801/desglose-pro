@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/Layout'
 import FractionUtils from '../../utils/fraction'
+import { useAuth } from '../../context/AuthContext'
+import { logActividad } from '../../services/actividadService'
 
 const calcular = (ancho, alto, hojas) => {
     if (hojas === 2) {
@@ -40,6 +42,7 @@ const calcular = (ancho, alto, hojas) => {
 
 export default function P92() {
   const navigate = useNavigate()
+  const { user, userData } = useAuth()
   const [form, setForm] = useState({ hueco: '', ancho: '', alto: '', hojas: 2 })
   const [results, setResults] = useState([])
   const [projectInfo, setProjectInfo] = useState({ cuenta: '', obra: '', color: '' })
@@ -48,7 +51,7 @@ export default function P92() {
   const handleFormChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
   const handleInfoChange = (e) => setProjectInfo({ ...projectInfo, [e.target.name]: e.target.value })
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     setError('')
     if (!form.ancho || !form.alto) { setError('❌ Ingresa ANCHO y ALTO'); return }
     const anchoDec = FractionUtils.parseFraction(form.ancho)
@@ -69,6 +72,13 @@ export default function P92() {
       vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto),
       vidrioMedio: calc.vidrioMedio ? FractionUtils.toSixteenths(calc.vidrioMedio) : null
     }])
+    await logActividad({
+      uid: user?.uid,
+      nombre: userData?.nombre,
+      email: userData?.email,
+      action: 'desglose',
+      detail: `Puerta P40 — Hueco: ${form.hueco}, ${form.ancho} x ${form.alto}`
+    })
     setForm({ hueco: '', ancho: '', alto: '', hojas: form.hojas })
   }
 

@@ -605,7 +605,6 @@ export default function WelcomePage() {
           <div className="landing-container">
             <nav className="landing-nav">
               <div className="landing-logo">
-                <img className='landing-logo-icon' src="../public/icons/favicon-32x32.png" alt="logo" />
                 <span>Desglose Pro</span>
               </div>
               <div className="landing-nav-links">
