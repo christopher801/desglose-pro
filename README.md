@@ -1,58 +1,95 @@
-# 🪟 DESGLOSE PRO V3.0.0
-
-**Sistema profesional de cálculo para carpintería de aluminio**
-
-[![React](https://img.shields.io/badge/React-18.2.0-61dafb?logo=react)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.4.11-646cff?logo=vite)](https://vitejs.dev/)
-[![Firebase](https://img.shields.io/badge/Firebase-10.11.0-ffca28?logo=firebase)](https://firebase.google.com/)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-7952b3?logo=bootstrap)](https://getbootstrap.com/)
+![Desglose Pro](./public/banner.svg)
+---
 
 ## 📋 Descripción
 
-Aplicación profesional para talleres de aluminio que calcula automáticamente todas las piezas necesarias para fabricar:
+**Desglose Pro** es una Progressive Web App (PWA) diseñada para profesionales de carpintería de aluminio. Permite calcular con precisión los perfiles necesarios para ventanas y puertas, gestionar cotizaciones, controlar gastos y emitir facturas — todo desde cualquier dispositivo, con o sin internet.
 
-- ✅ **Ventana P-92** (2, 3 y 4 hojas)
-- ✅ **Ventana P-65** (2, 3 y 4 hojas)
-- ✅ **Ventana TRADICIONAL** (2, 3 y 4 hojas)
-- ✅ **Puerta Comercial** (Simple)
+---
 
-## ✨ Características
+## ✨ Funcionalidades
 
-- 📐 **Cálculo preciso** con fracciones (1/16 de pulgada)
-- 🔄 **Múltiples sistemas** en una sola interfaz
-- 📊 **Tabla de desglose profesional**
-- 🖨️ **Impresión directa** con formato profesional
-- 📄 **Exportación a PDF**
-- 👥 **Sistema de usuarios** con Firebase Auth
-- 👑 **Panel de administración** para gestionar usuarios
-- 🔒 **Control de acceso** (usuarios bloqueados/activos)
-- 📱 **Diseño responsive** (funciona en móvil, tablet y PC)
-- 🎨 **Interfaz moderna** con Bootstrap 5
+### 🧮 Sistemas de Cálculo
+| Sistema | Hojas |
+|---------|-------|
+| Ventana P-92 | 2, 3 o 4 hojas |
+| Ventana P-65 | 2, 3 o 4 hojas |
+| Ventana Tradicional | 2, 3 o 4 hojas |
+| Ventana P-40 Proyectada | 1 o 2 hojas |
+| Puerta Comercial | Simple o Doble |
+| Puerta P40 | Simple |
 
-## 🚀 Tecnologías
+- Resultados precisos en fracciones de **1/16"**
+- Exportación a **PDF** profesional
+- Información del proyecto (Cuenta, Obra, Color)
 
-| Tecnología | Versión | Uso |
-|------------|---------|-----|
-| React | 18.2.0 | Framework frontend |
-| Vite | 5.4.11 | Build tool |
-| Firebase | 10.11.0 | Auth + Database |
-| Bootstrap | 5.3.3 | UI Components |
-| html2pdf.js | 0.10.1 | Exportación PDF |
+### 💼 Gestión de Negocio
+- **Cotizaciones** — Crea y da seguimiento con estados (Borrador, Enviada, Aprobada, Rechazada)
+- **Gastos** — Control por categoría (Materiales, Mano de obra, Transporte, Herramientas)
+- **Finanzas** — Resumen de ingresos, gastos y balance
 
-#
+### 🛡️ Panel de Administración
+- Gestión de usuarios (Activar / Bloquear)
 
-👨‍💻 Autor
-Christopher
+### 📱 PWA
+- Instalable en cualquier dispositivo (Android, iOS, Desktop)
+- Funciona **sin internet** (Service Worker + Cache)
+- Push notifications para el administrador
 
-✧ 2026 ✧
+---
 
-📝 Licencia
-Este proyecto es para uso profesional en talleres de carpintería de aluminio.
+## 🛠️ Stack Tecnológico
 
-🤝 Contribuciones
-Las contribuciones son bienvenidas. Por favor abre un issue primero para discutir los cambios.
+| Tecnología | Uso |
+|------------|-----|
+| **React 18** | Framework UI |
+| **Vite** | Build tool |
+| **Firebase Auth** | Autenticación |
+| **Firebase Firestore** | Base de datos en tiempo real |
+| **Firebase Cloud Messaging** | Push notifications |
+| **Firebase Cloud Functions** | Backend serverless |
+| **Bootstrap Icons** | Iconografía |
+| **Vercel** | Deployment |
+| **GitHub** | Control de versiones |
 
-📧 Contacto
-Para soporte o consultas, contacta al administrador del sistema.
+---
 
-KREYE PA CHRISTOPHER
+
+---
+
+## 🔐 Roles y Permisos
+
+| Acción | Usuario | Admin |
+|--------|---------|-------|
+| Usar sistemas de cálculo | ✅ | ✅ |
+| Cotizaciones, Gastos, Facturas | ✅ | ✅ |
+| Ver panel de administración | ❌ | ✅ |
+| Activar / Bloquear usuarios | ❌ | ✅ |
+| Ver actividad de usuarios | ❌ | ✅ |
+| Recibir push notifications | ❌ | ✅ |
+
+---
+
+## 🌐 Deploy
+
+El proyecto está desplegado en **Vercel**:
+
+🔗 [desglose-pro.vercel.app](https://desglose-pro.vercel.app)
+
+---
+
+## 📞 Contacto y Soporte
+
+- **Email:** softwaredesglosepro@gmail.com
+- **WhatsApp:** +1 (849) 485-0059
+- **Instagram:** [@desglosepro](https://instagram.com/desglosepro)
+
+---
+
+## 📄 Licencia
+
+Copyright © 2026 Desglose-pro. Todos los derechos reservados.
+
+Este software es propietario y confidencial. Su copia, distribución o uso no autorizado está estrictamente prohibido.
+
+Ver [Licencia completa](./src/pages/legal/License.jsx)
