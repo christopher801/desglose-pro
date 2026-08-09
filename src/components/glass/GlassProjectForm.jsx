@@ -1,22 +1,38 @@
 import React from "react";
 
 const TIPOS_VIDRIO = [
-  "Claro",
+  "Vidrio Monolítico",
+  "Vidrio laminado",
+  "Vidrio texturizado",
+  "Espejo",
+];
+
+const ESPESOR = [
+  '1/8" (3mm)',
+  '3/16" (4mm)',
+  '1/4" (6mm)',
+  '5/16" (8mm)',
+  '3/8" (10mm)',
+  '1/2" (12mm)',
+  '5/8" (15mm)',
+  '3/4" (19mm)',
+];
+
+const COLOR = [
+  "Incoloro",
   "Bronce",
   "Gris",
   "Azul",
   "Verde",
   "Reflectivo",
-  "Templado",
-  "Laminado",
-  "Espejo",
+  "Negro",
 ];
 
 const UNIDADES = [
+  { value: "in", label: "Pulgadas (in)" },
   { value: "mm", label: "Milímetros (mm)" },
   { value: "cm", label: "Centímetros (cm)" },
   { value: "m", label: "Metros (m)" },
-  { value: "in", label: "Pulgadas (in)" },
 ];
 
 export default function GlassProjectForm({ proyecto, onChange, disabled }) {
@@ -75,26 +91,34 @@ export default function GlassProjectForm({ proyecto, onChange, disabled }) {
 
           <div className="auth-field">
             <label className="auth-label">Espesor</label>
-            <input
-              type="text"
+            <select
               className="auth-input"
               value={proyecto.espesor}
               onChange={handle("espesor")}
               disabled={disabled}
-              placeholder="Ej. 6mm"
-            />
+            >
+              {ESPESOR.map((e) => (
+                <option key={e} value={e}>
+                  {e}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="auth-field">
             <label className="auth-label">Color</label>
-            <input
-              type="text"
+            <select
               className="auth-input"
               value={proyecto.color}
               onChange={handle("color")}
               disabled={disabled}
-              placeholder="Ej. Incoloro"
-            />
+            >
+              {COLOR.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="auth-field">
@@ -123,7 +147,7 @@ export default function GlassProjectForm({ proyecto, onChange, disabled }) {
               disabled={disabled}
               min="0"
               step="any"
-              placeholder="Ej. 2440"
+              placeholder="Ej. 130"
             />
           </div>
 
@@ -137,7 +161,7 @@ export default function GlassProjectForm({ proyecto, onChange, disabled }) {
               disabled={disabled}
               min="0"
               step="any"
-              placeholder="Ej. 1830"
+              placeholder="Ej. 84"
             />
           </div>
         </div>
