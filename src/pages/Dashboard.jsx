@@ -10,9 +10,9 @@ const systems = [
   { name: 'Ventana Tradicional', icon: 'bi-window', path: '/desglose/tradicional', nuevo: false },
   { name: 'Ventana P-40', icon: 'bi-window', path: '/desglose/p40', nuevo: false },
   { name: 'Puerta Comercial', icon: 'bi-door-open', path: '/desglose/puerta', nuevo: false },
-  { name: 'Puerta P40', icon: 'bi-door-open', path: '/desglose/puertap40', nuevo: true },
+  { name: 'Puerta P40', icon: 'bi-door-open', path: '/desglose/puertap40', nuevo: false },
   { name: 'Control de Gastos', icon: 'bi-cash-coin', path: '/finanzas', nuevo: false },
-  { name: 'Croquins de vidrio', icon: 'bi-square-half', path: '/glass-optimizer', nuevo: true },
+  { name: 'Croquins de vidrio', icon: 'bi-square-half', path: '/glass-optimizer', nuevo: false },
 ]
 
 export default function Dashboard() {
