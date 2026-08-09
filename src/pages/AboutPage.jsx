@@ -17,7 +17,6 @@ const systems = [
   { name: 'Ventana P-40 Proyectada', nuevo: false },
   { name: 'Puerta P-40', nuevo: false },
   { name: 'Puerta Comercial', nuevo: false },
-  { name: 'Control de Gastos', nuevo: false },
   { name: 'Optimización de Corte de Vidrio', nuevo: false },
 ]
 

@@ -763,11 +763,6 @@ export default function WelcomePage() {
                 <p>Puertas de aluminio</p>
               </div>
               <div className="landing-system-card">
-                <i className="bi bi-cash-coin"></i>
-                <h4>Control de Gastos</h4>
-                <p>Finanzas del taller</p>
-              </div>
-              <div className="landing-system-card">
                 <i className="bi bi-square-half"></i>
                 <h4>Croquins de vidrio</h4>
                 <p>Optimización de Corte de Vidrio</p>

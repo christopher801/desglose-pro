@@ -12,7 +12,6 @@ import ProfilePage from './pages/ProfilePage'
 import AdminPage from './pages/AdminPage'
 import AboutPage from './pages/AboutPage'
 import GlassOptimizer from './pages/GlassOptimizer'
-import Finanzas from './pages/Finanzas'
 import PrivacyPolicy from './pages/legal/PrivacyPolicy'
 import TermsOfService from './pages/legal/TermsOfService'
 import License from './pages/legal/License'
@@ -56,9 +55,6 @@ export default function AppRoutes() {
       } />
       <Route path="/glass-optimizer" element={
         <ProtectedRoute><GlassOptimizer /></ProtectedRoute>
-      } />
-      <Route path="/finanzas" element={
-        <ProtectedRoute><Finanzas /></ProtectedRoute>
       } />
 
       {/* ===== DESGLOSE ===== */}

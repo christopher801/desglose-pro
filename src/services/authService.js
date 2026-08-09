@@ -8,6 +8,7 @@ import { auth, db } from './firebase'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { createNewUserNotification } from './notificationService'
 import { logActividad } from './actividadService'
+import { checkTrialExpired } from './trialService'
 
 export const registerUser = async (email, password, nombre) => {
   try {
@@ -34,11 +35,9 @@ export const loginUser = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
 
-    // Jwenn done user pou log non li
     const docSnap = await getDoc(doc(db, 'users', user.uid))
     const userData = docSnap.exists() ? docSnap.data() : {}
 
-    // Track login
     await logActividad({
       uid: user.uid,
       nombre: userData.nombre || '',
@@ -46,6 +45,9 @@ export const loginUser = async (email, password) => {
       action: 'login',
       detail: 'Inicio de sesión exitoso'
     })
+
+    // Verifye 30 jou chak fwa user login
+    await checkTrialExpired(user.uid)
 
     return { success: true, user }
   } catch (error) {
@@ -55,7 +57,6 @@ export const loginUser = async (email, password) => {
 
 export const logoutUser = async (uid, nombre, email) => {
   try {
-    // Track logout anvan signOut
     if (uid) {
       await logActividad({
         uid,
