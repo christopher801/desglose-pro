@@ -1,27 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Layout from '../components/Layout'
 
-// 👇 CHANJE EMOJI YO AK NON ICON BOOTSTRAP (SAN "bi")
+const WHATSAPP_NUMBER = '18494850059'
+const WHATSAPP_MSG = encodeURIComponent('Hola, me gustaría obtener Full Access en Desglose Pro para acceder a todos los sistemas de cálculo.')
+
 const systems = [
-  { name: 'Ventana P-92', icon: 'bi-window', path: '/desglose/p92', nuevo: false },
-  { name: 'Ventana P-65', icon: 'bi-window', path: '/desglose/p65', nuevo: false },
-  { name: 'Ventana Tradicional', icon: 'bi-window', path: '/desglose/tradicional', nuevo: false },
-  { name: 'Ventana P-40', icon: 'bi-window', path: '/desglose/p40', nuevo: false },
-  { name: 'Puerta Comercial', icon: 'bi-door-open', path: '/desglose/puerta', nuevo: false },
-  { name: 'Puerta P40', icon: 'bi-door-open', path: '/desglose/puertap40', nuevo: false },
-  { name: 'Croquins de vidrio', icon: 'bi-square-half', path: '/glass-optimizer', nuevo: false },
+  { name: 'Ventanas P-92', icon: 'bi-window', path: '/desglose/p92', locked: false },
+  { name: 'Ventanas P-65', icon: 'bi-window', path: '/desglose/p65', locked: false },
+  { name: 'Ventanas Tradicional', icon: 'bi-window', path: '/desglose/tradicional', locked: false },
+  { name: 'Ventanas Proyectadas P-40', icon: 'bi-window', path: '/desglose/p40', locked: true },
+  { name: 'Puerta Comercial', icon: 'bi-door-open', path: '/desglose/puerta', locked: true },
+  { name: 'Puerta Abisagrada P40', icon: 'bi-door-open', path: '/desglose/puertap40', locked: true },
+  { name: 'Croquis', icon: 'bi-square-half', path: '/glass-optimizer', locked: false },
 ]
 
 export default function Dashboard() {
-  const { userData, isActive, isAdmin } = useAuth()
+  const { userData, isActive, isAdmin, fullAccess } = useAuth()
+  const [showPremium, setShowPremium] = useState(false)
+
+  const hasAccess = isAdmin || fullAccess
 
   return (
     <Layout>
       <div className="page-content">
 
-        {/* Welcome */}
         <div className="card-modern mb-4">
           <div className="dashboard-welcome">
             <div>
@@ -40,7 +44,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Stats — solo si admin */}
         {isAdmin && (
           <div className="dashboard-stats mb-4">
             <div className="stat-card">
@@ -54,30 +57,53 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Advertencia si no activo */}
         {!isActive && (
           <div className="alert-warning mb-4">
             Tu cuenta aún no ha sido activada. Contacta al administrador.
           </div>
         )}
 
-        {/* Sistemas */}
         {isActive && (
           <>
             <h2 className="section-title">Sistemas disponibles</h2>
             <div className="product-grid">
-              {systems.map((sys, idx) => (
-                <Link to={sys.path} key={idx} className="product-card">
-                  {sys.nuevo && <span className="product-badge">Nuevo</span>}
-                  <i className={`bi ${sys.icon} product-icon`}></i>
-                  <div className="product-title">{sys.name}</div>
-                </Link>
-              ))}
+              {systems.map((sys, idx) => {
+                const isLocked = sys.locked && !hasAccess
+
+                if (isLocked) {
+                  return (
+                    <div
+                      key={idx}
+                      className="product-card"
+                      style={{ cursor: 'pointer', position: 'relative', border: '1.5px dashed var(--gray-300)' }}
+                      onClick={() => setShowPremium(true)}
+                    >
+                      <span style={{
+                        position: 'absolute', top: '8px', right: '8px',
+                        background: '#fef3c7', borderRadius: '6px',
+                        padding: '2px 6px', fontSize: '11px', fontWeight: 600,
+                        color: '#b45309', display: 'flex', alignItems: 'center', gap: '3px'
+                      }}>
+                        <i className="bi bi-star-fill" style={{ fontSize: '10px' }}></i>
+                        Premium
+                      </span>
+                      <i className={`bi ${sys.icon} product-icon`} style={{ color: 'var(--gray-400)' }}></i>
+                      <div className="product-title" style={{ color: 'var(--gray-500)' }}>{sys.name}</div>
+                    </div>
+                  )
+                }
+
+                return (
+                  <Link to={sys.path} key={idx} className="product-card">
+                    <i className={`bi ${sys.icon} product-icon`}></i>
+                    <div className="product-title">{sys.name}</div>
+                  </Link>
+                )
+              })}
             </div>
           </>
         )}
 
-        {/* Info card */}
         <div className="card-modern mt-4">
           <h3 className="info-card-title">Información de cuenta</h3>
           <div className="info-row">
@@ -91,12 +117,60 @@ export default function Dashboard() {
             <span className="info-value">{isAdmin ? 'Administrador' : 'Usuario'}</span>
           </div>
           <div className="info-row">
+            <span className="info-label">Acceso</span>
+            <span className={`badge ${hasAccess ? 'badge-admin' : 'badge-user'}`}>
+              {hasAccess ? 'Full Access' : 'Normal'}
+            </span>
+          </div>
+          <div className="info-row">
             <span className="info-label">Email</span>
             <span className="info-value">{userData?.email}</span>
           </div>
         </div>
 
       </div>
+
+      {/* Modal Premium */}
+      {showPremium && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          onClick={() => setShowPremium(false)}
+        >
+          <div
+            style={{ background: 'white', borderRadius: '16px', padding: '2rem', maxWidth: '380px', width: '100%', textAlign: 'center' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+              <i className="bi bi-star-fill" style={{ fontSize: '1.5rem', color: '#f59e0b' }}></i>
+            </div>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>Producto Premium</h3>
+            <p style={{ fontSize: '13px', color: 'var(--gray-500)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+              Este sistema requiere <strong>Full Access</strong>. Contacta al administrador para obtener acceso completo a todos los módulos de cálculo.
+            </p>
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                width: '100%', padding: '12px',
+                background: '#25D366', color: 'white',
+                borderRadius: '10px', textDecoration: 'none',
+                fontSize: '14px', fontWeight: 600, marginBottom: '0.75rem'
+              }}
+            >
+              <i className="bi bi-whatsapp"></i>
+              Solicitar Full Access
+            </a>
+            <button
+              onClick={() => setShowPremium(false)}
+              style={{ width: '100%', padding: '10px', background: 'transparent', border: '1px solid var(--gray-300)', borderRadius: '10px', fontSize: '13px', color: 'var(--gray-600)', cursor: 'pointer' }}
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </Layout>
   )
 }

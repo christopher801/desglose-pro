@@ -1,5 +1,5 @@
 import { db } from './firebase'
-import { collection, getDocs, doc, updateDoc, getDoc, query, where, orderBy } from 'firebase/firestore'
+import { collection, getDocs, doc, updateDoc, getDoc, query, where } from 'firebase/firestore'
 
 export const getAllUsers = async () => {
   try {
@@ -63,6 +63,25 @@ export const lockUser = async (userId) => {
   try {
     const userRef = doc(db, 'users', userId)
     await updateDoc(userRef, { isActive: false })
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+}
+
+// ===== FULL ACCESS =====
+export const grantFullAccess = async (userId) => {
+  try {
+    await updateDoc(doc(db, 'users', userId), { fullAccess: true })
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+}
+
+export const revokeFullAccess = async (userId) => {
+  try {
+    await updateDoc(doc(db, 'users', userId), { fullAccess: false })
     return { success: true }
   } catch (error) {
     return { success: false, error: error.message }

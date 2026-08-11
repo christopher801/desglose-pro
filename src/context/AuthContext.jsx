@@ -54,7 +54,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: !!user,
     isActive: userData?.isActive || false,
-    isAdmin: userData?.role === 'admin'
+    isAdmin: userData?.role === 'admin',
+    fullAccess: userData?.fullAccess || false  // ← ajoute sa
   }
 
   return (

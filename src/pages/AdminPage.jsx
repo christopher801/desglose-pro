@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { getAllUsers, unlockUser, lockUser } from '../services/userService'
+import { getAllUsers, unlockUser, lockUser, grantFullAccess, revokeFullAccess } from '../services/userService'
 import { getNotifications, markNotificationAsRead, deleteNotification } from '../services/notificationService'
 import { getActividad, getActionLabel, logActividad } from '../services/actividadService'
 import Layout from '../components/Layout'
@@ -14,7 +14,6 @@ export default function AdminPage() {
   const [message, setMessage] = useState('')
   const [tab, setTab] = useState('users')
 
-  // Filtro aktivite
   const [filterUser, setFilterUser] = useState('')
   const [filterAction, setFilterAction] = useState('')
 
@@ -41,7 +40,6 @@ export default function AdminPage() {
   const handleUnlock = async (userId, userName) => {
     const result = await unlockUser(userId)
     if (result.success) {
-      // Track aksyon admin
       await logActividad({
         uid: user?.uid,
         nombre: userData?.nombre,
@@ -70,6 +68,40 @@ export default function AdminPage() {
       loadData()
     } else {
       showMessage('❌ Error al bloquear usuario')
+    }
+  }
+
+  const handleGrantFullAccess = async (userId, userName) => {
+    const result = await grantFullAccess(userId)
+    if (result.success) {
+      await logActividad({
+        uid: user?.uid,
+        nombre: userData?.nombre,
+        email: userData?.email,
+        action: 'admin_action',
+        detail: `Full Access otorgado a: ${userName}`
+      })
+      showMessage('⭐ Full Access otorgado')
+      loadData()
+    } else {
+      showMessage('❌ Error al otorgar Full Access')
+    }
+  }
+
+  const handleRevokeFullAccess = async (userId, userName) => {
+    const result = await revokeFullAccess(userId)
+    if (result.success) {
+      await logActividad({
+        uid: user?.uid,
+        nombre: userData?.nombre,
+        email: userData?.email,
+        action: 'admin_action',
+        detail: `Full Access revocado a: ${userName}`
+      })
+      showMessage('🔒 Full Access revocado')
+      loadData()
+    } else {
+      showMessage('❌ Error al revocar Full Access')
     }
   }
 
@@ -102,20 +134,19 @@ export default function AdminPage() {
   const pendingUsers = users.filter(u => !u.isActive && u.role !== 'admin').length
   const unreadNotifs = notifications.filter(n => !n.read).length
 
-  // Filtro aktivite
   const actividadFiltrada = actividad.filter(a => {
     const matchUser = filterUser === '' || a.uid === filterUser
     const matchAction = filterAction === '' || a.action === filterAction
     return matchUser && matchAction
   })
 
-  // Users ki pi aktif (login count)
   const loginCounts = actividad
     .filter(a => a.action === 'login')
     .reduce((acc, a) => {
       acc[a.uid] = { count: (acc[a.uid]?.count || 0) + 1, nombre: a.nombre, email: a.email }
       return acc
     }, {})
+
   const topUsers = Object.entries(loginCounts)
     .sort((a, b) => b[1].count - a[1].count)
     .slice(0, 5)
@@ -217,6 +248,7 @@ export default function AdminPage() {
                         <th>Email</th>
                         <th>Rol</th>
                         <th>Estado</th>
+                        <th>Acceso</th>
                         <th>Registro</th>
                         <th>Acciones</th>
                       </tr>
@@ -237,20 +269,40 @@ export default function AdminPage() {
                               {u.isActive ? 'Activo' : 'Pendiente'}
                             </span>
                           </td>
+                          <td>
+                            {u.role !== 'admin' && (
+                              u.fullAccess
+                                ? <span className="badge badge-admin">
+                                    <i className="bi bi-star-fill" style={{ marginRight: '4px' }}></i>Full Access
+                                  </span>
+                                : <span className="badge badge-user">Normal</span>
+                            )}
+                          </td>
                           <td className="td-date">
                             {u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-DO') : '—'}
                           </td>
                           <td>
                             {u.role !== 'admin' && (
-                              !u.isActive ? (
-                                <button className="btn-success-sm" onClick={() => handleUnlock(u.id, u.nombre)}>
-                                  <i className="bi bi-unlock" style={{ marginRight: '4px' }}></i>Activar
-                                </button>
-                              ) : (
-                                <button className="btn-warning-sm" onClick={() => handleLock(u.id, u.nombre)}>
-                                  <i className="bi bi-lock" style={{ marginRight: '4px' }}></i>Bloquear
-                                </button>
-                              )
+                              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                                {!u.isActive ? (
+                                  <button className="btn-success-sm" onClick={() => handleUnlock(u.id, u.nombre)}>
+                                    <i className="bi bi-unlock" style={{ marginRight: '4px' }}></i>Activar
+                                  </button>
+                                ) : (
+                                  <button className="btn-warning-sm" onClick={() => handleLock(u.id, u.nombre)}>
+                                    <i className="bi bi-lock" style={{ marginRight: '4px' }}></i>Bloquear
+                                  </button>
+                                )}
+                                {u.fullAccess ? (
+                                  <button className="btn-danger-sm" onClick={() => handleRevokeFullAccess(u.id, u.nombre)}>
+                                    <i className="bi bi-star" style={{ marginRight: '4px' }}></i>Revocar
+                                  </button>
+                                ) : (
+                                  <button className="btn-ghost-sm" onClick={() => handleGrantFullAccess(u.id, u.nombre)}>
+                                    <i className="bi bi-star-fill" style={{ marginRight: '4px' }}></i>Full Access
+                                  </button>
+                                )}
+                              </div>
                             )}
                           </td>
                         </tr>
@@ -298,7 +350,6 @@ export default function AdminPage() {
             {/* Tab actividad */}
             {tab === 'actividad' && (
               <div>
-                {/* Top users */}
                 {topUsers.length > 0 && (
                   <div className="card-modern mb-4">
                     <h3 className="info-card-title">
@@ -327,7 +378,6 @@ export default function AdminPage() {
                   </div>
                 )}
 
-                {/* Filtros */}
                 <div className="card-modern mb-4">
                   <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
                     <select
@@ -364,7 +414,6 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                {/* Lista actividad */}
                 <div className="card-modern" style={{ padding: 0, overflow: 'hidden' }}>
                   {actividadFiltrada.length === 0 ? (
                     <p className="empty-state">No hay actividad registrada</p>
