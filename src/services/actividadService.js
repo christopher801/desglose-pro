@@ -1,27 +1,24 @@
 import { db } from './firebase'
-import { collection, addDoc, getDocs, query, orderBy, limit, where } from 'firebase/firestore'
+import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, limit, where } from 'firebase/firestore'
 
 const COLLECTION = 'actividad'
 
-// Sove yon aksyon nan Firestore
 export const logActividad = async ({ uid, nombre, email, action, detail = '' }) => {
   try {
     await addDoc(collection(db, COLLECTION), {
       uid,
       nombre: nombre || 'Usuario',
       email: email || '',
-      action,   // 'login' | 'logout' | 'desglose' | 'admin_action'
-      detail,   // 'P92 - Hueco 1A' | 'login exitoso' | 'Activó a Juan' etc.
+      action,
+      detail,
       timestamp: Date.now(),
       fecha: new Date().toISOString()
     })
   } catch (error) {
-    // Pa janm kase app la si tracking echwe
     console.warn('[Actividad] Error al guardar:', error.message)
   }
 }
 
-// Jwenn tout aktivite yo — pou AdminPage
 export const getActividad = async (limitCount = 100) => {
   try {
     const q = query(
@@ -38,7 +35,6 @@ export const getActividad = async (limitCount = 100) => {
   }
 }
 
-// Jwenn aktivite yon user espesifik
 export const getActividadByUser = async (uid) => {
   try {
     const q = query(
@@ -56,7 +52,27 @@ export const getActividadByUser = async (uid) => {
   }
 }
 
-// Etikèt pou chak tip aksyon
+export const deleteActividad = async (id) => {
+  try {
+    await deleteDoc(doc(db, COLLECTION, id))
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+}
+
+export const deleteAllActividad = async () => {
+  try {
+    const snapshot = await getDocs(collection(db, COLLECTION))
+    const promises = []
+    snapshot.forEach(d => promises.push(deleteDoc(d.ref)))
+    await Promise.all(promises)
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+}
+
 export const getActionLabel = (action) => {
   const labels = {
     login: { label: 'Login', icon: 'bi-box-arrow-in-right', color: 'var(--success)' },
