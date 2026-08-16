@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cargando — Desglose Pro</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0d1e3d;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #1e3a8a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .logo-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.02em;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(255,255,255,0.15);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <h1 class="logo-name">Desglose Pro</h1>
+  </div>
+  <div class="spinner"></div>
+  <span class="label">Cargando sistema...</span>
+</body>
+</html>

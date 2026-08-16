@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.png">
+  <title>Página no encontrada — Desglose Pro</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 2rem;
+    }
+    .logo-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #0d1e3d;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .logo-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0d1e3d;
+    }
+    .error-code {
+      font-size: 5rem;
+      font-weight: 800;
+      color: #e2e8f0;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.04em;
+    }
+    .error-code span { color: #0d1e3d; }
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 12px;
+      background: #0d1e3d;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+      margin-bottom: 0.75rem;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-outline {
+      background: transparent;
+      color: #0d1e3d;
+      border: 1px solid #e2e8f0;
+    }
+    .btn-outline:hover { background: #f8fafc; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <h1 class="logo">Desglose Pro</h1>
+    </div>
+
+    <div class="error-code"><span>4</span>0<span>4</span></div>
+    <h1>Página no encontrada</h1>
+    <p>La página que buscas no existe o fue movida. Regresa al inicio y continúa trabajando.</p>
+
+    <a href="/" class="btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Ir al inicio
+    </a>
+    <a href="/dashboard" class="btn btn-outline">
+      Ir al dashboard
+    </a>
+  </div>
+</body>
+</html>

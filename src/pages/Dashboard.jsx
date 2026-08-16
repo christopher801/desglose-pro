@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Layout from '../components/Layout'
 
-const WHATSAPP_NUMBER = '18494850059'
-const WHATSAPP_MSG = encodeURIComponent('Hola, me gustaría obtener Full Access en Desglose Pro para acceder a todos los sistemas de cálculo.')
-
 const systems = [
   { name: 'Ventanas P-92', icon: 'bi-window', path: '/desglose/p92', locked: false },
   { name: 'Ventanas P-65', icon: 'bi-window', path: '/desglose/p65', locked: false },
@@ -22,6 +19,11 @@ export default function Dashboard() {
 
   const hasAccess = isAdmin || fullAccess
 
+  const WHATSAPP_NUMBER = '18494850059'
+const WHATSAPP_MSG = encodeURIComponent(
+    `Hola, soy ${userData?.nombre || 'un usuario'} y me gustaría obtener Full Access en Desglose Pro para acceder a todos los sistemas de cálculo.`
+  )
+  
   return (
     <Layout>
       <div className="page-content">

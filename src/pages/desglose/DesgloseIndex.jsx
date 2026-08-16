@@ -4,9 +4,6 @@ import Layout from "../../components/Layout";
 import { useAuth } from "../../context/AuthContext";
 
 const WHATSAPP_NUMBER = "18494850059";
-const WHATSAPP_MSG = encodeURIComponent(
-  "Hola, me gustaría obtener Full Access en Desglose Pro para acceder a todos los sistemas de cálculo.",
-);
 
 const systems = [
   {
@@ -48,11 +45,14 @@ const systems = [
 ];
 
 export default function DesgloseIndex() {
-  const { fullAccess, isAdmin } = useAuth();
+  const { fullAccess, isAdmin, userData } = useAuth();
   const [showPremium, setShowPremium] = useState(false);
 
   const hasAccess = isAdmin || fullAccess;
 
+  const WHATSAPP_MSG = encodeURIComponent(
+  `Hola, soy ${userData?.nombre || 'un usuario'} y me gustaría obtener Full Access en Desglose Pro para acceder a todos los sistemas de cálculo.`
+)
   return (
     <Layout>
       <div className="page-content">

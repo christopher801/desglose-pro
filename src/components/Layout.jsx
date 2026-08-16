@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { logoutUser } from "../services/authService";
+import InstallButton from "./InstallButton";
 
 const navItems = [
   { path: "/dashboard", icon: "bi-grid", label: "Inicio" },
@@ -11,21 +12,15 @@ const navItems = [
 
 const legalLinks = [
   {
-    path: "/legal/privacidad",
+    path: "/legal/PrivacyPolicy.html",
     icon: "bi-shield-lock",
     label: "Política de Privacidad",
   },
   {
-    path: "/legal/terminos",
+    path: "/legal/TermsOfService.html",
     icon: "bi-file-text",
     label: "Términos de Servicio",
   },
-  {
-    path: "/legal/licencia",
-    icon: "bi-file-earmark-check",
-    label: "Licencia de Uso",
-  },
-  { path: "/about", icon: "bi-info-circle", label: "Acerca de" },
 ];
 
 export default function Layout({ children, unreadCount = 0 }) {
@@ -66,7 +61,7 @@ export default function Layout({ children, unreadCount = 0 }) {
         <div className="sidebar-logo">
           <div>
             <div className="sidebar-logo-name">DESGLOSE PRO</div>
-            <div className="sidebar-logo-ver">v4.9.0</div>
+            <div className="sidebar-logo-ver">v5.1.0</div>
           </div>
         </div>
 
@@ -152,6 +147,7 @@ export default function Layout({ children, unreadCount = 0 }) {
               </Link>
             )}
           </div>
+          <InstallButton className="topbar-install-slot" />
           <a
             href={WHATSAPP_URL}
             target="_blank"
@@ -159,7 +155,7 @@ export default function Layout({ children, unreadCount = 0 }) {
             className="topbar-notif-btn"
             title="Ayuda y soporte"
           >
-            <i className="bi bi-headset me-1"></i>
+            <i className="bi bi-whatsapp me-1"></i>
           </a>
           {/*acerca de aqui */}
           <button
@@ -223,7 +219,7 @@ export default function Layout({ children, unreadCount = 0 }) {
               }}
             >
               <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 700 }}>
-                Desglose Pro v4.9.0
+                Desglose Pro v5.1.0
               </h3>
               <button
                 onClick={() => setShowAboutModal(false)}
@@ -258,9 +254,11 @@ export default function Layout({ children, unreadCount = 0 }) {
               }}
             >
               {legalLinks.map((link) => (
-                <Link
+                <a
                   key={link.path}
-                  to={link.path}
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setShowAboutModal(false)}
                   style={{
                     fontSize: "0.85rem",
@@ -270,7 +268,7 @@ export default function Layout({ children, unreadCount = 0 }) {
                 >
                   <i className={`bi ${link.icon} me-1`}></i>
                   {link.label}
-                </Link>
+                </a>
               ))}
             </div>
           </div>

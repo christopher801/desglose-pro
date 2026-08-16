@@ -3,42 +3,26 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/Layout'
 import FractionUtils from '../../utils/fraction'
 
-// P-40 Proyectada — 1 oswa 2 hojas
-const calcular = (ancho, alto, hojas) => {
-  if (hojas === 1) {
+// P-40 Proyectada — 1 hoja sèlman, pa gen hojas option
+const calcular = (ancho, alto) => {
     return {
       cabVen: ancho - 2,
       latVen: alto - 2,
       marco: ancho - (1/8),
       latMarco: alto - (1/8),
       vidrioAncho: ancho - (6 + 3/8),
-      vidrioAlto: alto - (6 + 1/4),
-      divisor: null
-    }
-  } else {
-    // 2 hojas
-    const divisor = (ancho - 10.875) // 22.9375 pou egzamp lan
-    return {
-      cabVen: (ancho - 2.875) / 2,
-      latVen: alto - 2,
-      marco: ancho - (1/8),
-      latMarco: alto - (1/8),
-      vidrioAncho: divisor / 2,
-      vidrioAlto: alto - 6,
-      divisor: divisor
+      vidrioAlto: alto - (6 + 1/4)
     }
   }
-}
 
 const buildPrintHtml = (projectInfo, results) => {
   const date = new Date().toLocaleDateString('es-DO')
   const rows = results.map(row => `
     <tr>
-      <td>${row.hueco}</td><td>${row.ancho}</td><td>${row.alto}</td><td>${row.hojas}</td>
+      <td>${row.hueco}</td><td>${row.ancho}</td><td>${row.alto}</td>
       <td>${row.cabVen}</td><td>${row.latVen}</td>
       <td>${row.marco}</td><td>${row.latMarco}</td>
       <td>${row.vidrioAncho}</td><td>${row.vidrioAlto}</td>
-      <td>${row.divisor || '—'}</td>
     </tr>`).join('')
   return `<!DOCTYPE html><html><head><title>VENTANA PROYECTADA P-40</title>
   <style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:.5in;background:white}
@@ -60,18 +44,18 @@ const buildPrintHtml = (projectInfo, results) => {
   </div>
   <table><thead>
     <tr>
-      <th rowspan="2">Hueco</th><th rowspan="2">Ancho</th><th rowspan="2">Alto</th><th rowspan="2">Hojas</th>
-      <th colspan="2">Hoja</th><th colspan="2">Marco</th><th colspan="2">Vidrio</th><th rowspan="2">Divisor</th>
+      <th rowspan="2">Hueco</th><th rowspan="2">Ancho</th><th rowspan="2">Alto</th>
+      <th colspan="2">Hoja</th><th colspan="2">Marco</th><th colspan="2">Vidrio</th>
     </tr>
-    <tr><th>Cab-ven</th><th>Lat-ven</th><th>Cab-marco</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th>
+    <tr><th>Cab-ven</th><th>Lat-ven</th><th>Cab-marco</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th></tr>
   </thead><tbody>${rows}</tbody></table>
-  <div class="footer"><span>© 2026 - Desglose Pro</span><span>${date}</span></div>
+  <div class="footer"><span>© 2026 - Christopher</span><span>${date}</span></div>
   </body></html>`
 }
 
 export default function P40() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ hueco: '', ancho: '', alto: '', hojas: 1 })
+  const [form, setForm] = useState({ hueco: 1, ancho: '', alto: '' })
   const [results, setResults] = useState([])
   const [projectInfo, setProjectInfo] = useState({ cuenta: '', obra: '', color: '' })
   const [error, setError] = useState('')
@@ -85,28 +69,24 @@ export default function P40() {
     const anchoDec = FractionUtils.parseFraction(form.ancho)
     const altoDec = FractionUtils.parseFraction(form.alto)
     if (anchoDec <= 0 || altoDec <= 0) { setError('❌ Las medidas deben ser mayores a 0'); return }
-    const hojas = parseInt(form.hojas, 10)
-    const calc = calcular(anchoDec, altoDec, hojas)
+    const calc = calcular(anchoDec, altoDec)
     setResults([...results, {
       hueco: form.hueco,
       ancho: form.ancho,
       alto: form.alto,
-      hojas: hojas === 1 ? '1 Hoja' : '2 Hojas',
       cabVen: FractionUtils.toSixteenths(calc.cabVen),
       latVen: FractionUtils.toSixteenths(calc.latVen),
       marco: FractionUtils.toSixteenths(calc.marco),
       latMarco: FractionUtils.toSixteenths(calc.latMarco),
       vidrioAncho: FractionUtils.toSixteenths(calc.vidrioAncho),
-      vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto),
-      divisor: calc.divisor ? FractionUtils.toSixteenths(calc.divisor) : null
+      vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto)
     }])
-    setForm({ hueco: '', ancho: '', alto: '', hojas: form.hojas })
-
+    setForm({ hueco: parseInt(form.hueco) + 1, ancho: '', alto: '' })
   }
 
   const handleReset = () => {
     setResults([]); setError('')
-    setForm({ hueco: 1, ancho: '', alto: '', hojas: 1 })
+    setForm({ hueco: 1, ancho: '', alto: '' })
     setProjectInfo({ cuenta: '', obra: '', color: '' })
   }
 
@@ -122,15 +102,15 @@ export default function P40() {
     <Layout>
       <div className="page-content">
         <div className="desglose-header">
-          <button className="btn-back" onClick={() => navigate('/desglose')}><i className="bi bi-arrow-left" style={{ marginRight: '6px' }}></i>Volver</button>
+          <button className="btn-back" onClick={() => navigate('/desglose')}>← Volver</button>
           <h1 className="page-title">Ventana P-40 Proyectada</h1>
           <div className="desglose-header-actions">
-            {results.length > 0 && <button className="btn-primary-sm" onClick={handlePrint}><i className="bi bi-printer" style={{ marginRight: '6px' }}></i>Imprimir</button>}
+            {results.length > 0 && <button className="btn-primary-sm" onClick={handlePrint}>🖨️ Imprimir</button>}
           </div>
         </div>
 
         <div className="card-modern mb-4">
-          <h3 className="info-card-title"><i className="bi bi-clipboard" style={{ marginRight: '6px' }}></i>Información del proyecto</h3>
+          <h3 className="info-card-title">📋 Información del proyecto</h3>
           <div className="form-grid-3">
             {[['cuenta', 'Cuenta'], ['obra', 'Obra'], ['color', 'Color']].map(([name, label]) => (
               <div className="auth-field" key={name}>
@@ -142,10 +122,11 @@ export default function P40() {
         </div>
 
         <div className="card-modern mb-4">
-          <div className="form-grid-4">
+          {/* P-40 pa gen hojas — sèlman Hueco, Ancho, Alto */}
+          <div className="form-grid-3">
             <div className="auth-field">
               <label className="auth-label">Hueco #</label>
-              <input type="text" name="hueco" value={form.hueco} onChange={handleFormChange} placeholder='ej: A-1' className="auth-input" />
+              <input type="number" name="hueco" value={form.hueco} onChange={handleFormChange} className="auth-input" />
             </div>
             <div className="auth-field">
               <label className="auth-label">Ancho</label>
@@ -155,18 +136,11 @@ export default function P40() {
               <label className="auth-label">Alto</label>
               <input type="text" name="alto" value={form.alto} onChange={handleFormChange} placeholder='ej: 27 15/16"' className="auth-input" />
             </div>
-            <div className="auth-field">
-              <label className="auth-label">Hojas</label>
-              <select name="hojas" value={form.hojas} onChange={handleFormChange} className="auth-input">
-                <option value={1}>1 Hoja</option>
-                <option value={2}>2 Hojas</option>
-              </select>
-            </div>
           </div>
           {error && <div className="auth-error" style={{ marginTop: '0.5rem' }}>{error}</div>}
           <div className="form-actions">
-            <button className="auth-btn" onClick={handleAdd}><i className="bi bi-plus-circle" style={{ marginRight: '6px' }}></i>Agregar</button>
-            {results.length > 0 && <button className="btn-outline-lg" onClick={handleReset}><i className="bi bi-arrow-counterclockwise" style={{ marginRight: '6px' }}></i>Reset</button>}
+            <button className="auth-btn" onClick={handleAdd}>➕ Agregar</button>
+            {results.length > 0 && <button className="btn-outline-lg" onClick={handleReset}>↺ Reset</button>}
           </div>
         </div>
 
@@ -174,11 +148,11 @@ export default function P40() {
           <div className="table-container">
             <div className="table-title">VENTANA PROYECTADA P-40</div>
             <div className="table-responsive">
-              <table className="table-professional" style={{ minWidth: '950px' }}>
+              <table className="table-professional" style={{ minWidth: '780px' }}>
                 <thead>
                   <tr>
-                    <th rowSpan="2">Hueco</th><th rowSpan="2">Ancho</th><th rowSpan="2">Alto</th><th rowSpan="2">Hojas</th>
-                    <th colSpan="2">Hoja</th><th colSpan="2">Marco</th><th colSpan="2">Vidrio</th><th rowSpan="2">Divisor</th>
+                    <th rowSpan="2">Hueco</th><th rowSpan="2">Ancho</th><th rowSpan="2">Alto</th>
+                    <th colSpan="2">Hoja</th><th colSpan="2">Marco</th><th colSpan="2">Vidrio</th>
                   </tr>
                   <tr>
                     <th>Cab-ven</th><th>Lat-ven</th><th>Cab-marco</th><th>Lat-marco</th><th>Ancho</th><th>Alto</th>
@@ -187,11 +161,10 @@ export default function P40() {
                 <tbody>
                   {results.map((row, idx) => (
                     <tr key={idx}>
-                      <td>{row.hueco}</td><td>{row.ancho}</td><td>{row.alto}</td><td>{row.hojas}</td>
+                      <td>{row.hueco}</td><td>{row.ancho}</td><td>{row.alto}</td>
                       <td>{row.cabVen}</td><td>{row.latVen}</td>
                       <td>{row.marco}</td><td>{row.latMarco}</td>
                       <td>{row.vidrioAncho}</td><td>{row.vidrioAlto}</td>
-                      <td>{row.divisor || '—'}</td>
                     </tr>
                   ))}
                 </tbody>

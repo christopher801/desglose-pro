@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Términos de Servicio — Desglose Pro</title>
+  <link rel="icon" href="/favicon.png" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.7;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 50;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .logo-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #0d1e3d;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .logo-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0d1e3d;
+    }
+    .nav-back {
+      font-size: 13px;
+      color: #64748b;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: #0d1e3d; }
+
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 6rem;
+    }
+    .header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eff6ff;
+      color: #1e40af;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0d1e3d;
+      margin-bottom: 0.5rem;
+    }
+    .meta {
+      font-size: 13px;
+      color: #64748b;
+    }
+    section { margin-bottom: 2rem; }
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0d1e3d;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h2::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 18px;
+      background: #3b82f6;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    p {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 0.75rem;
+    }
+    ul {
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    li {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 0.4rem;
+    }
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid #3b82f6;
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .info-box p { color: #1e40af; margin: 0; }
+    .warning-box {
+      background: #fff7ed;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .warning-box p { color: #92400e; margin: 0; }
+    .check-list { list-style: none; padding-left: 0; }
+    .check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .check-list li::before {
+      content: '✓';
+      color: #10b981;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .x-list { list-style: none; padding-left: 0; }
+    .x-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .x-list li::before {
+      content: '✕';
+      color: #ef4444;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .contact-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 0.75rem;
+    }
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 0.5rem;
+    }
+    .contact-row:last-child { margin-bottom: 0; }
+    .contact-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #eff6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid #e2e8f0;
+    }
+    a { color: #3b82f6; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-brand">
+      <div class="logo-box">DP</div>
+      <span class="logo-name">Desglose Pro</span>
+    </a>
+  </nav>
+
+  <main>
+    <div class="header">
+      <h1>Términos de Servicio</h1>
+      <p class="meta">Última actualización: 16 de agosto de 2026</p>
+    </div>
+
+    <div class="info-box">
+      <p>Al acceder y usar Desglose Pro, aceptas quedar vinculado por estos Términos de Servicio. Si no estás de acuerdo con alguna parte, no debes usar el servicio.</p>
+    </div>
+
+    <section>
+      <h2>1. Descripción del servicio</h2>
+      <p><strong>Desglose Pro</strong> es una aplicación web progresiva (PWA) diseñada para profesionales de carpintería de aluminio. Permite calcular perfiles para ventanas y puertas de aluminio.</p>
+    </section>
+
+    <section>
+      <h2>2. Cuentas de usuario</h2>
+      <p>Para acceder al servicio debes registrar una cuenta. Al hacerlo, aceptas:</p>
+      <ul class="check-list">
+        <li>Proporcionar información veraz y actualizada.</li>
+        <li>Mantener la seguridad de tu contraseña.</li>
+        <li>Notificar cualquier acceso no autorizado a tu cuenta.</li>
+        <li>Ser responsable de toda actividad bajo tu cuenta.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. Uso aceptable</h2>
+      <p>Al usar Desglose Pro, te comprometes a <strong>NO</strong>:</p>
+      <ul class="x-list">
+        <li>Usar el servicio para fines ilegales o no autorizados.</li>
+        <li>Intentar acceder a cuentas de otros usuarios.</li>
+        <li>Interferir con el funcionamiento del servicio.</li>
+        <li>Reproducir, distribuir o revender el software sin autorización.</li>
+        <li>Realizar ingeniería inversa del código fuente.</li>
+        <li>Eliminar avisos de derechos de autor o marcas comerciales.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. Planes y acceso</h2>
+      <p>Desglose Pro opera con los siguientes niveles de acceso:</p>
+      <ul>
+        <li><strong>Plan básico:</strong> acceso a los sistemas P-92 y P-65 Tradicional Optimizacion de Corte de Vidrio.</li>
+        <li><strong>Full Access:</strong> acceso completo a todos los módulos de cálculo, otorgado por el administrador.</li>
+      </ul>
+      <p>El administrador se reserva el derecho de activar, suspender o revocar el acceso de cualquier cuenta en cualquier momento.</p>
+    </section>
+
+    <section>
+      <h2>5. Propiedad intelectual</h2>
+      <p>Desglose Pro y todo su contenido — incluyendo código fuente, diseño, lógica de cálculo, marcas y logotipos  son propiedad exclusiva de <strong>Desglose Pro</strong>.</p>
+      <p>El uso del servicio no te otorga ningún derecho de propiedad sobre el software o sus componentes.</p>
+    </section>
+
+    <section>
+      <h2>6. Disponibilidad del servicio</h2>
+      <p>Nos esforzamos por mantener Desglose Pro disponible en todo momento, pero no garantizamos disponibilidad ininterrumpida. Podemos realizar mantenimientos, actualizaciones o interrupciones sin previo aviso.</p>
+    </section>
+
+    <section>
+      <h2>7. Limitación de responsabilidad</h2>
+      <p>Desglose Pro se proporciona <strong>"tal cual"</strong>. No seremos responsables por:</p>
+      <ul>
+        <li>Errores en los cálculos derivados de datos incorrectos ingresados por el usuario.</li>
+        <li>Pérdida de datos por fallas de conectividad o del dispositivo.</li>
+        <li>Daños directos, indirectos o consecuentes derivados del uso del servicio.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>8. Modificaciones</h2>
+      <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios entran en vigor inmediatamente después de su publicación. El uso continuado del servicio constituye aceptación de los nuevos términos.</p>
+    </section>
+
+    <section>
+      <h2>9. Terminación</h2>
+      <p>Podemos suspender o terminar tu acceso a Desglose Pro si incumples estos términos, sin previo aviso y sin responsabilidad de nuestra parte.</p>
+      <p>Puedes cancelar tu cuenta en cualquier momento contactando al administrador.</p>
+    </section>
+
+    <section>
+      <h2>10. Contacto</h2>
+      <p>Para preguntas sobre estos términos, contáctanos:</p>
+      <div class="contact-box">
+        <div class="contact-row">
+          <div class="contact-icon">✉️</div>
+          <span><strong>Email:</strong> softwaredesglosepro@gmail.com</span>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">📞</div>
+          <span><strong>Teléfono:</strong> +1 (849) 485-0059</span>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">💬</div>
+          <span><strong>WhatsApp:</strong> +1 (849) 485-0059</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Desglose Pro — Todos los derechos reservados.
+    <br/>
+    <a href="/legal/PrivacyPolicy.html">Política de Privacidad</a>
+  </footer>
+
+</body>
+</html>

@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+
 // Rout ki egzije login sèlman
 export const AuthRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -25,3 +26,11 @@ export const AdminRoute = ({ children }) => {
   if (!isAdmin) return <Navigate to="/dashboard" replace />;
   return children;
 };
+
+export const FullAccessRoute = ({ children }) => {
+  const { isAuthenticated, isActive, isAdmin, fullAccess } = useAuth()
+  if (!isAuthenticated) return <Navigate to="/login" replace />
+  if (!isActive) return <Navigate to="/pending" replace />
+  if (!isAdmin && !fullAccess) return <Navigate to="/desglose" replace />
+  return children
+}
