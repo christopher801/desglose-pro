@@ -28,13 +28,75 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ============================================================ */
+/* FONTS - DM Sans (cuerpo) + Manrope (títulos)                 */
+/* ============================================================ */
+
+/* Aplike font kò a body */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background: var(--gray-50);
   color: var(--gray-800);
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Opsyonèl: Aplike a tout eleman yo */
+* {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* ============================================================ */
+/* Tit ak encabezados (si w itilize Manrope)                    */
+/* ============================================================ */
+
+/* Aplike Manrope a tit yo (si ou vle) */
+h1, h2, h3, h4, h5, h6,
+.sidebar-logo-name,
+.topbar-title,
+.profile-page-title,
+.page-title,
+.card-title,
+.modal-title {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================ */
+/* Opsyonèl: Ajuste poids pou kèk eleman                       */
+/* ============================================================ */
+
+/* Bouton ak input yo */
+button, input, select, textarea {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+}
+
+/* Kò tèks */
+p, span, div, li, .text-body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+}
+
+/* ============================================================ */
+/* Si ou vle sèlman DM Sans pou tout bagay (pa Manrope)        */
+/* ============================================================ */
+
+/* Dekomante liy sa yo si ou pa vle Manrope */
+
+h1, h2, h3, h4, h5, h6,
+.sidebar-logo-name,
+.topbar-title,
+.profile-page-title,
+.page-title,
+.card-title,
+.modal-title {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
 
 /* ========= LAYOUT SHELL ========= */
 .layout-shell {
