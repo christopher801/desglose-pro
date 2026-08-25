@@ -15,7 +15,6 @@ import SignupPage from "./pages/SignupPage";
 import PendingPage from "./pages/PendingPage";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
-import ConfiguracionPage from "./pages/configuracion";
 import AdminPage from "./pages/AdminPage";
 import GlassOptimizer from "./pages/GlassOptimizer";
 
@@ -65,14 +64,7 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/configuracion"
-          element={
-            <ProtectedRoute>
-              <ConfiguracionPage />
-            </ProtectedRoute>
-          }
-        />
+        
         
         <Route
           path="/glass-optimizer"
