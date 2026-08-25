@@ -25,6 +25,12 @@ const systems = [
     locked: false,
   },
   {
+    name: "Ventanas E-70",
+    path: "/desglose/e70",
+    icon: "bi-window",
+    locked: true,
+  },
+  {
     name: "Ventanas Proyectada P-40",
     path: "/desglose/p40",
     icon: "bi-window-dock",
@@ -56,7 +62,7 @@ export default function DesgloseIndex() {
   return (
     <Layout>
       <div className="page-content">
-        <h1 className="page-title">Sistemas de cálculo</h1>
+        <h1 className="section-title">Sistemas de cálculo</h1>
 
         {!hasAccess && (
           <div className="alert-info mb-4">
