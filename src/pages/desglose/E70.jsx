@@ -3,41 +3,42 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/Layout'
 import FractionUtils from '../../utils/fraction'
 
-// E-70 — 2, 3, 4 hojas
+// E-70 — 2, 3, 4 hojas (korekte ak fraksyon)
 const calcular = (ancho, alto, hojas) => {
   if (hojas === 2) {
     return {
-      cabAlf: (ancho - 1.125) / 2,      // (ancho - 1 1/8) / 2
-      jambas: alto - 2.8125,            // alto - 2 13/16
-      marco: ancho - 0.125,             // ancho - 1/8
-      latMarco: alto - 0.125,           // alto - 1/8
-      vidrioAncho: (ancho - 8.875) / 2, // (ancho - 8 7/8) / 2
-      vidrioAlto: alto - 6.8125,        // alto - 6 13/16
+      cabAlf: (ancho - 1) / 2,
+      jambas: alto - (2 + 5/8),
+      marco: ancho - (1/8),
+      latMarco: alto - (1/8),
+      vidrioAncho: (ancho - (9 + 10/16)) / 2,
+      vidrioAlto: alto - (6 + 11/16),
       vidrioMedio: null
     }
   } else if (hojas === 3) {
     return {
-      cabAlf: (ancho / 3) + 0.25,      // (ancho / 3) + 1/4
-      jambas: alto - 2.8125,           // alto - 2 13/16
-      marco: ancho - 0.125,            // ancho - 1/8
-      latMarco: alto - 0.125,          // alto - 1/8
-      vidrioAncho: (ancho / 3) - 3.625, // (ancho / 3) - 3 5/8
-      vidrioAlto: alto - 6.8125,       // alto - 6 13/16
-      vidrioMedio: (ancho / 3) - 3.625 // (ancho / 3) - 3 5/8
+      cabAlf: (ancho / 3) + (5/16),
+      jambas: alto - (2 + 5/8),
+      marco: ancho - (1/8),
+      latMarco: alto - (1/8),
+      vidrioAncho: (ancho / 3) - (3 + 7/8),
+      vidrioAlto: alto - (6 + 3/4),
+      vidrioMedio: (ancho / 3) - (3 + 7/8)
     }
   } else {
     // 4 hojas
     return {
-      cabAlf: (ancho / 4) + 0.125,     // (ancho / 4) + 1/8
-      jambas: alto - 2.625,            // alto - 2 5/8
-      marco: ancho - 0.125,            // ancho - 1/8
-      latMarco: alto - 0.125,          // alto - 1/8
-      vidrioAncho: (ancho / 4) - 3.875, // (ancho / 4) - 3 7/8
-      vidrioAlto: alto - 6.625,        // alto - 6 5/8
+      cabAlf: (ancho / 4) + (3/16),
+      jambas: alto - (2 + 5/8),
+      marco: ancho - (1/8),
+      latMarco: alto - (1/8),
+      vidrioAncho: (ancho / 4) - (3 + 7/8),
+      vidrioAlto: alto - (6 + 3/4),
       vidrioMedio: null
     }
   }
 }
+
 
 export default function E70() {
   const navigate = useNavigate()
