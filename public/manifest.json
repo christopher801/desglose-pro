@@ -4,7 +4,7 @@
   "description": "Sistema profesional de cálculo para carpintería de aluminio",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#1e3b5c",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "orientation": "portrait",
   "icons": [
