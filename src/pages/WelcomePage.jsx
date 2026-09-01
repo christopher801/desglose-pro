@@ -37,6 +37,14 @@ export default function WelcomePage() {
       tag: "popular",
     },
     {
+      name: "Ventana E-70",
+      type: "Corredera 2, 3 o 4 hojas",
+      precision: '1/16"',
+      status: "Disponible",
+      icon: "bi-window",
+      tag: "popular",
+    },
+    {
       name: "P-40 Proyectada",
       type: "Sistema proyectado",
       precision: '1/16"',
@@ -2121,7 +2129,7 @@ export default function WelcomePage() {
               </li>
               <li>
                 <span style={{ fontSize: "0.85rem", color: "#64748b" }}>
-                  Versión: 5.1.0
+                  Versión: 5.3.0
                 </span>
               </li>
             </ul>
