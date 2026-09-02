@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Layout from "../components/Layout";
+import { getHistorial } from "../services/historialService";
 
 const systems = [
   {
@@ -46,7 +47,6 @@ const systems = [
     path: "/desglose/puertap40",
     locked: true,
   },
-
   {
     name: "Croquis",
     icon: "bi-square-half",
@@ -55,20 +55,186 @@ const systems = [
   },
 ];
 
-const summaryData = [];
+const SYSTEM_ICONS = {
+  "Ventana P-92": "bi-window",
+  "Ventana P-65": "bi-window",
+  "Ventana Tradicional": "bi-window",
+  "Ventana E-70": "bi-window",
+  "Ventana P-40 Proyectada": "bi-window",
+  "Puerta Comercial": "bi-door-open",
+  "Puerta P40": "bi-door-open",
+};
 
-const recentDesgloses = [];
+const getSystemIcon = (sistema) => {
+  return SYSTEM_ICONS[sistema] || "bi-calculator";
+};
+
+const formatDate = (date) => {
+  if (!date) return "Sin fecha";
+
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return "Sin fecha";
+  }
+
+  return parsedDate.toLocaleDateString("es-DO", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
+const formatRelativeDate = (date) => {
+  if (!date) return "";
+
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return "";
+  }
+
+  const now = new Date();
+
+  const diff = now.getTime() - parsedDate.getTime();
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 1) return "Ahora mismo";
+  if (minutes < 60) return `Hace ${minutes} min`;
+  if (hours < 24) return `Hace ${hours} h`;
+  if (days === 1) return "Ayer";
+  if (days < 7) return `Hace ${days} días`;
+
+  return formatDate(date);
+};
 
 export default function Dashboard() {
   const { userData, isActive, isAdmin, fullAccess } = useAuth();
+
   const [showPremium, setShowPremium] = useState(false);
+
+  const [historial, setHistorial] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(true);
 
   const hasAccess = isAdmin || fullAccess;
 
   const WHATSAPP_NUMBER = "18494850059";
+
   const WHATSAPP_MSG = encodeURIComponent(
-    `Hola, soy ${userData?.nombre || "un usuario"} y me gustaría obtener Full Access en Desglose Pro para acceder a todos los sistemas de cálculo.`,
+    `Hola, soy ${
+      userData?.nombre || "un usuario"
+    } y me gustaría obtener Full Access en Desglose Pro para acceder a todos los sistemas de cálculo.`,
   );
+
+  // ==========================================
+  // CARGAR HISTORIAL
+  // ==========================================
+
+  useEffect(() => {
+    const loadHistorial = () => {
+      try {
+        const data = getHistorial();
+
+        if (Array.isArray(data)) {
+          setHistorial(data);
+        } else {
+          setHistorial([]);
+        }
+      } catch (error) {
+        console.error("Error cargando historial:", error);
+        setHistorial([]);
+      } finally {
+        setLoadingHistory(false);
+      }
+    };
+
+    loadHistorial();
+  }, []);
+
+  // ==========================================
+  // ORDENAR HISTORIAL
+  // ==========================================
+
+  const sortedHistorial = [...historial].sort((a, b) => {
+    return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+  });
+
+  // ==========================================
+  // SUMMARY DATA
+  // ==========================================
+
+  const totalDesgloses = historial.length;
+
+  const currentDate = new Date();
+
+  const desglosesEsteMes = historial.filter((item) => {
+    if (!item.fecha) return false;
+
+    const date = new Date(item.fecha);
+
+    return (
+      date.getMonth() === currentDate.getMonth() &&
+      date.getFullYear() === currentDate.getFullYear()
+    );
+  }).length;
+
+  const sistemasUtilizados = new Set(
+    historial.map((item) => item.sistema).filter(Boolean),
+  ).size;
+
+  const ultimoDesglose = sortedHistorial[0];
+
+  const summaryData = [
+    {
+      label: "Total Desgloses",
+      value: totalDesgloses,
+      footer:
+        totalDesgloses === 1
+          ? "1 desglose registrado"
+          : `${totalDesgloses} desgloses registrados`,
+    },
+    {
+      label: "Este Mes",
+      value: desglosesEsteMes,
+      footer: "Desgloses realizados este mes",
+    },
+    {
+      label: "Sistemas Utilizados",
+      value: sistemasUtilizados,
+      footer:
+        sistemasUtilizados === 1
+          ? "1 sistema utilizado"
+          : `${sistemasUtilizados} sistemas utilizados`,
+    },
+    {
+      label: "Último Desglose",
+      value: ultimoDesglose ? formatDate(ultimoDesglose.fecha) : "—",
+      footer: ultimoDesglose
+        ? ultimoDesglose.sistema
+        : "Aún no has creado desgloses",
+    },
+  ];
+
+  // ==========================================
+  // RECENT DESGLOSES
+  // ==========================================
+
+  const recentDesgloses = sortedHistorial.slice(0, 5).map((item) => {
+    const cliente =
+      item.proyecto?.cliente || item.proyecto?.cuenta || "Sin cliente";
+
+    const obra = item.proyecto?.obra || "";
+
+    return {
+      id: item.id,
+      name: item.sistema || "Desglose",
+      icon: getSystemIcon(item.sistema),
+      meta: obra ? `${cliente} • ${obra}` : cliente,
+      type: formatRelativeDate(item.fecha),
+    };
+  });
 
   return (
     <Layout>
@@ -82,6 +248,7 @@ export default function Dashboard() {
         {isActive && (
           <>
             <h2 className="section-title">Crear proyecto</h2>
+
             <div className="product-grid">
               {systems.map((sys, idx) => {
                 const isLocked = sys.locked && !hasAccess;
@@ -120,13 +287,19 @@ export default function Dashboard() {
                         ></i>
                         Premium
                       </span>
+
                       <i
                         className={`bi ${sys.icon} product-icon`}
-                        style={{ color: "var(--gray-400)" }}
+                        style={{
+                          color: "var(--gray-400)",
+                        }}
                       ></i>
+
                       <div
                         className="product-title"
-                        style={{ color: "var(--gray-500)" }}
+                        style={{
+                          color: "var(--gray-500)",
+                        }}
                       >
                         {sys.name}
                       </div>
@@ -137,6 +310,7 @@ export default function Dashboard() {
                 return (
                   <Link to={sys.path} key={idx} className="product-card">
                     <i className={`bi ${sys.icon} product-icon`}></i>
+
                     <div className="product-title">{sys.name}</div>
                   </Link>
                 );
@@ -145,15 +319,17 @@ export default function Dashboard() {
           </>
         )}
 
+        {/* ==========================================
+            RESUMEN
+        ========================================== */}
+
         <div className="summary-grid">
           {summaryData.map((item, index) => (
             <div className="summary-card" key={index}>
               <div className="summary-label">{item.label}</div>
 
-              <div
-                className={`summary-value ${item.positive ? "positive" : ""}`}
-              >
-                {item.value}
+              <div className="summary-value">
+                {loadingHistory ? "..." : item.value}
               </div>
 
               <div className="summary-footer">{item.footer}</div>
@@ -161,72 +337,130 @@ export default function Dashboard() {
           ))}
         </div>
 
+        {/* ==========================================
+            DESGLOSES RECIENTES
+        ========================================== */}
+
         <div className="bottom-grid">
           <div className="panel">
-            {/* Panel Header */}
-            {/* <div className="panel-header">
-              <div className="panel-title">Desgloses recientes</div>
+            <div
+              className="panel-header"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: "16px",
+                    fontWeight: 700,
+                  }}
+                >
+                  Desgloses recientes
+                </h3>
 
-              <button className="panel-link">
-                Ver todos <i className="bi bi-arrow-right"></i>
-              </button>
-            </div>  */}
+                <p
+                  style={{
+                    margin: "4px 0 0",
+                    fontSize: "12px",
+                    color: "var(--gray-500)",
+                  }}
+                >
+                  Tus últimos cálculos guardados
+                </p>
+              </div>
 
-            {/* Panel Body */}
-            <div className="panel-body">
-              {recentDesgloses.map((item, index) => (
-                <div className="recent-item" key={index}>
-                  {/* Icon */}
-                  <div className="recent-icon">
-                    <i className={`bi ${item.icon}`}></i>
-                  </div>
-
-                  {/* Information */}
-                  <div className="recent-info">
-                    <div className="recent-name">{item.name}</div>
-
-                    <div className="recent-meta">{item.meta}</div>
-                  </div>
-
-                  {/* Type */}
-                  <span className="recent-type">{item.type}</span>
-                </div>
-              ))}
+              {historial.length > 0 && (
+                <Link
+                  to="/historial"
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                  }}
+                >
+                  Ver historial
+                </Link>
+              )}
             </div>
-          </div>
-        </div>
-        <div className="card-modern mt-4">
-          <h3 className="info-card-title">Información de cuenta</h3>
-          <div className="info-row">
-            <span className="info-label">Estado</span>
-            <span
-              className={`badge ${isActive ? "badge-active" : "badge-inactive"}`}
-            >
-              {isActive ? "Activo" : "Bloqueado"}
-            </span>
-          </div>
-          <div className="info-row">
-            <span className="info-label">Rol</span>
-            <span className="info-value">
-              {isAdmin ? "Administrador" : "Usuario"}
-            </span>
-          </div>
-          <div className="info-row">
-            <span className="info-label">Acceso</span>
-            <span
-              className={`badge ${hasAccess ? "badge-admin" : "badge-user"}`}
-            >
-              {hasAccess ? "Full Access" : "Normal"}
-            </span>
-          </div>
-          <div className="info-row">
-            <span className="info-label">Email</span>
-            <span className="info-value">{userData?.email}</span>
+
+            <div className="panel-body">
+              {loadingHistory ? (
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "2rem",
+                    color: "var(--gray-500)",
+                    fontSize: "13px",
+                  }}
+                >
+                  Cargando historial...
+                </div>
+              ) : recentDesgloses.length > 0 ? (
+                recentDesgloses.map((item) => (
+                  <div className="recent-item" key={item.id}>
+                    <div className="recent-icon">
+                      <i className={`bi ${item.icon}`}></i>
+                    </div>
+
+                    <div className="recent-info">
+                      <div className="recent-name">{item.name}</div>
+
+                      <div className="recent-meta">{item.meta}</div>
+                    </div>
+
+                    <span className="recent-type">{item.type}</span>
+                  </div>
+                ))
+              ) : (
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "2rem 1rem",
+                    color: "var(--gray-500)",
+                  }}
+                >
+                  <i
+                    className="bi bi-clock-history"
+                    style={{
+                      fontSize: "2rem",
+                      display: "block",
+                      marginBottom: "0.75rem",
+                      opacity: 0.5,
+                    }}
+                  ></i>
+
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      marginBottom: "4px",
+                    }}
+                  >
+                    No hay desgloses recientes
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: "12px",
+                    }}
+                  >
+                    Crea tu primer desglose para verlo aquí.
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Modal Premium */}
+      {/* ==========================================
+          MODAL PREMIUM
+      ========================================== */}
+
       {showPremium && (
         <div
           style={{
@@ -266,9 +500,13 @@ export default function Dashboard() {
             >
               <i
                 className="bi bi-star-fill"
-                style={{ fontSize: "1.5rem", color: "#f59e0b" }}
+                style={{
+                  fontSize: "1.5rem",
+                  color: "#f59e0b",
+                }}
               ></i>
             </div>
+
             <h3
               style={{
                 fontSize: "1.2rem",
@@ -278,6 +516,7 @@ export default function Dashboard() {
             >
               Producto Premium
             </h3>
+
             <p
               style={{
                 fontSize: "13px",
@@ -290,6 +529,7 @@ export default function Dashboard() {
               administrador para obtener acceso completo a todos los módulos de
               cálculo.
             </p>
+
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`}
               target="_blank"
@@ -313,6 +553,7 @@ export default function Dashboard() {
               <i className="bi bi-whatsapp"></i>
               Solicitar Full Access
             </a>
+
             <button
               onClick={() => setShowPremium(false)}
               style={{

@@ -8,6 +8,7 @@ const navItems = [
   { path: "/dashboard", icon: "bi-grid", label: "Inicio" },
   { path: "/desglose", icon: "bi-layers", label: "Desglose" },
   { path: "/glass-optimizer", icon: "bi-square-half", label: "Croquis" },
+  { path: "/historial", icon: "bi-clock", label: "Historial" },
 ];
 
 const NAV_CALCULO = [
@@ -29,7 +30,8 @@ const NAV_GESTION = [
   { path: "/facturas", icon: "bi-receipt", label: "Facturas" },
 ];
 
-const NAV_SISTEMA = [
+const NAV_HISTORY = [
+  { path: "/historial", icon: "bi-clock", label: "Historial" },
 ];
 
 const legalLinks = [
@@ -120,8 +122,8 @@ export default function Layout({ children, unreadCount = 0 }) {
           {/* Gestión */}
 
           {/* Sistema */}
-          <div className="sidebar-section"></div>
-          {NAV_SISTEMA.map((item) => (
+          <div className="sidebar-section">GESTIÓN</div>
+          {NAV_HISTORY.map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -506,176 +508,462 @@ export default function Layout({ children, unreadCount = 0 }) {
 
       {showPrecioModal && (
         <div
+          onClick={() => setShowPrecioModal(false)}
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            zIndex: 1000,
+            background: "rgba(15, 23, 42, 0.60)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+            zIndex: 9999,
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "center",
+            padding: "0",
           }}
-          onClick={() => setShowPrecioModal(false)}
         >
           <div
-            style={{
-              background: "white",
-              borderRadius: "16px 16px 0 0",
-              width: "100%",
-              maxWidth: "480px",
-              padding: "1.5rem",
-              maxHeight: "90vh",
-              overflowY: "auto",
-            }}
             onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%",
+              maxWidth: "520px",
+              maxHeight: "94vh",
+              overflowY: "auto",
+              background: "#ffffff",
+              borderRadius: "24px 24px 0 0",
+              boxShadow: "0 -20px 60px rgba(15, 23, 42, 0.20)",
+              animation: "slideUpModal 0.28s ease-out",
+            }}
           >
-            {/* Header */}
+            {/* ================================
+          HEADER
+      ================================= */}
             <div
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1.25rem",
+                padding: "22px 22px 16px",
+                borderBottom: "1px solid #e2e8f0",
+                position: "sticky",
+                top: 0,
+                background: "rgba(255,255,255,0.96)",
+                backdropFilter: "blur(10px)",
+                zIndex: 2,
               }}
             >
-              <div>
-                <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700 }}>
-                  Planes y soporte
-                </h3>
-                <p
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "12px" }}
+                >
+                  <div
+                    style={{
+                      width: "42px",
+                      height: "42px",
+                      borderRadius: "12px",
+                      background: "#eff6ff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#2563eb",
+                    }}
+                  >
+                    <i className="bi bi-gem" style={{ fontSize: "20px" }}></i>
+                  </div>
+
+                  <div>
+                    <h3
+                      style={{
+                        margin: 0,
+                        fontSize: "18px",
+                        fontWeight: 800,
+                        color: "#0f172a",
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      Full Access
+                    </h3>
+
+                    <p
+                      style={{
+                        margin: "3px 0 0",
+                        fontSize: "12px",
+                        color: "#64748b",
+                      }}
+                    >
+                      Acceso completo a Desglose Pro
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowPrecioModal(false)}
+                  aria-label="Cerrar"
+                  style={{
+                    width: "34px",
+                    height: "34px",
+                    borderRadius: "10px",
+                    border: "1px solid #e2e8f0",
+                    background: "#f8fafc",
+                    color: "#64748b",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <i className="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+
+            <div style={{ padding: "20px 22px 24px" }}>
+              {/* ================================
+            INTRO
+        ================================= */}
+              <div style={{ marginBottom: "18px" }}>
+                
+
+                <h4
                   style={{
                     margin: 0,
-                    fontSize: "12px",
-                    color: "var(--gray-500)",
+                    fontSize: "21px",
+                    lineHeight: 1.25,
+                    fontWeight: 800,
+                    color: "#0f172a",
+                    letterSpacing: "-0.03em",
                   }}
                 >
-                  
+                  Lleva tu taller al siguiente nivel
+                </h4>
+
+                <p
+                  style={{
+                    margin: "7px 0 0",
+                    fontSize: "13px",
+                    lineHeight: 1.6,
+                    color: "#64748b",
+                  }}
+                >
+                  Desbloquea todos los sistemas de cálculo y trabaja con
+                  Desglose Pro sin limitaciones.
                 </p>
               </div>
-              <button
-                onClick={() => setShowPrecioModal(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  fontSize: "1.1rem",
-                  cursor: "pointer",
-                  color: "var(--gray-500)",
-                }}
-              >
-                <i className="bi bi-x-lg"></i>
-              </button>
-            </div>
 
-            {/* Precio */}
-            <div
-              style={{
-                background: "linear-gradient(135deg, #0d1e3d, #1e3a8a)",
-                borderRadius: "12px",
-                padding: "1.25rem",
-                marginBottom: "1rem",
-                color: "white",
-              }}
-            >
+              {/* ================================
+            PRICING CARD
+        ================================= */}
               <div
                 style={{
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "#93c5fd",
-                  marginBottom: "12px",
-                  textAlign: "center",
+                  background:
+                    "linear-gradient(145deg, #0d1e3d 0%, #132a52 55%, #1e3a8a 100%)",
+                  borderRadius: "18px",
+                  padding: "20px",
+                  color: "#ffffff",
+                  marginBottom: "18px",
+                  position: "relative",
+                  overflow: "hidden",
                 }}
               >
-                <i className="bi bi-gem" style={{ marginRight: "5px" }}></i>
-                Precio Full Access
-              </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "10px",
-                }}
-              >
+                {/* Decorative circle */}
                 <div
                   style={{
-                    background: "rgba(255,255,255,0.08)",
-                    borderRadius: "10px",
-                    padding: "12px",
-                    textAlign: "center",
+                    position: "absolute",
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                    background: "rgba(96,165,250,0.08)",
+                    top: "-80px",
+                    right: "-50px",
                   }}
-                >
-                  <div style={{ fontSize: "1.5rem", fontWeight: 800 }}>
-                    RD$ 499
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "11px",
-                      color: "#93c5fd",
-                      marginTop: "2px",
-                    }}
-                  >
-                    por mes
-                  </div>
-                </div>
+                />
+
                 <div
                   style={{
-                    background: "rgba(255,255,255,0.15)",
-                    borderRadius: "10px",
-                    padding: "12px",
-                    textAlign: "center",
-                    border: "1px solid rgba(255,255,255,0.2)",
                     position: "relative",
+                    zIndex: 1,
                   }}
                 >
                   <div
                     style={{
-                      position: "absolute",
-                      top: "-10px",
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      background: "#f59e0b",
-                      color: "white",
-                      fontSize: "9px",
-                      fontWeight: 700,
-                      padding: "2px 8px",
-                      borderRadius: "10px",
-                      whiteSpace: "nowrap",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "16px",
                     }}
                   >
-                    AHORRA 33%
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        fontWeight: 700,
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        color: "#93c5fd",
+                      }}
+                    >
+                      <i
+                        className="bi bi-stars"
+                        style={{ marginRight: "6px" }}
+                      ></i>
+                      Plan Full Access
+                    </div>
+
+                    <span
+                      style={{
+                        background: "#f59e0b",
+                        color: "#ffffff",
+                        padding: "5px 9px",
+                        borderRadius: "999px",
+                        fontSize: "9px",
+                        fontWeight: 800,
+                      }}
+                    >
+                      MEJOR VALOR
+                    </span>
                   </div>
-                  <div style={{ fontSize: "1.5rem", fontWeight: 800 }}>
-                    RD$ 3,990
-                  </div>
+
                   <div
                     style={{
-                      fontSize: "11px",
-                      color: "#93c5fd",
-                      marginTop: "2px",
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "10px",
                     }}
                   >
-                    por año
+                    {/* MONTHLY */}
+                    <div
+                      style={{
+                        padding: "15px 10px",
+                        borderRadius: "13px",
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        textAlign: "center",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: "10px",
+                          color: "#bfdbfe",
+                          fontWeight: 600,
+                          marginBottom: "5px",
+                        }}
+                      >
+                        MENSUAL
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: "25px",
+                          fontWeight: 850,
+                          letterSpacing: "-0.03em",
+                        }}
+                      >
+                        RD$ 499
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: "10px",
+                          color: "#93c5fd",
+                          marginTop: "2px",
+                        }}
+                      >
+                        / mes
+                      </div>
+                    </div>
+
+                    {/* YEARLY */}
+                    <div
+                      style={{
+                        padding: "15px 10px",
+                        borderRadius: "13px",
+                        background: "rgba(255,255,255,0.15)",
+                        border: "1px solid rgba(147,197,253,0.25)",
+                        textAlign: "center",
+                        position: "relative",
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "-9px",
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                          background: "#22c55e",
+                          color: "#ffffff",
+                          padding: "4px 8px",
+                          borderRadius: "999px",
+                          fontSize: "8px",
+                          fontWeight: 800,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        AHORRA RD$ 1,998
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: "10px",
+                          color: "#bfdbfe",
+                          fontWeight: 600,
+                          marginBottom: "5px",
+                        }}
+                      >
+                        ANUAL
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: "25px",
+                          fontWeight: 850,
+                          letterSpacing: "-0.03em",
+                        }}
+                      >
+                        RD$ 3,990
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: "10px",
+                          color: "#93c5fd",
+                          marginTop: "2px",
+                        }}
+                      >
+                        / año
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: "13px",
+                      textAlign: "center",
+                      fontSize: "10px",
+                      color: "#bfdbfe",
+                    }}
+                  >
+                    El plan anual equivale a solo{" "}
+                    <strong style={{ color: "#ffffff" }}>
+                      RD$ 332.50 al mes
+                    </strong>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Botones */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.6rem",
-              }}
-            >
-              {/* Activar Full Access */}
+              {/* ================================
+            BENEFITS
+        ================================= */}
+              <div style={{ marginBottom: "18px" }}>
+                <div
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: 800,
+                    color: "#0f172a",
+                    marginBottom: "11px",
+                  }}
+                >
+                  ¿Qué incluye Full Access?
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gap: "8px",
+                  }}
+                >
+                  {[
+                    {
+                      icon: "bi-calculator",
+                      text: "Todos los sistemas de cálculo",
+                    },
+                    {
+                      icon: "bi-window",
+                      text: "Ventanas P-92, P-65, E-70 y Tradicional",
+                    },
+                    {
+                      icon: "bi-door-open",
+                      text: "Puertas Comercial y P40",
+                    },
+                    {
+                      icon: "bi-rulers",
+                      text: " Optimización de Corte de Vidrio",
+                    },
+                    {
+                      icon: "bi-clock-history",
+                      text: "Historial de tus desgloses",
+                    },
+                    {
+                      icon: "bi-headset",
+                      text: "Soporte técnico por WhatsApp",
+                    },
+                  ].map((item, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        padding: "9px 10px",
+                        background: "#f8fafc",
+                        border: "1px solid #e2e8f0",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "28px",
+                          height: "28px",
+                          flexShrink: 0,
+                          borderRadius: "8px",
+                          background: "#eff6ff",
+                          color: "#2563eb",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <i
+                          className={`bi ${item.icon}`}
+                          style={{ fontSize: "14px" }}
+                        ></i>
+                      </div>
+
+                      <span
+                        style={{
+                          fontSize: "12px",
+                          color: "#334155",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {item.text}
+                      </span>
+
+                      <i
+                        className="bi bi-check-circle-fill"
+                        style={{
+                          marginLeft: "auto",
+                          color: "#22c55e",
+                          fontSize: "14px",
+                        }}
+                      ></i>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ================================
+            CTA
+        ================================= */}
               {(() => {
                 const msg = encodeURIComponent(
                   "Hola, soy " +
                     (userData?.nombre || "un usuario") +
                     " y quiero activar Full Access en Desglose Pro.",
                 );
+
                 return (
                   <a
                     href={"https://wa.me/" + WHATSAPP_NUMBER + "?text=" + msg}
@@ -683,171 +971,215 @@ export default function Layout({ children, unreadCount = 0 }) {
                     rel="noopener noreferrer"
                     onClick={() => setShowPrecioModal(false)}
                     style={{
+                      width: "100%",
                       display: "flex",
                       alignItems: "center",
-                      gap: "12px",
-                      padding: "13px 16px",
+                      justifyContent: "center",
+                      gap: "9px",
+                      padding: "14px 16px",
                       background: "#0d1e3d",
-                      color: "white",
-                      borderRadius: "10px",
+                      color: "#ffffff",
+                      borderRadius: "12px",
                       textDecoration: "none",
                       fontSize: "14px",
-                      fontWeight: 600,
+                      fontWeight: 800,
+                      boxShadow: "0 8px 20px rgba(13,30,61,0.18)",
+                      marginBottom: "9px",
                     }}
                   >
                     <i
-                      className="bi bi-stars"
-                      style={{ fontSize: "18px", color: "#93c5fd" }}
+                      className="bi bi-whatsapp"
+                      style={{ fontSize: "18px" }}
                     ></i>
-                    <div>
-                      <div>Activar Full Access</div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 400,
-                          color: "#93c5fd",
-                        }}
-                      >
-                        Todos los módulos desbloqueados
-                      </div>
-                    </div>
+                    Activar Full Access
                     <i
-                      className="bi bi-chevron-right"
+                      className="bi bi-arrow-up-right"
                       style={{
-                        marginLeft: "auto",
                         fontSize: "12px",
-                        color: "#93c5fd",
+                        marginLeft: "2px",
                       }}
                     ></i>
                   </a>
                 );
               })()}
 
-              {/* Prueba gratuita */}
-              
+              {/* ================================
+            SECONDARY ACTIONS
+        ================================= */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "9px",
+                  marginBottom: "18px",
+                }}
+              >
+                {/* HOW IT WORKS */}
+                {(() => {
+                  const msg = encodeURIComponent(
+                    "Hola, me gustaría saber cómo funciona Desglose Pro y qué incluye el Full Access.",
+                  );
 
-              {/* Como funciona */}
-              {(() => {
-                const msg = encodeURIComponent(
-                  "Hola, me gustaria saber como funciona Desglose Pro y que incluye el Full Access.",
-                );
-                return (
-                  <a
-                    href={"https://wa.me/" + WHATSAPP_NUMBER + "?text=" + msg}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setShowPrecioModal(false)}
+                  return (
+                    <a
+                      href={"https://wa.me/" + WHATSAPP_NUMBER + "?text=" + msg}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setShowPrecioModal(false)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "7px",
+                        padding: "11px 8px",
+                        background: "#eff6ff",
+                        color: "#1e40af",
+                        border: "1px solid #bfdbfe",
+                        borderRadius: "10px",
+                        textDecoration: "none",
+                        fontSize: "11px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      <i className="bi bi-question-circle"></i>
+                      ¿Cómo funciona?
+                    </a>
+                  );
+                })()}
+
+                {/* SUPPORT */}
+                {(() => {
+                  const msg = encodeURIComponent(
+                    "Hola, soy " +
+                      (userData?.nombre || "un usuario") +
+                      " y necesito soporte técnico con Desglose Pro.",
+                  );
+
+                  return (
+                    <a
+                      href={"https://wa.me/" + WHATSAPP_NUMBER + "?text=" + msg}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setShowPrecioModal(false)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "7px",
+                        padding: "11px 8px",
+                        background: "#f8fafc",
+                        color: "#475569",
+                        border: "1px solid #e2e8f0",
+                        borderRadius: "10px",
+                        textDecoration: "none",
+                        fontSize: "11px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      <i
+                        className="bi bi-headset"
+                        style={{ color: "#16a34a" }}
+                      ></i>
+                      Soporte técnico
+                    </a>
+                  );
+                })()}
+              </div>
+
+              {/* ================================
+            TRUST / INFO
+        ================================= */}
+              <div
+                style={{
+                  padding: "12px",
+                  borderRadius: "10px",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  display: "flex",
+                  gap: "9px",
+                  alignItems: "flex-start",
+                  marginBottom: "16px",
+                }}
+              >
+                <i
+                  className="bi bi-shield-check"
+                  style={{
+                    color: "#16a34a",
+                    fontSize: "16px",
+                    marginTop: "1px",
+                  }}
+                ></i>
+
+                <div>
+                  <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      padding: "13px 16px",
-                      background: "#eff6ff",
-                      color: "#1e40af",
-                      borderRadius: "10px",
-                      textDecoration: "none",
-                      fontSize: "14px",
-                      fontWeight: 600,
-                      border: "1px solid #bfdbfe",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      color: "#334155",
+                      marginBottom: "2px",
                     }}
                   >
-                    <i
-                      className="bi bi-question-circle"
-                      style={{ fontSize: "18px", color: "#3b82f6" }}
-                    ></i>
-                    <div>
-                      <div>Como funciona?</div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 400,
-                          color: "#3b82f6",
-                        }}
-                      >
-                        Conoce todos los modulos
-                      </div>
-                    </div>
-                    <i
-                      className="bi bi-chevron-right"
-                      style={{
-                        marginLeft: "auto",
-                        fontSize: "12px",
-                        color: "#3b82f6",
-                      }}
-                    ></i>
-                  </a>
-                );
-              })()}
+                    Activación rápida y soporte personalizado
+                  </div>
 
-              {/* Soporte */}
-              {(() => {
-                const msg = encodeURIComponent(
-                  "Hola, soy " +
-                    (userData?.nombre || "un usuario") +
-                    " y necesito soporte tecnico con Desglose Pro.",
-                );
-                return (
-                  <a
-                    href={"https://wa.me/" + WHATSAPP_NUMBER + "?text=" + msg}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setShowPrecioModal(false)}
+                  <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      padding: "13px 16px",
-                      background: "#f8fafc",
-                      color: "var(--gray-700)",
-                      borderRadius: "10px",
-                      textDecoration: "none",
-                      fontSize: "14px",
-                      fontWeight: 600,
-                      border: "1px solid var(--gray-200)",
+                      fontSize: "10px",
+                      lineHeight: 1.5,
+                      color: "#64748b",
                     }}
                   >
-                    <i
-                      className="bi bi-headset"
-                      style={{ fontSize: "18px", color: "#16a34a" }}
-                    ></i>
-                    <div>
-                      <div>Soporte tecnico</div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 400,
-                          color: "var(--gray-500)",
-                        }}
-                      >
-                        Respuesta rapida por WhatsApp
-                      </div>
-                    </div>
-                    <i
-                      className="bi bi-chevron-right"
-                      style={{
-                        marginLeft: "auto",
-                        fontSize: "12px",
-                        color: "var(--gray-400)",
-                      }}
-                    ></i>
-                  </a>
-                );
-              })()}
+                    Escríbenos por WhatsApp para recibir las instrucciones de
+                    activación de tu acceso.
+                  </div>
+                </div>
+              </div>
+
+              {/* ================================
+            FOOTER
+        ================================= */}
+              <div
+                style={{
+                  textAlign: "center",
+                  fontSize: "10px",
+                  color: "#94a3b8",
+                  lineHeight: 1.5,
+                }}
+              >
+                <div>
+                  © 2026{" "}
+                  <strong style={{ color: "#64748b" }}>Desglose Pro</strong>
+                </div>
+
+                <div style={{ marginTop: "3px" }}>
+                  Software profesional para talleres de aluminio y vidrio
+                </div>
+              </div>
             </div>
 
-            <p
-              style={{
-                textAlign: "center",
-                fontSize: "11px",
-                color: "var(--gray-400)",
-                marginTop: "1rem",
-              }}
-            >
-              © 2026 <strong>Desglose Pro</strong>. Todos los derechos
-              reservados.
-            </p>
-            
+            {/* ================================
+          ANIMATION
+      ================================= */}
+            <style>
+              {`
+          @keyframes slideUpModal {
+            from {
+              transform: translateY(100%);
+              opacity: 0;
+            }
+            to {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
 
+          @media (min-width: 768px) {
+            .desglose-price-modal {
+              border-radius: 24px;
+            }
+          }
+        `}
+            </style>
           </div>
         </div>
       )}

@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
 import GlassOptimizer from "./pages/GlassOptimizer";
+import Historial from "./pages/HistorialPage";
 
 // Desglose
 import DesgloseIndex from "./pages/desglose/DesgloseIndex";
@@ -71,6 +72,14 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <GlassOptimizer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/historial"
+          element={ 
+            <ProtectedRoute>
+              <Historial />
             </ProtectedRoute>
           }
         />
