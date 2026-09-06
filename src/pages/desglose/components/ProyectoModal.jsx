@@ -14,7 +14,7 @@ export default function ProyectoModal({ onConfirm, onCancel }) {
   const [form, setForm] = useState({
     cliente: '',
     obra: '',
-    color: 'Aluminio natural',
+    color: 'Blanco',
     notas: '',
   })
   const [error, setError] = useState('')

@@ -29,16 +29,27 @@ import P40 from "./pages/desglose/P40";
 import PuertaComercial from "./pages/desglose/PuertaComercial";
 import PuertaP40 from "./pages/desglose/PuertaP40";
 
+// Materiales
+import MaterialP92 from "./pages/desglose/components/MaterialP92";
+
 export default function AppRoutes() {
   return (
     <>
       <Routes>
-        {/* ===== ROUT PIBLIK ===== */}
+
+        {/* =========================================
+            ROUTES PUBLIC
+        ========================================= */}
         <Route path="/" element={<WelcomePage />} />
+
         <Route path="/login" element={<LoginPage />} />
+
         <Route path="/signup" element={<SignupPage />} />
 
-        {/* ===== ROUT POU USER POKO AKTIVE ===== */}
+
+        {/* =========================================
+            ROUTE POUR USER NON ENCORE ACTIVÉ
+        ========================================= */}
         <Route
           path="/pending"
           element={
@@ -48,7 +59,12 @@ export default function AppRoutes() {
           }
         />
 
-        {/* ===== ROUT PWOTEJE ===== */}
+
+        {/* =========================================
+            ROUTES PROTÉGÉES
+        ========================================= */}
+
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -57,6 +73,8 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* Profil */}
         <Route
           path="/perfil"
           element={
@@ -65,8 +83,8 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        
-        
+
+        {/* Croquis / Glass Optimizer */}
         <Route
           path="/glass-optimizer"
           element={
@@ -75,16 +93,23 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* Historial */}
         <Route
           path="/historial"
-          element={ 
+          element={
             <ProtectedRoute>
               <Historial />
             </ProtectedRoute>
           }
         />
 
-        {/* ===== DESGLOSE ===== */}
+
+        {/* =========================================
+            DESGLOSE
+        ========================================= */}
+
+        {/* Página principal de Desglose */}
         <Route
           path="/desglose"
           element={
@@ -93,6 +118,11 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* -----------------------------------------
+            P-92
+        ----------------------------------------- */}
+
         <Route
           path="/desglose/p92"
           element={
@@ -101,6 +131,22 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* Materiales P-92 */}
+        <Route
+          path="/desglose/material-p92"
+          element={
+            <ProtectedRoute>
+              <MaterialP92 />
+            </ProtectedRoute>
+          }
+        />
+
+
+        {/* -----------------------------------------
+            P-65
+        ----------------------------------------- */}
+
         <Route
           path="/desglose/p65"
           element={
@@ -109,6 +155,12 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+
+        {/* -----------------------------------------
+            TRADICIONAL
+        ----------------------------------------- */}
+
         <Route
           path="/desglose/tradicional"
           element={
@@ -117,6 +169,12 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+
+        {/* -----------------------------------------
+            P-40
+        ----------------------------------------- */}
+
         <Route
           path="/desglose/p40"
           element={
@@ -125,6 +183,12 @@ export default function AppRoutes() {
             </FullAccessRoute>
           }
         />
+
+
+        {/* -----------------------------------------
+            E-70
+        ----------------------------------------- */}
+
         <Route
           path="/desglose/e70"
           element={
@@ -133,6 +197,12 @@ export default function AppRoutes() {
             </FullAccessRoute>
           }
         />
+
+
+        {/* -----------------------------------------
+            PUERTA COMERCIAL
+        ----------------------------------------- */}
+
         <Route
           path="/desglose/puerta"
           element={
@@ -141,6 +211,12 @@ export default function AppRoutes() {
             </FullAccessRoute>
           }
         />
+
+
+        {/* -----------------------------------------
+            PUERTA P-40
+        ----------------------------------------- */}
+
         <Route
           path="/desglose/puertap40"
           element={
@@ -150,7 +226,11 @@ export default function AppRoutes() {
           }
         />
 
-        {/* ===== ADMIN ===== */}
+
+        {/* =========================================
+            ADMIN
+        ========================================= */}
+
         <Route
           path="/admin"
           element={
@@ -160,10 +240,19 @@ export default function AppRoutes() {
           }
         />
 
-        {/* ===== REDIRECT SI WOUT ENKONI ===== */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        {/* =========================================
+            ROUTE 404
+        ========================================= */}
+
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+
       </Routes>
 
+      {/* PWA Install Banner */}
       <InstallBaner />
     </>
   );

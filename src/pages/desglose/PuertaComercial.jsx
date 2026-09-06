@@ -2,7 +2,14 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/Layout'
 import FractionUtils from '../../utils/fraction'
+import ProyectoModal from './components/ProyectoModal'
+import MaterialPuertaComercial from './components/MaterialPuertaComercial'
 import { saveDesglose } from '../../services/historialService'
+
+import {
+  calcularResumenMaterialesPuertaComercial,
+  calcularTotalesMaterialesPuertaComercial
+} from '../../utils/puertaComercialMaterials'
 
 const calcular = (ancho, alto, hojas) => {
   if (hojas === 1) {
@@ -26,12 +33,18 @@ const calcular = (ancho, alto, hojas) => {
   }
 }
 
-const buildPrintHtml = (projectInfo, results) => {
+const buildPrintHtml = (proyecto, results) => {
   const date = new Date().toLocaleDateString('es-DO')
+
+  const materiales =
+    calcularResumenMaterialesPuertaComercial(results)
+
+  const totales =
+    calcularTotalesMaterialesPuertaComercial(materiales)
 
   const rows = results.map(row => `
     <tr>
-      <td>${row.hueco}</td>
+      <td>${row.hueco || '—'}</td>
       <td>${row.ancho}</td>
       <td>${row.alto}</td>
       <td>${row.tipo}</td>
@@ -44,232 +57,795 @@ const buildPrintHtml = (projectInfo, results) => {
     </tr>
   `).join('')
 
-  return `<!DOCTYPE html>
-<html>
-<head>
-<title>PUERTA COMERCIAL</title>
+  const materialRows = materiales.map(item => `
+    <tr>
+      <td>${item.material}</td>
+      <td>${item.piezas}</td>
+      <td>${item.pies.toFixed(2)}</td>
+      <td>
+        <span class="barra-badge">
+          ${item.barras}
+        </span>
+      </td>
+    </tr>
+  `).join('')
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  return `
+    <!DOCTYPE html>
 
-body {
-  font-family: Arial, sans-serif;
-  margin: .5in;
-  background: white;
-}
+    <html lang="es">
 
-h1 {
-  font-size: 18px;
-  text-align: center;
-  color: #1e2b3c;
-  margin-bottom: 4px;
-}
+    <head>
 
-h2 {
-  font-size: 11px;
-  text-align: center;
-  color: #555;
-  font-weight: 400;
-  margin-bottom: 12px;
-}
+      <meta charset="UTF-8">
 
-.info {
-  display: flex;
-  gap: 2rem;
-  font-size: 11px;
-  margin-bottom: 12px;
-  background: #f8f9fa;
-  padding: 8px;
-  border-radius: 4px;
-}
+      <title>
+        PUERTA COMERCIAL
+      </title>
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 10px;
-}
+      <style>
 
-th {
-  background: #1e2b3c;
-  color: white;
-  padding: 5px;
-  border: 1px solid #2c3e50;
-  text-align: center;
-}
+        * {
+          box-sizing: border-box;
+        }
 
-th[colspan] {
-  background: #2c3e50;
-}
+        body {
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
 
-td {
-  padding: 4px 5px;
-  border: 1px solid #cbd5e1;
-  text-align: center;
-  font-family: monospace;
-}
+          margin: .5in;
 
-tr:nth-child(even) td {
-  background: #f8f9fa;
-}
+          background: white;
 
-.footer {
-  margin-top: 12px;
-  font-size: 9px;
-  color: #888;
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid #ddd;
-  padding-top: 6px;
-}
+          color: #1e293b;
+        }
 
-@media print {
-  th {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-}
-</style>
+        h1 {
+          font-size: 18px;
 
-</head>
+          text-align: center;
 
-<body>
+          color: #1e2b3c;
 
-<h1>PUERTA COMERCIAL TRADICIONAL</h1>
-<h2>SISTEMA PROFESIONAL DE CÁLCULO</h2>
+          margin:
+            0 0 4px;
+        }
 
-<div class="info">
-  <span>
-    <strong>CUENTA:</strong>
-    ${projectInfo.cuenta || '—'}
-  </span>
+        h2 {
+          font-size: 11px;
 
-  <span>
-    <strong>OBRA:</strong>
-    ${projectInfo.obra || '—'}
-  </span>
+          text-align: center;
 
-  <span>
-    <strong>COLOR:</strong>
-    ${projectInfo.color || '—'}
-  </span>
-</div>
+          color: #64748b;
 
-<table>
+          font-weight: 400;
 
-<thead>
+          margin:
+            0 0 14px;
+        }
 
-<tr>
-  <th rowspan="2">Hueco</th>
-  <th rowspan="2">Ancho</th>
-  <th rowspan="2">Alto</th>
-  <th rowspan="2">Tipo</th>
+        h3 {
+          font-size: 13px;
 
-  <th colspan="2">Hoja</th>
-  <th colspan="2">Marco</th>
-  <th colspan="2">Vidrio</th>
-</tr>
+          color: #1e2b3c;
 
-<tr>
-  <th>Cab-alf</th>
-  <th>Jambas</th>
-  <th>Cab-marco</th>
-  <th>Lat-marco</th>
-  <th>Ancho</th>
-  <th>Alto</th>
-</tr>
+          margin:
+            20px 0 8px;
 
-</thead>
+          border-bottom:
+            2px solid #1e2b3c;
 
-<tbody>
-${rows}
-</tbody>
+          padding-bottom: 5px;
+        }
 
-</table>
+        .info {
+          display: flex;
 
-<div class="footer">
-  <span>© 2026 - Desglose Pro</span>
-  <span>${date}</span>
-</div>
+          gap: 2rem;
 
-</body>
-</html>`
+          flex-wrap: wrap;
+
+          font-size: 11px;
+
+          margin-bottom: 14px;
+
+          background:
+            #f8f9fa;
+
+          padding:
+            9px 10px;
+
+          border:
+            1px solid #e2e8f0;
+
+          border-radius: 4px;
+        }
+
+        table {
+          width: 100%;
+
+          border-collapse:
+            collapse;
+
+          font-size: 10px;
+
+          margin-bottom: 16px;
+        }
+
+        th {
+          background:
+            #1e2b3c;
+
+          color:
+            white;
+
+          padding:
+            6px 5px;
+
+          border:
+            1px solid #2c3e50;
+
+          text-align:
+            center;
+
+          font-weight:
+            bold;
+        }
+
+        th[colspan] {
+          background:
+            #2c3e50;
+        }
+
+        td {
+          padding:
+            5px;
+
+          border:
+            1px solid #cbd5e1;
+
+          text-align:
+            center;
+
+          font-family:
+            monospace;
+        }
+
+        tr:nth-child(even) td {
+          background:
+            #f8f9fa;
+        }
+
+        /* =========================
+           MATERIALES
+        ========================= */
+
+        .material-section {
+          margin-top:
+            24px;
+
+          page-break-inside:
+            avoid;
+        }
+
+        .material-info {
+          background:
+            #f8fafc;
+
+          border:
+            1px solid #e2e8f0;
+
+          padding:
+            8px 10px;
+
+          font-size:
+            10px;
+
+          color:
+            #64748b;
+
+          margin-bottom:
+            8px;
+        }
+
+        .material-table {
+          margin-bottom:
+            10px;
+        }
+
+        .material-table td {
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+        }
+
+        .barra-badge {
+          display:
+            inline-block;
+
+          min-width:
+            28px;
+
+          padding:
+            3px 7px;
+
+          border-radius:
+            5px;
+
+          background:
+            #eff6ff;
+
+          color:
+            #1d4ed8;
+
+          font-weight:
+            bold;
+        }
+
+        .total-row td {
+          background:
+            #e2e8f0 !important;
+
+          font-weight:
+            bold;
+
+          color:
+            #0f172a;
+        }
+
+        .summary {
+          display:
+            flex;
+
+          gap:
+            10px;
+
+          margin-top:
+            10px;
+
+          margin-bottom:
+            16px;
+        }
+
+        .summary-box {
+          flex:
+            1;
+
+          border:
+            1px solid #e2e8f0;
+
+          background:
+            #f8fafc;
+
+          padding:
+            8px;
+
+          text-align:
+            center;
+        }
+
+        .summary-label {
+          font-size:
+            9px;
+
+          color:
+            #64748b;
+
+          margin-bottom:
+            3px;
+        }
+
+        .summary-value {
+          font-size:
+            14px;
+
+          font-weight:
+            bold;
+
+          color:
+            #1e293b;
+        }
+
+        .footer {
+          margin-top:
+            24px;
+
+          font-size:
+            9px;
+
+          color:
+            #64748b;
+
+          display:
+            flex;
+
+          justify-content:
+            space-between;
+
+          border-top:
+            1px solid #e2e8f0;
+
+          padding-top:
+            6px;
+        }
+
+        @media print {
+
+          th {
+            -webkit-print-color-adjust:
+              exact;
+
+            print-color-adjust:
+              exact;
+          }
+
+          * {
+            -webkit-print-color-adjust:
+              exact;
+
+            print-color-adjust:
+              exact;
+          }
+
+          .material-section {
+            page-break-inside:
+              avoid;
+          }
+
+          tr {
+            page-break-inside:
+              avoid;
+          }
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <h1>
+        PUERTA COMERCIAL TRADICIONAL
+      </h1>
+
+      <h2>
+        SISTEMA PROFESIONAL DE CÁLCULO
+      </h2>
+
+      <div class="info">
+
+        <span>
+          <strong>
+            Cliente:
+          </strong>
+
+          ${proyecto?.cliente || '—'}
+        </span>
+
+        <span>
+          <strong>
+            Obra:
+          </strong>
+
+          ${proyecto?.obra || '—'}
+        </span>
+
+        <span>
+          <strong>
+            Color:
+          </strong>
+
+          ${proyecto?.color || '—'}
+        </span>
+
+      </div>
+
+      <!-- =========================
+           MEDIDAS Y CORTES
+      ========================== -->
+
+      <h3>
+        MEDIDAS Y CORTES
+      </h3>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th rowspan="2">
+              Hueco
+            </th>
+
+            <th rowspan="2">
+              Ancho
+            </th>
+
+            <th rowspan="2">
+              Alto
+            </th>
+
+            <th rowspan="2">
+              Tipo
+            </th>
+
+            <th colspan="2">
+              Hoja
+            </th>
+
+            <th colspan="2">
+              Marco
+            </th>
+
+            <th colspan="2">
+              Vidrio
+            </th>
+
+          </tr>
+
+          <tr>
+
+            <th>
+              Cab-alf
+            </th>
+
+            <th>
+              Jambas
+            </th>
+
+            <th>
+              Cab-marco
+            </th>
+
+            <th>
+              Lat-marco
+            </th>
+
+            <th>
+              Ancho
+            </th>
+
+            <th>
+              Alto
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${rows}
+
+        </tbody>
+
+      </table>
+
+      <!-- =========================
+           MATERIALES
+      ========================== -->
+
+      ${
+        materiales.length > 0
+          ? `
+
+            <div
+              class="material-section"
+            >
+
+              <h3>
+                MATERIALES PUERTA COMERCIAL
+              </h3>
+
+              <div
+                class="material-info"
+              >
+
+                <span>
+                  Material calculado para todas las medidas agregadas.
+                </span>
+
+                <strong
+                  style="
+                    float: right;
+                    color: #334155;
+                  "
+                >
+                  Barra:
+                  21 pies
+                  (252")
+                </strong>
+
+              </div>
+
+              <table
+                class="material-table"
+              >
+
+                <thead>
+
+                  <tr>
+
+                    <th>
+                      Material
+                    </th>
+
+                    <th>
+                      Piezas
+                    </th>
+
+                    <th>
+                      Pies
+                    </th>
+
+                    <th>
+                      Barras
+                    </th>
+
+                  </tr>
+
+                </thead>
+
+                <tbody>
+
+                  ${materialRows}
+
+                </tbody>
+
+                <tfoot>
+
+                  <tr
+                    class="total-row"
+                  >
+
+                    <td>
+                      TOTAL
+                    </td>
+
+                    <td>
+                      ${totales.piezas}
+                    </td>
+
+                    <td>
+                      ${totales.pies.toFixed(2)}
+                    </td>
+
+                    <td>
+                      ${totales.barras}
+                    </td>
+
+                  </tr>
+
+                </tfoot>
+
+              </table>
+
+              <div
+                class="summary"
+              >
+
+                <div
+                  class="summary-box"
+                >
+
+                  <div
+                    class="summary-label"
+                  >
+                    TOTAL PIEZAS
+                  </div>
+
+                  <div
+                    class="summary-value"
+                  >
+                    ${totales.piezas}
+                  </div>
+
+                </div>
+
+                <div
+                  class="summary-box"
+                >
+
+                  <div
+                    class="summary-label"
+                  >
+                    TOTAL PIES
+                  </div>
+
+                  <div
+                    class="summary-value"
+                  >
+                    ${totales.pies.toFixed(2)}
+                  </div>
+
+                </div>
+
+                <div
+                  class="summary-box"
+                >
+
+                  <div
+                    class="summary-label"
+                  >
+                    TOTAL BARRAS
+                  </div>
+
+                  <div
+                    class="summary-value"
+                  >
+                    ${totales.barras}
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          `
+          : ''
+      }
+
+      <div
+        class="footer"
+      >
+
+        <span>
+          © 2026 - Desglose Pro
+        </span>
+
+        <span>
+          ${date}
+        </span>
+
+      </div>
+
+    </body>
+
+    </html>
+  `
 }
 
 export default function PuertaComercial() {
+
   const navigate = useNavigate()
 
-  const [form, setForm] = useState({
-    hueco: '',
-    ancho: '',
-    alto: '',
-    hojas: 1
-  })
+  const [step, setStep] =
+    useState('proyecto')
 
-  const [results, setResults] = useState([])
+  const [proyecto, setProyecto] =
+    useState(null)
 
-  const [projectInfo, setProjectInfo] = useState({
-    cuenta: '',
-    obra: '',
-    color: ''
-  })
+  const [form, setForm] =
+    useState({
+      hueco: '',
+      ancho: '',
+      alto: '',
+      hojas: 1
+    })
 
-  const [error, setError] = useState('')
-  const [saved, setSaved] = useState(false)
+  const [results, setResults] =
+    useState([])
 
-  const handleFormChange = (e) => {
+  const [error, setError] =
+    useState('')
+
+  const [savedMsg, setSavedMsg] =
+    useState('')
+
+  const handleFormChange = (e) =>
     setForm({
       ...form,
       [e.target.name]: e.target.value
     })
-  }
-
-  const handleInfoChange = (e) => {
-    setProjectInfo({
-      ...projectInfo,
-      [e.target.name]: e.target.value
-    })
-
-    setSaved(false)
-  }
 
   const handleAdd = () => {
+
     setError('')
 
     if (!form.ancho || !form.alto) {
-      setError('❌ Ingresa ANCHO y ALTO')
+      setError(
+        '❌ Ingresa ANCHO y ALTO'
+      )
+
       return
     }
 
-    const anchoDec = FractionUtils.parseFraction(form.ancho)
-    const altoDec = FractionUtils.parseFraction(form.alto)
+    const anchoDec =
+      FractionUtils.parseFraction(
+        form.ancho
+      )
 
-    if (anchoDec <= 0 || altoDec <= 0) {
-      setError('❌ Las medidas deben ser mayores a 0')
+    const altoDec =
+      FractionUtils.parseFraction(
+        form.alto
+      )
+
+    if (
+      anchoDec <= 0 ||
+      altoDec <= 0
+    ) {
+      setError(
+        '❌ Las medidas deben ser mayores a 0'
+      )
+
       return
     }
 
-    const hojas = parseInt(form.hojas, 10)
-    const calc = calcular(anchoDec, altoDec, hojas)
+    const hojas =
+      parseInt(
+        form.hojas,
+        10
+      )
+
+    const calc =
+      calcular(
+        anchoDec,
+        altoDec,
+        hojas
+      )
 
     setResults([
       ...results,
       {
-        hueco: form.hueco,
-        ancho: form.ancho,
-        alto: form.alto,
-        tipo: hojas === 1 ? 'Simple' : 'Doble',
-        cabAlf: FractionUtils.toSixteenths(calc.cabAlf),
-        jambas: FractionUtils.toSixteenths(calc.jambas),
-        marco: FractionUtils.toSixteenths(calc.marco),
-        latMarco: FractionUtils.toSixteenths(calc.latMarco),
-        vidrioAncho: FractionUtils.toSixteenths(calc.vidrioAncho),
-        vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto)
+        id: Date.now(),
+
+        hueco:
+          form.hueco,
+
+        ancho:
+          form.ancho,
+
+        alto:
+          form.alto,
+
+        anchoDec,
+
+        altoDec,
+
+        hojasNum:
+          hojas,
+
+        tipo:
+          hojas === 1
+            ? 'Simple'
+            : 'Doble',
+
+        cabAlf:
+          FractionUtils.toSixteenths(
+            calc.cabAlf
+          ),
+
+        jambas:
+          FractionUtils.toSixteenths(
+            calc.jambas
+          ),
+
+        marco:
+          FractionUtils.toSixteenths(
+            calc.marco
+          ),
+
+        latMarco:
+          FractionUtils.toSixteenths(
+            calc.latMarco
+          ),
+
+        vidrioAncho:
+          FractionUtils.toSixteenths(
+            calc.vidrioAncho
+          ),
+
+        vidrioAlto:
+          FractionUtils.toSixteenths(
+            calc.vidrioAlto
+          )
       }
     ])
-
-    setSaved(false)
 
     setForm({
       hueco: '',
@@ -280,113 +856,141 @@ export default function PuertaComercial() {
   }
 
   const handleReset = () => {
+
     setResults([])
+
     setError('')
-    setSaved(false)
 
     setForm({
-      hueco: 1,
+      hueco: '',
       ancho: '',
       alto: '',
       hojas: 1
     })
-
-    setProjectInfo({
-      cuenta: '',
-      obra: '',
-      color: ''
-    })
   }
 
-  // ==========================================
-  // GUARDAR EN HISTORIAL
-  // ==========================================
-  const handleSave = () => {
-    if (results.length === 0) {
-      alert('No hay datos para guardar')
+  const handleGuardar = () => {
+
+    if (
+      results.length === 0
+    ) {
+      alert(
+        'No hay datos para guardar'
+      )
+
       return
     }
 
-    const historialEntry = {
-      id: `puerta-comercial-${Date.now()}`,
-      fecha: new Date().toISOString(),
-      sistema: 'Puerta Comercial',
-
-      proyecto: {
-        cliente: projectInfo.cuenta || 'Sin cliente',
-        obra: projectInfo.obra || '',
-        color: projectInfo.color || '',
-        notas: ''
-      },
-
-      results: results,
-      materiales: []
-    }
-
-    try {
-      saveDesglose(historialEntry)
-
-      setSaved(true)
-
-      alert(
-        '✅ Desglose de Puerta Comercial guardado correctamente en el historial.'
-      )
-    } catch (err) {
-      console.error(
-        'Error guardando desglose Puerta Comercial:',
-        err
+    const materiales =
+      calcularResumenMaterialesPuertaComercial(
+        results
       )
 
-      alert(
-        '❌ No se pudo guardar el desglose.'
-      )
-    }
+    saveDesglose({
+      sistema:
+        'Puerta Comercial',
+
+      proyecto,
+
+      results,
+
+      materiales
+    })
+
+    setSavedMsg(
+      '✅ Guardado'
+    )
+
+    setTimeout(
+      () =>
+        setSavedMsg(''),
+      3000
+    )
   }
 
   const handlePrint = () => {
-    if (results.length === 0) {
-      alert('No hay datos para imprimir')
+
+    if (
+      results.length === 0
+    ) {
+      alert(
+        'No hay datos para imprimir'
+      )
+
       return
     }
 
-    const w = window.open('', '_blank')
+    const w =
+      window.open(
+        '',
+        '_blank'
+      )
 
     if (!w) {
       alert(
-        'No se pudo abrir la ventana de impresión. Verifica que los pop-ups estén permitidos.'
+        'No se pudo abrir la ventana de impresión.'
       )
+
       return
     }
 
     w.document.write(
-      buildPrintHtml(projectInfo, results)
+      buildPrintHtml(
+        proyecto,
+        results
+      )
     )
 
     w.document.close()
 
-    setTimeout(() => {
-      w.print()
-    }, 500)
+    setTimeout(
+      () => w.print(),
+      500
+    )
   }
 
   return (
     <Layout>
 
+      {step === 'proyecto' && (
+
+        <ProyectoModal
+
+          onConfirm={(data) => {
+            setProyecto(data)
+            setStep('formulario')
+          }}
+
+          onCancel={() =>
+            navigate('/desglose')
+          }
+
+        />
+
+      )}
+
       <div className="page-content">
 
         {/* HEADER */}
+
         <div className="desglose-header">
 
           <button
             className="btn-back"
-            onClick={() => navigate('/desglose')}
+            onClick={() =>
+              navigate('/desglose')
+            }
           >
+
             <i
               className="bi bi-arrow-left"
-              style={{ marginRight: '6px' }}
+              style={{
+                marginRight: '6px'
+              }}
             ></i>
 
             Volver
+
           </button>
 
           <h1 className="page-title">
@@ -396,317 +1000,586 @@ export default function PuertaComercial() {
           <div className="desglose-header-actions">
 
             {results.length > 0 && (
+
               <>
+
+                {savedMsg ? (
+
+                  <span
+                    style={{
+                      fontSize: '13px',
+                      color:
+                        'var(--success)',
+                      fontWeight: 600
+                    }}
+                  >
+                    {savedMsg}
+                  </span>
+
+                ) : (
+
+                  <button
+                    className="btn-secondary-sm"
+                    onClick={
+                      handleGuardar
+                    }
+                  >
+
+                    <i
+                      className="bi bi-save"
+                      style={{
+                        marginRight: '6px'
+                      }}
+                    ></i>
+
+                    Guardar
+
+                  </button>
+
+                )}
+
                 <button
                   className="btn-primary-sm"
-                  onClick={handleSave}
+                  onClick={
+                    handlePrint
+                  }
                 >
-                  <i
-                    className="bi bi-save"
-                    style={{ marginRight: '6px' }}
-                  ></i>
 
-                  {saved ? 'Guardado' : 'Guardar'}
-                </button>
-
-                <button
-                  className="btn-primary-sm"
-                  onClick={handlePrint}
-                >
                   <i
                     className="bi bi-printer"
-                    style={{ marginRight: '6px' }}
+                    style={{
+                      marginRight: '6px'
+                    }}
                   ></i>
 
                   Imprimir
+
                 </button>
+
               </>
+
             )}
 
           </div>
+
         </div>
 
-        {/* INFORMACIÓN DEL PROYECTO */}
-        <div className="card-modern mb-4">
+        {/* PROYECTO */}
 
-          <h3 className="info-card-title">
+        {proyecto && (
 
-            <i
-              className="bi bi-clipboard"
-              style={{ marginRight: '6px' }}
-            ></i>
+          <div
+            className="card-modern mb-4"
+            style={{
+              background:
+                '#f0f9ff',
+              border:
+                '1px solid #bfdbfe'
+            }}
+          >
 
-            Información del proyecto
+            <div
+              style={{
+                display:
+                  'flex',
+                justifyContent:
+                  'space-between',
+                alignItems:
+                  'center',
+                flexWrap:
+                  'wrap',
+                gap:
+                  '8px'
+              }}
+            >
 
-          </h3>
+              <div
+                style={{
+                  display:
+                    'flex',
+                  gap:
+                    '1.5rem',
+                  flexWrap:
+                    'wrap',
+                  fontSize:
+                    '13px'
+                }}
+              >
 
-          <div className="form-grid-3">
+                <span>
+                  <strong>
+                    Cliente:
+                  </strong>{' '}
+                  {proyecto.cliente}
+                </span>
 
-            {[
-              ['cuenta', 'Cuenta'],
-              ['obra', 'Obra'],
-              ['color', 'Color']
-            ].map(([name, label]) => (
+                {proyecto.obra && (
+
+                  <span>
+                    <strong>
+                      Obra:
+                    </strong>{' '}
+                    {proyecto.obra}
+                  </span>
+
+                )}
+
+                {proyecto.color && (
+
+                  <span>
+                    <strong>
+                      Color:
+                    </strong>{' '}
+                    {proyecto.color}
+                  </span>
+
+                )}
+
+              </div>
+
+              <button
+                className="btn-ghost-sm"
+                onClick={() =>
+                  setStep(
+                    'proyecto'
+                  )
+                }
+                style={{
+                  fontSize:
+                    '11px'
+                }}
+              >
+
+                <i
+                  className="bi bi-pencil"
+                  style={{
+                    marginRight:
+                      '4px'
+                  }}
+                ></i>
+
+                Editar
+
+              </button>
+
+            </div>
+
+            {proyecto.notas && (
+
+              <div
+                style={{
+                  fontSize:
+                    '12px',
+                  color:
+                    '#92400e',
+                  marginTop:
+                    '6px',
+                  background:
+                    '#fffbeb',
+                  padding:
+                    '5px 8px',
+                  borderRadius:
+                    '6px'
+                }}
+              >
+
+                <i
+                  className="bi bi-sticky"
+                  style={{
+                    marginRight:
+                      '4px'
+                  }}
+                ></i>
+
+                {proyecto.notas}
+
+              </div>
+
+            )}
+
+          </div>
+
+        )}
+
+        {/* FORMULARIO */}
+
+        {step === 'formulario' && (
+
+          <div
+            className="card-modern mb-4"
+          >
+
+            <div
+              className="form-grid-4"
+            >
 
               <div
                 className="auth-field"
-                key={name}
               >
 
-                <label className="auth-label">
-                  {label}
+                <label
+                  className="auth-label"
+                >
+                  Hueco #
                 </label>
 
                 <input
                   type="text"
-                  name={name}
-                  value={projectInfo[name]}
-                  onChange={handleInfoChange}
+                  name="hueco"
+                  value={
+                    form.hueco
+                  }
+                  onChange={
+                    handleFormChange
+                  }
+                  placeholder="ej: A-1"
                   className="auth-input"
                 />
 
               </div>
 
-            ))}
-
-          </div>
-
-        </div>
-
-        {/* FORMULARIO */}
-        <div className="card-modern mb-4">
-
-          <div className="form-grid-4">
-
-            <div className="auth-field">
-
-              <label className="auth-label">
-                Hueco #
-              </label>
-
-              <input
-                type="text"
-                name="hueco"
-                value={form.hueco}
-                onChange={handleFormChange}
-                placeholder="ej: A-1"
-                className="auth-input"
-              />
-
-            </div>
-
-            <div className="auth-field">
-
-              <label className="auth-label">
-                Ancho
-              </label>
-
-              <input
-                type="text"
-                name="ancho"
-                value={form.ancho}
-                onChange={handleFormChange}
-                placeholder={'ej: 56 7/8"'}
-                className="auth-input"
-              />
-
-            </div>
-
-            <div className="auth-field">
-
-              <label className="auth-label">
-                Alto
-              </label>
-
-              <input
-                type="text"
-                name="alto"
-                value={form.alto}
-                onChange={handleFormChange}
-                placeholder={'ej: 82 2/16"'}
-                className="auth-input"
-              />
-
-            </div>
-
-            <div className="auth-field">
-
-              <label className="auth-label">
-                Tipo puerta
-              </label>
-
-              <select
-                name="hojas"
-                value={form.hojas}
-                onChange={handleFormChange}
-                className="auth-input"
+              <div
+                className="auth-field"
               >
 
-                <option value={1}>
-                  1 hoja (Simple)
-                </option>
+                <label
+                  className="auth-label"
+                >
+                  Ancho
+                </label>
 
-                <option value={2}>
-                  2 hojas (Doble)
-                </option>
+                <input
+                  type="text"
+                  name="ancho"
+                  value={
+                    form.ancho
+                  }
+                  onChange={
+                    handleFormChange
+                  }
+                  placeholder='ej: 56 7/8"'
+                  className="auth-input"
+                />
 
-              </select>
+              </div>
 
-            </div>
-
-          </div>
-
-          {error && (
-            <div
-              className="auth-error"
-              style={{ marginTop: '0.5rem' }}
-            >
-              {error}
-            </div>
-          )}
-
-          <div className="form-actions">
-
-            <button
-              className="auth-btn"
-              onClick={handleAdd}
-            >
-              <i
-                className="bi bi-plus-circle"
-                style={{ marginRight: '6px' }}
-              ></i>
-
-              Agregar
-            </button>
-
-            {results.length > 0 && (
-              <button
-                className="btn-outline-lg"
-                onClick={handleReset}
+              <div
+                className="auth-field"
               >
-                <i
-                  className="bi bi-arrow-counterclockwise"
-                  style={{ marginRight: '6px' }}
-                ></i>
 
-                Reset
-              </button>
+                <label
+                  className="auth-label"
+                >
+                  Alto
+                </label>
+
+                <input
+                  type="text"
+                  name="alto"
+                  value={
+                    form.alto
+                  }
+                  onChange={
+                    handleFormChange
+                  }
+                  placeholder='ej: 82 2/16"'
+                  className="auth-input"
+                />
+
+              </div>
+
+              <div
+                className="auth-field"
+              >
+
+                <label
+                  className="auth-label"
+                >
+                  Tipo puerta
+                </label>
+
+                <select
+                  name="hojas"
+                  value={
+                    form.hojas
+                  }
+                  onChange={
+                    handleFormChange
+                  }
+                  className="auth-input"
+                >
+
+                  <option value={1}>
+                    1 hoja (Simple)
+                  </option>
+
+                  <option value={2}>
+                    2 hojas (Doble)
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+            {error && (
+
+              <div
+                className="auth-error"
+                style={{
+                  marginTop:
+                    '0.5rem'
+                }}
+              >
+                {error}
+              </div>
+
             )}
 
-          </div>
+            <div
+              className="form-actions"
+            >
 
-        </div>
-
-        {/* TABLA RESULTADOS */}
-        {results.length > 0 ? (
-
-          <div className="table-container">
-
-            <div className="table-title">
-              PUERTA COMERCIAL TRADICIONAL
-            </div>
-
-            <div className="table-responsive">
-
-              <table
-                className="table-professional"
-                style={{ minWidth: '820px' }}
+              <button
+                className="auth-btn"
+                onClick={
+                  handleAdd
+                }
               >
 
-                <thead>
+                <i
+                  className="bi bi-plus-circle"
+                  style={{
+                    marginRight:
+                      '6px'
+                  }}
+                ></i>
 
-                  <tr>
+                Agregar
 
-                    <th rowSpan="2">
-                      Hueco
-                    </th>
+              </button>
 
-                    <th rowSpan="2">
-                      Ancho
-                    </th>
+              {results.length > 0 && (
 
-                    <th rowSpan="2">
-                      Alto
-                    </th>
+                <button
+                  className="btn-outline-lg"
+                  onClick={
+                    handleReset
+                  }
+                >
 
-                    <th rowSpan="2">
-                      Tipo
-                    </th>
+                  <i
+                    className="bi bi-arrow-counterclockwise"
+                    style={{
+                      marginRight:
+                        '6px'
+                    }}
+                  ></i>
 
-                    <th colSpan="2">
-                      Hoja
-                    </th>
+                  Reset
 
-                    <th colSpan="2">
-                      Marco
-                    </th>
+                </button>
 
-                    <th colSpan="2">
-                      Vidrio
-                    </th>
-
-                  </tr>
-
-                  <tr>
-
-                    <th>Cab-alf</th>
-                    <th>Jambas</th>
-
-                    <th>Cab-marco</th>
-                    <th>Lat-marco</th>
-
-                    <th>Ancho</th>
-                    <th>Alto</th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {results.map((row, idx) => (
-
-                    <tr key={idx}>
-
-                      <td>{row.hueco}</td>
-                      <td>{row.ancho}</td>
-                      <td>{row.alto}</td>
-                      <td>{row.tipo}</td>
-
-                      <td>{row.cabAlf}</td>
-                      <td>{row.jambas}</td>
-
-                      <td>{row.marco}</td>
-                      <td>{row.latMarco}</td>
-
-                      <td>{row.vidrioAncho}</td>
-                      <td>{row.vidrioAlto}</td>
-
-                    </tr>
-
-                  ))}
-
-                </tbody>
-
-              </table>
+              )}
 
             </div>
 
-          </div>
-
-        ) : (
-
-          <div
-            className="card-modern text-center"
-            style={{
-              padding: '2rem',
-              color: 'var(--gray-500)'
-            }}
-          >
-            Ingresa las medidas y haz clic en "Agregar"
           </div>
 
         )}
+
+        {/* RESULTADOS */}
+
+        {results.length > 0 && (
+
+          <>
+
+            <div
+              className="table-container"
+            >
+
+              <div
+                className="table-title"
+              >
+                PUERTA COMERCIAL TRADICIONAL
+              </div>
+
+              <div
+                className="table-responsive"
+              >
+
+                <table
+                  className="table-professional"
+                  style={{
+                    minWidth:
+                      '820px'
+                  }}
+                >
+
+                  <thead>
+
+                    <tr>
+
+                      <th rowSpan="2">
+                        Hueco
+                      </th>
+
+                      <th rowSpan="2">
+                        Ancho
+                      </th>
+
+                      <th rowSpan="2">
+                        Alto
+                      </th>
+
+                      <th rowSpan="2">
+                        Tipo
+                      </th>
+
+                      <th colSpan="2">
+                        Hoja
+                      </th>
+
+                      <th colSpan="2">
+                        Marco
+                      </th>
+
+                      <th colSpan="2">
+                        Vidrio
+                      </th>
+
+                    </tr>
+
+                    <tr>
+
+                      <th>
+                        Cab-alf
+                      </th>
+
+                      <th>
+                        Jambas
+                      </th>
+
+                      <th>
+                        Cab-marco
+                      </th>
+
+                      <th>
+                        Lat-marco
+                      </th>
+
+                      <th>
+                        Ancho
+                      </th>
+
+                      <th>
+                        Alto
+                      </th>
+
+                    </tr>
+
+                  </thead>
+
+                  <tbody>
+
+                    {results.map(
+                      (row, idx) => (
+
+                        <tr
+                          key={
+                            row.id ||
+                            idx
+                          }
+                        >
+
+                          <td>
+                            {row.hueco ||
+                              '—'}
+                          </td>
+
+                          <td>
+                            {row.ancho}
+                          </td>
+
+                          <td>
+                            {row.alto}
+                          </td>
+
+                          <td>
+                            {row.tipo}
+                          </td>
+
+                          <td>
+                            {row.cabAlf}
+                          </td>
+
+                          <td>
+                            {row.jambas}
+                          </td>
+
+                          <td>
+                            {row.marco}
+                          </td>
+
+                          <td>
+                            {row.latMarco}
+                          </td>
+
+                          <td>
+                            {row.vidrioAncho}
+                          </td>
+
+                          <td>
+                            {row.vidrioAlto}
+                          </td>
+
+                        </tr>
+
+                      )
+                    )}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+            {/* MATERIALES */}
+
+            <MaterialPuertaComercial
+              medidas={
+                results
+              }
+            />
+
+          </>
+
+        )}
+
+        {/* EMPTY */}
+
+        {results.length === 0 &&
+          step === 'formulario' && (
+
+            <div
+              className="card-modern text-center"
+              style={{
+                padding:
+                  '2rem',
+                color:
+                  'var(--gray-500)'
+              }}
+            >
+
+              Ingresa las medidas y haz clic en
+              "Agregar"
+
+            </div>
+
+          )}
 
       </div>
 
