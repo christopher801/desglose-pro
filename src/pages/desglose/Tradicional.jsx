@@ -7,6 +7,9 @@ import ProyectoModal from "./components/ProyectoModal";
 import MaterialTradicional from "./components/MaterialTradicional";
 
 import { saveDesglose } from "../../services/historialService";
+import { useAuth } from "../../context/AuthContext";
+import { checkAndIncrementUsage } from "../../services/usageService";
+import DailyLimitModal from "../../components/DailyLimitModal";
 
 import {
   calcularResumenMaterialesTradicional,
@@ -490,6 +493,10 @@ ${materialRows}
 export default function Tradicional() {
   const navigate = useNavigate();
 
+  const { user, fullAccess } = useAuth();
+
+  const [showLimitModal, setShowLimitModal] = useState(false);
+
   const [step, setStep] = useState("proyecto");
 
   const [form, setForm] = useState({
@@ -532,8 +539,11 @@ export default function Tradicional() {
     setSaved(false);
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     setError("");
+
+    const allowed = await checkAndIncrementUsage(user?.uid, fullAccess);
+    if (!allowed) { setShowLimitModal(true); return; }
 
     if (!form.ancho || !form.alto) {
       setError(
@@ -766,6 +776,10 @@ export default function Tradicional() {
 
   return (
     <Layout>
+
+      {showLimitModal && (
+        <DailyLimitModal onClose={() => setShowLimitModal(false)} />
+      )}
 
       {step === "proyecto" && (
         <ProyectoModal

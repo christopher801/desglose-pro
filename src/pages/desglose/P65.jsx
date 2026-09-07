@@ -7,6 +7,9 @@ import ProyectoModal from "./components/ProyectoModal";
 import MaterialP65 from "./components/MaterialP65";
 
 import { saveDesglose } from "../../services/historialService";
+import { useAuth } from "../../context/AuthContext";
+import { checkAndIncrementUsage } from "../../services/usageService";
+import DailyLimitModal from "../../components/DailyLimitModal";
 
 import {
   calcularResumenMaterialesP65,
@@ -397,6 +400,10 @@ const buildPrintHtml = (
 export default function P65() {
   const navigate = useNavigate();
 
+  const { user, fullAccess } = useAuth();
+
+  const [showLimitModal, setShowLimitModal] = useState(false);
+
   const [step, setStep] = useState("proyecto");
 
   const [proyecto, setProyecto] = useState(null);
@@ -421,8 +428,11 @@ export default function P65() {
     });
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     setError("");
+
+    const allowed = await checkAndIncrementUsage(user?.uid, fullAccess);
+    if (!allowed) { setShowLimitModal(true); return; }
 
     if (!form.ancho || !form.alto) {
       setError("❌ Ingresa ANCHO y ALTO");
@@ -604,6 +614,10 @@ export default function P65() {
 
   return (
     <Layout>
+
+      {showLimitModal && (
+        <DailyLimitModal onClose={() => setShowLimitModal(false)} />
+      )}
 
       {step === "proyecto" && (
         <ProyectoModal
