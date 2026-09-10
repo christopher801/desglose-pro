@@ -158,7 +158,7 @@ export default function GlassOptimizer() {
       <div className="page-content">
         <h1 className="page-title">
           <i className="bi bi-square-half me-2"></i>
-          Optimización de Corte de Vidrio
+          Croquins de Vidrio
         </h1>
 
         <div className="admin-header mb-3">

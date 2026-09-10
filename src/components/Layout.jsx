@@ -8,6 +8,7 @@ const navItems = [
   { path: "/dashboard", icon: "bi-grid", label: "Inicio" },
   { path: "/desglose", icon: "bi-layers", label: "Desglose" },
   { path: "/glass-optimizer", icon: "bi-square-half", label: "Croquis" },
+  { path: "/croquis-barras", icon: "bi bi-scissors", label: "Barras" },
   { path: "/historial", icon: "bi-clock", label: "Historial" },
 ];
 
@@ -18,6 +19,7 @@ const NAV_CALCULO = [
     icon: "bi-square-half",
     label: "Croquis",
   },
+  { path: "/croquis-barras", icon: "bi bi-scissors", label: "Barras" },
 ];
 
 const NAV_GESTION = [
@@ -626,8 +628,6 @@ export default function Layout({ children, unreadCount = 0 }) {
             INTRO
         ================================= */}
               <div style={{ marginBottom: "18px" }}>
-                
-
                 <h4
                   style={{
                     margin: 0,

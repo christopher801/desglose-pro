@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
 import GlassOptimizer from "./pages/GlassOptimizer";
+import CroquisBarrasPage from "./pages/CroquisBarrasPage";
 import Historial from "./pages/HistorialPage";
 
 // Desglose
@@ -36,7 +37,6 @@ export default function AppRoutes() {
   return (
     <>
       <Routes>
-
         {/* =========================================
             ROUTES PUBLIC
         ========================================= */}
@@ -45,7 +45,6 @@ export default function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/signup" element={<SignupPage />} />
-
 
         {/* =========================================
             ROUTE POUR USER NON ENCORE ACTIVÉ
@@ -58,7 +57,6 @@ export default function AppRoutes() {
             </AuthRoute>
           }
         />
-
 
         {/* =========================================
             ROUTES PROTÉGÉES
@@ -94,6 +92,15 @@ export default function AppRoutes() {
           }
         />
 
+        <Route
+          path="/croquis-barras"
+          element={
+            <ProtectedRoute>
+              <CroquisBarrasPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Historial */}
         <Route
           path="/historial"
@@ -103,7 +110,6 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
 
         {/* =========================================
             DESGLOSE
@@ -142,7 +148,6 @@ export default function AppRoutes() {
           }
         />
 
-
         {/* -----------------------------------------
             P-65
         ----------------------------------------- */}
@@ -155,7 +160,6 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
 
         {/* -----------------------------------------
             TRADICIONAL
@@ -170,7 +174,6 @@ export default function AppRoutes() {
           }
         />
 
-
         {/* -----------------------------------------
             P-40
         ----------------------------------------- */}
@@ -183,7 +186,6 @@ export default function AppRoutes() {
             </FullAccessRoute>
           }
         />
-
 
         {/* -----------------------------------------
             E-70
@@ -198,7 +200,6 @@ export default function AppRoutes() {
           }
         />
 
-
         {/* -----------------------------------------
             PUERTA COMERCIAL
         ----------------------------------------- */}
@@ -211,7 +212,6 @@ export default function AppRoutes() {
             </FullAccessRoute>
           }
         />
-
 
         {/* -----------------------------------------
             PUERTA P-40
@@ -226,7 +226,6 @@ export default function AppRoutes() {
           }
         />
 
-
         {/* =========================================
             ADMIN
         ========================================= */}
@@ -240,16 +239,11 @@ export default function AppRoutes() {
           }
         />
 
-
         {/* =========================================
             ROUTE 404
         ========================================= */}
 
-        <Route
-          path="*"
-          element={<Navigate to="/" replace />}
-        />
-
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       {/* PWA Install Banner */}
