@@ -31,6 +31,12 @@ const systems = [
     locked: true,
   },
   {
+    name: "Ventanas M-100",
+    path: "/desglose/m100",
+    icon: "bi-window",
+    locked: true,
+  },
+  {
     name: "Ventanas Proyectada P-40",
     path: "/desglose/p40",
     icon: "bi-window-dock",
@@ -142,110 +148,165 @@ export default function DesgloseIndex() {
       </div>
 
       {/* Modal Premium */}
-      {showPremium && (
-        <div
+    {showPremium && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(15, 23, 42, 0.55)",
+      backdropFilter: "blur(5px)",
+      WebkitBackdropFilter: "blur(5px)",
+      zIndex: 1000,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "1rem",
+    }}
+    onClick={() => setShowPremium(false)}
+  >
+    <div
+      style={{
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: "18px",
+        padding: "2rem",
+        maxWidth: "400px",
+        width: "100%",
+        textAlign: "center",
+        boxShadow: "0 24px 60px rgba(15, 23, 42, 0.18)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Icon */}
+      <div
+        style={{
+          width: "64px",
+          height: "64px",
+          borderRadius: "16px",
+          background: "#eff6ff",
+          border: "1px solid #dbeafe",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 1.25rem",
+        }}
+      >
+        <i
+          className="bi bi-gem"
           style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            zIndex: 1000,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "1rem",
+            fontSize: "1.7rem",
+            color: "#2563eb",
           }}
-          onClick={() => setShowPremium(false)}
-        >
-          <div
-            style={{
-              background: "white",
-              borderRadius: "16px",
-              padding: "2rem",
-              maxWidth: "380px",
-              width: "100%",
-              textAlign: "center",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              style={{
-                width: "56px",
-                height: "56px",
-                borderRadius: "50%",
-                background: "#fef3c7",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 1rem",
-              }}
-            >
-              <i
-                className="bi bi-star-fill"
-                style={{ fontSize: "1.5rem", color: "#f59e0b" }}
-              ></i>
-            </div>
-            <h3
-              style={{
-                fontSize: "1.2rem",
-                fontWeight: 700,
-                marginBottom: "0.5rem",
-              }}
-            >
-              Producto Premium
-            </h3>
-            <p
-              style={{
-                fontSize: "13px",
-                color: "var(--gray-500)",
-                marginBottom: "1.5rem",
-                lineHeight: 1.6,
-              }}
-            >
-              Este sistema requiere <strong>Full Access</strong>. Contacta al
-              administrador para obtener acceso completo a todos los módulos de
-              cálculo.
-            </p>
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                width: "100%",
-                padding: "12px",
-                background: "#25D366",
-                color: "white",
-                borderRadius: "10px",
-                textDecoration: "none",
-                fontSize: "14px",
-                fontWeight: 600,
-                marginBottom: "0.75rem",
-              }}
-            >
-              <i className="bi bi-whatsapp"></i>
-              Solicitar Full Access
-            </a>
-            <button
-              onClick={() => setShowPremium(false)}
-              style={{
-                width: "100%",
-                padding: "10px",
-                background: "transparent",
-                border: "1px solid var(--gray-300)",
-                borderRadius: "10px",
-                fontSize: "13px",
-                color: "var(--gray-600)",
-                cursor: "pointer",
-              }}
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
+        ></i>
+      </div>
+
+      {/* Badge */}
+      <div
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "6px",
+          padding: "5px 10px",
+          borderRadius: "999px",
+          background: "#f8fafc",
+          border: "1px solid #e2e8f0",
+          color: "#475569",
+          fontSize: "11px",
+          fontWeight: 700,
+          marginBottom: "0.75rem",
+        }}
+      >
+        <i className="bi bi-lock-fill"></i>
+        ACCESO PREMIUM
+      </div>
+
+      {/* Title */}
+      <h3
+        style={{
+          fontSize: "1.3rem",
+          fontWeight: 700,
+          color: "#0f172a",
+          marginBottom: "0.6rem",
+        }}
+      >
+        Desbloquea esta función
+      </h3>
+
+      {/* Description */}
+      <p
+        style={{
+          fontSize: "13px",
+          color: "#64748b",
+          marginBottom: "1.5rem",
+          lineHeight: 1.65,
+        }}
+      >
+        Esta función está disponible para usuarios con{" "}
+        <strong style={{ color: "#334155" }}>Full Access</strong>.
+        Consulta nuestros planes para conocer todas las funcionalidades
+        disponibles para tu taller.
+      </p>
+
+      {/* Main CTA */}
+      <Link
+        to="/planes"
+        onClick={() => setShowPremium(false)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+          width: "100%",
+          padding: "12px 16px",
+          background: "#1e3a8a",
+          color: "#ffffff",
+          borderRadius: "10px",
+          textDecoration: "none",
+          fontSize: "14px",
+          fontWeight: 600,
+          transition: "all 0.2s ease",
+        }}
+      >
+        Ver planes
+        <i className="bi bi-arrow-right"></i>
+      </Link>
+
+      {/* Close */}
+      <button
+        type="button"
+        onClick={() => setShowPremium(false)}
+        style={{
+          width: "100%",
+          marginTop: "0.75rem",
+          padding: "10px",
+          background: "transparent",
+          border: "none",
+          borderRadius: "10px",
+          fontSize: "13px",
+          fontWeight: 500,
+          color: "#64748b",
+          cursor: "pointer",
+        }}
+      >
+        Ahora no
+      </button>
+
+      {/* Small trust text */}
+      <div
+        style={{
+          marginTop: "1rem",
+          paddingTop: "1rem",
+          borderTop: "1px solid #f1f5f9",
+          fontSize: "11px",
+          color: "#94a3b8",
+        }}
+      >
+        <i className="bi bi-shield-check me-1"></i>
+        Acceso seguro y activación por administrador
+      </div>
+    </div>
+  </div>
+)}
     </Layout>
   );
 }

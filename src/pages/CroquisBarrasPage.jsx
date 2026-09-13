@@ -199,7 +199,7 @@ export default function CroquisBarrasPage() {
       <div className="barras-header no-print">
         <div className="barras-header-main">
           <div className="barras-title-icon">
-            <i className="bi bi-layout-text-window-reverse" />
+            <i className="bi bi-scissors" />
           </div>
 
           <div>

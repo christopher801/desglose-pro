@@ -30,6 +30,12 @@ const systems = [
     locked: true,
   },
   {
+    name: "Ventanas M-100",
+    icon: "bi-window",
+    path: "/desglose/m100",
+    locked: true,
+  },
+  {
     name: "Ventanas Proyectadas P-40",
     icon: "bi-window",
     path: "/desglose/p40",
@@ -46,12 +52,6 @@ const systems = [
     icon: "bi-door-open",
     path: "/desglose/puertap40",
     locked: true,
-  },
-  {
-    name: "Croquis",
-    icon: "bi-square-half",
-    path: "/glass-optimizer",
-    locked: false,
   },
 ];
 
@@ -466,7 +466,9 @@ export default function Dashboard() {
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(0,0,0,0.5)",
+            background: "rgba(15, 23, 42, 0.55)",
+            backdropFilter: "blur(5px)",
+            WebkitBackdropFilter: "blur(5px)",
             zIndex: 1000,
             display: "flex",
             alignItems: "center",
@@ -477,98 +479,144 @@ export default function Dashboard() {
         >
           <div
             style={{
-              background: "white",
-              borderRadius: "16px",
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: "18px",
               padding: "2rem",
-              maxWidth: "380px",
+              maxWidth: "400px",
               width: "100%",
               textAlign: "center",
+              boxShadow: "0 24px 60px rgba(15, 23, 42, 0.18)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Icon */}
             <div
               style={{
-                width: "56px",
-                height: "56px",
-                borderRadius: "50%",
-                background: "#fef3c7",
+                width: "64px",
+                height: "64px",
+                borderRadius: "16px",
+                background: "#eff6ff",
+                border: "1px solid #dbeafe",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                margin: "0 auto 1rem",
+                margin: "0 auto 1.25rem",
               }}
             >
               <i
-                className="bi bi-star-fill"
+                className="bi bi-gem"
                 style={{
-                  fontSize: "1.5rem",
-                  color: "#f59e0b",
+                  fontSize: "1.7rem",
+                  color: "#2563eb",
                 }}
               ></i>
             </div>
 
-            <h3
+            {/* Badge */}
+            <div
               style={{
-                fontSize: "1.2rem",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "5px 10px",
+                borderRadius: "999px",
+                background: "#f8fafc",
+                border: "1px solid #e2e8f0",
+                color: "#475569",
+                fontSize: "11px",
                 fontWeight: 700,
-                marginBottom: "0.5rem",
+                marginBottom: "0.75rem",
               }}
             >
-              Producto Premium
+              <i className="bi bi-lock-fill"></i>
+              ACCESO PREMIUM
+            </div>
+
+            {/* Title */}
+            <h3
+              style={{
+                fontSize: "1.3rem",
+                fontWeight: 700,
+                color: "#0f172a",
+                marginBottom: "0.6rem",
+              }}
+            >
+              Desbloquea esta función
             </h3>
 
+            {/* Description */}
             <p
               style={{
                 fontSize: "13px",
-                color: "var(--gray-500)",
+                color: "#64748b",
                 marginBottom: "1.5rem",
-                lineHeight: 1.6,
+                lineHeight: 1.65,
               }}
             >
-              Este sistema requiere <strong>Full Access</strong>. Contacta al
-              administrador para obtener acceso completo a todos los módulos de
-              cálculo.
+              Esta función está disponible para usuarios con{" "}
+              <strong style={{ color: "#334155" }}>Full Access</strong>.
+              Consulta nuestros planes para conocer todas las funcionalidades
+              disponibles para tu taller.
             </p>
 
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            {/* Main CTA */}
+            <Link
+              to="/planes"
+              onClick={() => setShowPremium(false)}
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "8px",
                 width: "100%",
-                padding: "12px",
-                background: "#25D366",
-                color: "white",
+                padding: "12px 16px",
+                background: "#1e3a8a",
+                color: "#ffffff",
                 borderRadius: "10px",
                 textDecoration: "none",
                 fontSize: "14px",
                 fontWeight: 600,
-                marginBottom: "0.75rem",
+                transition: "all 0.2s ease",
               }}
             >
-              <i className="bi bi-whatsapp"></i>
-              Solicitar Full Access
-            </a>
+              Ver planes
+              <i className="bi bi-arrow-right"></i>
+            </Link>
 
+            {/* Close */}
             <button
+              type="button"
               onClick={() => setShowPremium(false)}
               style={{
                 width: "100%",
+                marginTop: "0.75rem",
                 padding: "10px",
                 background: "transparent",
-                border: "1px solid var(--gray-300)",
+                border: "none",
                 borderRadius: "10px",
                 fontSize: "13px",
-                color: "var(--gray-600)",
+                fontWeight: 500,
+                color: "#64748b",
                 cursor: "pointer",
               }}
             >
-              Cerrar
+              Ahora no
             </button>
+
+            {/* Small trust text */}
+            <div
+              style={{
+                marginTop: "1rem",
+                paddingTop: "1rem",
+                borderTop: "1px solid #f1f5f9",
+                fontSize: "11px",
+                color: "#94a3b8",
+              }}
+            >
+              <i className="bi bi-shield-check me-1"></i>
+              Acceso seguro y activación por administrador
+            </div>
           </div>
         </div>
       )}

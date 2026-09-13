@@ -19,13 +19,14 @@ import AdminPage from "./pages/AdminPage";
 import GlassOptimizer from "./pages/GlassOptimizer";
 import CroquisBarrasPage from "./pages/CroquisBarrasPage";
 import Historial from "./pages/HistorialPage";
-
+import PlanesPage from "./pages/PlanesPage";
 // Desglose
 import DesgloseIndex from "./pages/desglose/DesgloseIndex";
 import P92 from "./pages/desglose/P92";
 import P65 from "./pages/desglose/P65";
 import Tradicional from "./pages/desglose/Tradicional";
 import E70 from "./pages/desglose/E70";
+import M100 from "./pages/desglose/M100";
 import P40 from "./pages/desglose/P40";
 import PuertaComercial from "./pages/desglose/PuertaComercial";
 import PuertaP40 from "./pages/desglose/PuertaP40";
@@ -107,6 +108,16 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <Historial />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Planes */}
+        <Route
+          path="/planes"
+          element={
+            <ProtectedRoute>
+              <PlanesPage />
             </ProtectedRoute>
           }
         />
@@ -196,6 +207,19 @@ export default function AppRoutes() {
           element={
             <FullAccessRoute>
               <E70 />
+            </FullAccessRoute>
+          }
+        />
+
+        {/* -----------------------------------------
+            M-100
+        ----------------------------------------- */}
+
+        <Route
+          path="/desglose/m100"
+          element={
+            <FullAccessRoute>
+              <M100 />
             </FullAccessRoute>
           }
         />

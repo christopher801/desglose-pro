@@ -2129,7 +2129,7 @@ export default function WelcomePage() {
               </li>
               <li>
                 <span style={{ fontSize: "0.85rem", color: "#64748b" }}>
-                  Versión: 5.3.0
+                  Versión: 5.4.0
                 </span>
               </li>
             </ul>
