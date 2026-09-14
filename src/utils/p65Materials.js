@@ -51,17 +51,17 @@ export const calcularMaterialesVentanaP65 = ({
   const nombreCabMarco =
     hojas === 3
       ? "Cabezal del marco 3 vías P-65"
-      : "Cabezal del marco 2/4 vías P-65";
+      : "Cabezal del marco 2 vías P-65";
 
   const nombreRiel =
     hojas === 3
       ? "Riel del marco 3 vías P-65"
-      : "Riel del marco 2/4 vías P-65";
+      : "Riel del marco 2 vías P-65";
 
   const nombreLateral =
     hojas === 3
       ? "Lateral 3 vías P-65"
-      : "Lateral 2/4 vías P-65";
+      : "Lateral 2 vías P-65";
 
   return [
     {

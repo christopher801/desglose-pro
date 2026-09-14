@@ -105,17 +105,17 @@ export const calcularMaterialesVentanaTradicional = ({
   const nombreCabMarco =
     hojas === 3
       ? "Cabezal del marco 3 vías Tradicional"
-      : "Cabezal del marco 2/4 vías Tradicional";
+      : "Cabezal del marco 2 vías Tradicional";
 
   const nombreRiel =
     hojas === 3
       ? "Riel del marco 3 vías Tradicional"
-      : "Riel del marco 2/4 vías Tradicional";
+      : "Riel del marco 2 vías Tradicional";
 
   const nombreLateral =
     hojas === 3
       ? "Lateral 3 vías Tradicional"
-      : "Lateral 2/4 vías Tradicional";
+      : "Lateral 2 vías Tradicional";
 
   // =========================
   // MATERIAL FINAL

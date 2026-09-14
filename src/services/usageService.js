@@ -1,5 +1,5 @@
 // ============================================================
-// FILE 1: usageService.js
+// FILE: usageService.js
 // ============================================================
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
@@ -9,6 +9,7 @@ const DAILY_LIMIT = 5
 
 /**
  * Retounen dat lokal República Dominicana nan fòma:
+ *
  * YYYY-MM-DD
  */
 const today = () => {
@@ -40,13 +41,28 @@ export const getNextResetTime = () => {
     day: '2-digit',
   }).formatToParts(now)
 
-  const year = Number(parts.find(p => p.type === 'year')?.value)
-  const month = Number(parts.find(p => p.type === 'month')?.value)
-  const day = Number(parts.find(p => p.type === 'day')?.value)
+  const year = Number(
+    parts.find((p) => p.type === 'year')?.value
+  )
 
-  // Kreye pwochen jou a a 00:00 RD
+  const month = Number(
+    parts.find((p) => p.type === 'month')?.value
+  )
+
+  const day = Number(
+    parts.find((p) => p.type === 'day')?.value
+  )
+
+  // Pwochen jou a 00:00 RD
   const nextDay = new Date(
-    Date.UTC(year, month - 1, day + 1, 4, 0, 0)
+    Date.UTC(
+      year,
+      month - 1,
+      day + 1,
+      4,
+      0,
+      0
+    )
   )
 
   return nextDay
@@ -56,9 +72,10 @@ export const getNextResetTime = () => {
  * Retounen kantite tan ki rete anvan reset.
  *
  * Egzanp:
+ *
  * "10h 32m"
  * "45m"
- * "1h"
+ * "1h 00m"
  */
 export const getTimeUntilReset = () => {
   const now = new Date()
@@ -73,18 +90,26 @@ export const getTimeUntilReset = () => {
     difference / 1000 / 60
   )
 
-  const hours = Math.floor(totalMinutes / 60)
+  const hours = Math.floor(
+    totalMinutes / 60
+  )
+
   const minutes = totalMinutes % 60
 
   if (hours > 0) {
-    return `${hours}h ${String(minutes).padStart(2, '0')}m`
+    return `${hours}h ${String(minutes).padStart(
+      2,
+      '0'
+    )}m`
   }
 
   return `${minutes}m`
 }
 
 /**
- * Retounen lè pwochen reset la nan fòma:
+ * Retounen lè pwochen reset la.
+ *
+ * Fòma:
  *
  * "00:00"
  */
@@ -95,30 +120,61 @@ export const getResetTimeFormatted = () => {
 /**
  * Verifye si user ka itilize yon despiece.
  *
- * Si fullAccess:
- * - toujou true
- * - pa modifye dailyUsage
+ * ADMIN:
+ * - Pa gen Daily Limit
+ * - Pa modifye dailyUsage
  *
- * Si user la poko rive nan limit:
- * - ajoute +1
+ * FULL ACCESS:
+ * - Pa gen Daily Limit
+ * - Pa modifye dailyUsage
  *
- * Si li rive nan DAILY_LIMIT:
- * - retounen false
+ * USER NORMAL:
+ * - Maksimòm 5 itilizasyon pa jou
+ * - Chak itilizasyon ajoute +1
+ *
+ * Retounen:
+ *
+ * true  → itilizasyon otorize
+ * false → limit la rive
  */
 export const checkAndIncrementUsage = async (
   uid,
   fullAccess
 ) => {
-  if (!uid) return true
-
-  // Full Access = ilimitado
-  if (fullAccess) return true
+  if (!uid) {
+    return true
+  }
 
   try {
     const ref = doc(db, 'users', uid)
     const snap = await getDoc(ref)
 
+    /**
+     * Si user document lan pa egziste,
+     * nou pa bloke itilizatè a.
+     */
+    if (!snap.exists()) {
+      return true
+    }
+
     const data = snap.data() || {}
+
+    /**
+     * ADMIN + FULL ACCESS = ILIMITADO
+     *
+     * Nou verifye tou:
+     *
+     * data.role
+     * fullAccess
+     * data.fullAccess
+     */
+    if (
+      data.role === 'admin' ||
+      fullAccess === true ||
+      data.fullAccess === true
+    ) {
+      return true
+    }
 
     const usage = data.dailyUsage || {
       date: '',
@@ -127,7 +183,12 @@ export const checkAndIncrementUsage = async (
 
     const todayStr = today()
 
-    // Nouvo jounen
+    /**
+     * NOUVO JOUNEN
+     *
+     * Reset count la epi konte itilizasyon aktyèl la
+     * kòm premye itilizasyon jounen an.
+     */
     if (usage.date !== todayStr) {
       await updateDoc(ref, {
         dailyUsage: {
@@ -139,22 +200,32 @@ export const checkAndIncrementUsage = async (
       return true
     }
 
-    // Limit la rive
+    /**
+     * LIMIT LA RIVE
+     */
     if (usage.count >= DAILY_LIMIT) {
       return false
     }
 
-    // Ajoute yon itilizasyon
+    /**
+     * AJOUTE YON ITILIZASYON
+     */
     await updateDoc(ref, {
       'dailyUsage.count': usage.count + 1,
     })
 
     return true
-  } catch (err) {
-    console.error('usageService error:', err)
 
-    // Si Firestore gen pwoblèm,
-    // pa bloke itilizatè a.
+  } catch (err) {
+    console.error(
+      'usageService error:',
+      err
+    )
+
+    /**
+     * Si Firestore gen yon erè,
+     * pa bloke itilizatè a.
+     */
     return true
   }
 }
@@ -162,16 +233,20 @@ export const checkAndIncrementUsage = async (
 /**
  * Retounen kantite itilizasyon ki rete jodi a.
  *
- * Egzanp:
- * 5 → 5 ki rete
- * 2 → 2 ki rete
- * 0 → limit rive
+ * ADMIN:
+ * Infinity
+ *
+ * FULL ACCESS:
+ * Infinity
+ *
+ * USER NORMAL:
+ * 0 - 5
  */
 export const getRemainingUsage = async (
   uid,
   fullAccess
 ) => {
-  if (!uid || fullAccess) {
+  if (!uid) {
     return Infinity
   }
 
@@ -179,22 +254,47 @@ export const getRemainingUsage = async (
     const ref = doc(db, 'users', uid)
     const snap = await getDoc(ref)
 
-    const usage = snap.data()?.dailyUsage || {
+    if (!snap.exists()) {
+      return DAILY_LIMIT
+    }
+
+    const data = snap.data() || {}
+
+    /**
+     * ADMIN + FULL ACCESS = ILIMITADO
+     */
+    if (
+      data.role === 'admin' ||
+      fullAccess === true ||
+      data.fullAccess === true
+    ) {
+      return Infinity
+    }
+
+    const usage = data.dailyUsage || {
       date: '',
       count: 0,
     }
 
     const todayStr = today()
 
-    // Nouvo jounen
+    /**
+     * NOUVO JOUNEN
+     *
+     * User la gen tout 5 itilizasyon li yo.
+     */
     if (usage.date !== todayStr) {
       return DAILY_LIMIT
     }
 
+    /**
+     * RETOUNEN SA KI RETE
+     */
     return Math.max(
       0,
       DAILY_LIMIT - usage.count
     )
+
   } catch (err) {
     console.error(
       'getRemainingUsage error:',
