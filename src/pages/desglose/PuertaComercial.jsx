@@ -34,41 +34,119 @@ const calcular = (ancho, alto, hojas) => {
 }
 
 const buildPrintHtml = (proyecto, results) => {
-  const date = new Date().toLocaleDateString('es-DO')
+  // ================================================
+  // MATERIALES
+  // ================================================
 
   const materiales =
-    calcularResumenMaterialesPuertaComercial(results)
+    calcularResumenMaterialesPuertaComercial(results);
 
   const totales =
-    calcularTotalesMaterialesPuertaComercial(materiales)
+    calcularTotalesMaterialesPuertaComercial(materiales);
 
-  const rows = results.map(row => `
-    <tr>
-      <td>${row.hueco || '—'}</td>
-      <td>${row.ancho}</td>
-      <td>${row.alto}</td>
-      <td>${row.tipo}</td>
-      <td>${row.cabAlf}</td>
-      <td>${row.jambas}</td>
-      <td>${row.marco}</td>
-      <td>${row.latMarco}</td>
-      <td>${row.vidrioAncho}</td>
-      <td>${row.vidrioAlto}</td>
-    </tr>
-  `).join('')
+  const totalPiezas = totales.piezas;
+  const totalPies = totales.pies;
+  const totalBarras = totales.barras;
 
-  const materialRows = materiales.map(item => `
-    <tr>
-      <td>${item.material}</td>
-      <td>${item.piezas}</td>
-      <td>${item.pies.toFixed(2)}</td>
-      <td>
-        <span class="barra-badge">
-          ${item.barras}
-        </span>
-      </td>
-    </tr>
-  `).join('')
+  // ================================================
+  // FECHA
+  // ================================================
+
+  const date =
+    new Date().toLocaleDateString("es-DO");
+
+  // ================================================
+  // TABLA DE MEDIDAS
+  // ================================================
+
+  const tableRows = results
+    .map(
+      (row) => `
+        <tr>
+
+          <td>
+            ${row.hueco || "—"}
+          </td>
+
+          <td>
+            ${row.ancho}
+          </td>
+
+          <td>
+            ${row.alto}
+          </td>
+
+          <td>
+            ${row.tipo}
+          </td>
+
+          <td>
+            ${row.cabAlf}
+          </td>
+
+          <td>
+            ${row.jambas}
+          </td>
+
+          <td>
+            ${row.marco}
+          </td>
+
+          <td>
+            ${row.latMarco}
+          </td>
+
+          <td>
+            ${row.vidrioAncho}
+          </td>
+
+          <td>
+            ${row.vidrioAlto}
+          </td>
+
+        </tr>
+      `
+    )
+    .join("");
+
+  // ================================================
+  // TABLA DE MATERIALES
+  // ================================================
+
+  const materialRows = materiales
+    .map(
+      (item) => `
+        <tr>
+
+          <td
+            style="
+              text-align:left;
+              font-weight:600;
+            "
+          >
+            ${item.material}
+          </td>
+
+          <td>
+            ${item.piezas}
+          </td>
+
+          <td>
+            ${item.pies.toFixed(2)}
+          </td>
+
+          <td>
+            ${item.barras}
+          </td>
+
+        </tr>
+      `
+    )
+    .join("");
+
+  // ================================================
+  // HTML PRINT
+  // ================================================
 
   return `
     <!DOCTYPE html>
@@ -77,10 +155,10 @@ const buildPrintHtml = (proyecto, results) => {
 
     <head>
 
-      <meta charset="UTF-8">
+      <meta charset="UTF-8" />
 
       <title>
-        PUERTA COMERCIAL
+        PUERTA COMERCIAL TRADICIONAL
       </title>
 
       <style>
@@ -89,315 +167,372 @@ const buildPrintHtml = (proyecto, results) => {
           box-sizing: border-box;
         }
 
+        @page {
+          size: A4 landscape;
+          margin: 10mm;
+        }
+
         body {
           font-family:
             Arial,
             Helvetica,
             sans-serif;
 
-          margin: .5in;
+          margin: 0;
 
-          background: white;
+          background: #ffffff;
 
-          color: #1e293b;
+          color: #111827;
         }
 
-        h1 {
-          font-size: 18px;
+        .page {
+          width: 100%;
 
-          text-align: center;
+          max-width: 1400px;
 
-          color: #1e2b3c;
+          min-height: 900px;
 
-          margin:
-            0 0 4px;
+          margin: 0 auto;
+
+          padding:
+            20px
+            26px
+            16px;
+
+          display: flex;
+
+          flex-direction: column;
         }
 
-        h2 {
-          font-size: 11px;
+        /* ============================================
+           HEADER
+        ============================================ */
 
+        .top {
           text-align: center;
+
+          padding-bottom: 10px;
+
+          border-bottom:
+            1px solid #cfcfcf;
+        }
+
+        .company-name {
+          font-size: 17px;
+
+          font-weight: 700;
+
+          color: #111827;
+
+          margin: 0;
+        }
+
+        .company-info {
+          font-size: 12px;
 
           color: #64748b;
 
-          font-weight: 400;
-
-          margin:
-            0 0 14px;
+          margin-top: 3px;
         }
 
-        h3 {
-          font-size: 13px;
+        /* ============================================
+           UPPER SECTION
+        ============================================ */
 
-          color: #1e2b3c;
+        .upper {
+          display: grid;
 
-          margin:
-            20px 0 8px;
+          grid-template-columns:
+            240px
+            1fr;
 
-          border-bottom:
-            2px solid #1e2b3c;
+          gap: 48px;
 
-          padding-bottom: 5px;
+          margin-top: 14px;
+
+          align-items: start;
         }
 
-        .info {
-          display: flex;
+        /* ============================================
+           ORDER BOX
+        ============================================ */
 
-          gap: 2rem;
+        .order-box {
+          border:
+            1px solid #d7d7d7;
 
-          flex-wrap: wrap;
+          border-radius: 6px;
+
+          background: #e5e7eb;
+
+          padding:
+            12px
+            14px
+            10px;
+        }
+
+        .order-box h2 {
+          margin:
+            0 0 10px;
+
+          font-size: 16px;
+
+          font-weight: 700;
+
+          color: #111827;
+        }
+
+        .order-field {
+          margin-bottom: 7px;
 
           font-size: 11px;
 
-          margin-bottom: 14px;
-
-          background:
-            #f8f9fa;
-
-          padding:
-            9px 10px;
-
-          border:
-            1px solid #e2e8f0;
-
-          border-radius: 4px;
+          line-height: 1.35;
         }
 
-        table {
+        .order-field:last-child {
+          margin-bottom: 0;
+        }
+
+        .order-label {
+          font-weight: 700;
+
+          color: #111827;
+        }
+
+        .order-value {
+          color: #374151;
+        }
+
+        /* ============================================
+           MATERIALS
+        ============================================ */
+
+        .materials {
+          width: 100%;
+        }
+
+        .section-title {
+          margin:
+            0 0 7px;
+
+          font-size: 14px;
+
+          font-weight: 700;
+
+          color: #111827;
+        }
+
+        .materials-table {
           width: 100%;
 
           border-collapse:
             collapse;
 
-          font-size: 10px;
+          table-layout: fixed;
 
-          margin-bottom: 16px;
+          margin: 0;
         }
 
-        th {
-          background:
-            #1e2b3c;
+        .materials-table th {
+          background: #e5e7eb;
 
-          color:
-            white;
-
-          padding:
-            6px 5px;
+          color: #111827;
 
           border:
-            1px solid #2c3e50;
+            1px solid #d0d0d0;
 
-          text-align:
-            center;
-
-          font-weight:
-            bold;
-        }
-
-        th[colspan] {
-          background:
-            #2c3e50;
-        }
-
-        td {
           padding:
+            6px
             5px;
 
-          border:
-            1px solid #cbd5e1;
+          font-size: 11px;
 
-          text-align:
-            center;
+          font-weight: 700;
 
-          font-family:
-            monospace;
+          text-align: center;
         }
 
-        tr:nth-child(even) td {
-          background:
-            #f8f9fa;
-        }
+        .materials-table td {
+          background: #ffffff;
 
-        /* =========================
-           MATERIALES
-        ========================= */
-
-        .material-section {
-          margin-top:
-            24px;
-
-          page-break-inside:
-            avoid;
-        }
-
-        .material-info {
-          background:
-            #f8fafc;
+          color: #111827;
 
           border:
-            1px solid #e2e8f0;
+            1px solid #d0d0d0;
 
           padding:
-            8px 10px;
+            6px
+            5px;
 
-          font-size:
-            10px;
+          font-size: 11px;
 
-          color:
-            #64748b;
+          text-align: center;
 
-          margin-bottom:
-            8px;
-        }
-
-        .material-table {
-          margin-bottom:
-            10px;
-        }
-
-        .material-table td {
           font-family:
             Arial,
             Helvetica,
             sans-serif;
         }
 
-        .barra-badge {
-          display:
-            inline-block;
+        .materials-table th:first-child,
+        .materials-table td:first-child {
+          width: 55%;
 
-          min-width:
-            28px;
-
-          padding:
-            3px 7px;
-
-          border-radius:
-            5px;
-
-          background:
-            #eff6ff;
-
-          color:
-            #1d4ed8;
-
-          font-weight:
-            bold;
+          text-align: left;
         }
 
-        .total-row td {
-          background:
-            #e2e8f0 !important;
-
-          font-weight:
-            bold;
-
-          color:
-            #0f172a;
+        .materials-table th:not(:first-child),
+        .materials-table td:not(:first-child) {
+          width: 15%;
         }
 
-        .summary {
-          display:
-            flex;
+        .materials-table .total-row td {
+          background: #eef2f7;
 
-          gap:
-            10px;
+          font-weight: 700;
 
-          margin-top:
-            10px;
-
-          margin-bottom:
-            16px;
+          color: #111827;
         }
 
-        .summary-box {
-          flex:
-            1;
+        /* ============================================
+           WINDOWS / MEASURES
+        ============================================ */
+
+        .windows {
+          margin-top: 30px;
+        }
+
+        .windows h2 {
+          margin:
+            0 0 7px;
+
+          font-size: 16px;
+
+          font-weight: 700;
+
+          color: #111827;
+
+          text-align: left;
+        }
+
+        .windows table {
+          width: 100%;
+
+          border-collapse:
+            collapse;
+
+          table-layout: fixed;
+
+          margin: 0;
+
+          font-size: 10px;
+        }
+
+        .windows th {
+          background: #e5e7eb;
+
+          color: #111827;
 
           border:
-            1px solid #e2e8f0;
-
-          background:
-            #f8fafc;
+            1px solid #c9c9c9;
 
           padding:
-            8px;
+            6px
+            5px;
 
-          text-align:
-            center;
+          text-align: center;
+
+          font-size: 10px;
+
+          font-weight: 700;
         }
 
-        .summary-label {
-          font-size:
-            9px;
+        .windows td {
+          background: #ffffff;
 
-          color:
-            #64748b;
+          color: #111827;
 
-          margin-bottom:
-            3px;
+          border:
+            1px solid #c9c9c9;
+
+          padding:
+            6px
+            5px;
+
+          text-align: center;
+
+          font-size: 10px;
+
+          font-family:
+            monospace;
         }
 
-        .summary-value {
-          font-size:
-            14px;
-
-          font-weight:
-            bold;
-
-          color:
-            #1e293b;
+        .windows tbody tr:nth-child(even) td {
+          background: #fafafa;
         }
+
+        /* ============================================
+           FOOTER
+        ============================================ */
 
         .footer {
-          margin-top:
-            24px;
+          margin-top: 9px;
 
-          font-size:
-            9px;
+          font-size: 8px;
 
-          color:
-            #64748b;
+          color: #888888;
 
-          display:
-            flex;
+          display: flex;
 
-          justify-content:
-            space-between;
+          justify-content: space-between;
 
           border-top:
-            1px solid #e2e8f0;
+            1px solid #dddddd;
 
-          padding-top:
-            6px;
+          padding-top: 5px;
         }
+
+        /* ============================================
+           PRINT
+        ============================================ */
 
         @media print {
 
-          th {
-            -webkit-print-color-adjust:
-              exact;
-
-            print-color-adjust:
-              exact;
+          body {
+            margin: 0;
           }
 
-          * {
-            -webkit-print-color-adjust:
-              exact;
+          .page {
+            max-width: none;
 
-            print-color-adjust:
-              exact;
+            min-height: auto;
+
+            padding:
+              20px
+              26px
+              16px;
           }
 
-          .material-section {
-            page-break-inside:
-              avoid;
+          .top,
+          .order-box,
+          .materials-table th,
+          .materials-table .total-row td,
+          .windows th {
+            -webkit-print-color-adjust: exact;
+
+            print-color-adjust: exact;
+          }
+
+          .materials-table,
+          .windows table {
+            page-break-inside: auto;
           }
 
           tr {
-            page-break-inside:
-              avoid;
+            page-break-inside: avoid;
+
+            page-break-after: auto;
           }
         }
 
@@ -407,308 +542,272 @@ const buildPrintHtml = (proyecto, results) => {
 
     <body>
 
-      <h1>
-        PUERTA COMERCIAL TRADICIONAL
-      </h1>
+      <div class="page">
 
-      <h2>
-        SISTEMA PROFESIONAL DE CÁLCULO
-      </h2>
+        <!-- ==========================================
+             HEADER
+        =========================================== -->
 
-      <div class="info">
+        <div class="top">
 
-        <span>
-          <strong>
-            Cliente:
-          </strong>
+          <div class="company-name">
+            DESGLOSE PRO
+          </div>
 
-          ${proyecto?.cliente || '—'}
-        </span>
+          <div class="company-info">
+            Software profesional para talleres de aluminio
+          </div>
 
-        <span>
-          <strong>
-            Obra:
-          </strong>
+        </div>
 
-          ${proyecto?.obra || '—'}
-        </span>
 
-        <span>
-          <strong>
-            Color:
-          </strong>
+        <!-- ==========================================
+             UPPER
+        =========================================== -->
 
-          ${proyecto?.color || '—'}
-        </span>
+        <div class="upper">
 
-      </div>
+          <!-- RESUMEN -->
 
-      <!-- =========================
-           MEDIDAS Y CORTES
-      ========================== -->
+          <div class="order-box">
 
-      <h3>
-        MEDIDAS Y CORTES
-      </h3>
+            <h2>
+              Resumen del Desglose
+            </h2>
 
-      <table>
+            <div class="order-field">
 
-        <thead>
+              <span class="order-label">
+                Tipo:
+              </span>
 
-          <tr>
-
-            <th rowspan="2">
-              Hueco
-            </th>
-
-            <th rowspan="2">
-              Ancho
-            </th>
-
-            <th rowspan="2">
-              Alto
-            </th>
-
-            <th rowspan="2">
-              Tipo
-            </th>
-
-            <th colspan="2">
-              Hoja
-            </th>
-
-            <th colspan="2">
-              Marco
-            </th>
-
-            <th colspan="2">
-              Vidrio
-            </th>
-
-          </tr>
-
-          <tr>
-
-            <th>
-              Cab-alf
-            </th>
-
-            <th>
-              Jambas
-            </th>
-
-            <th>
-              Cab-marco
-            </th>
-
-            <th>
-              Lat-marco
-            </th>
-
-            <th>
-              Ancho
-            </th>
-
-            <th>
-              Alto
-            </th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${rows}
-
-        </tbody>
-
-      </table>
-
-      <!-- =========================
-           MATERIALES
-      ========================== -->
-
-      ${
-        materiales.length > 0
-          ? `
-
-            <div
-              class="material-section"
-            >
-
-              <h3>
-                MATERIALES PUERTA COMERCIAL
-              </h3>
-
-              <div
-                class="material-info"
-              >
-
-                <span>
-                  Material calculado para todas las medidas agregadas.
-                </span>
-
-                <strong
-                  style="
-                    float: right;
-                    color: #334155;
-                  "
-                >
-                  Barra:
-                  21 pies
-                  (252")
-                </strong>
-
-              </div>
-
-              <table
-                class="material-table"
-              >
-
-                <thead>
-
-                  <tr>
-
-                    <th>
-                      Material
-                    </th>
-
-                    <th>
-                      Piezas
-                    </th>
-
-                    <th>
-                      Pies
-                    </th>
-
-                    <th>
-                      Barras
-                    </th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  ${materialRows}
-
-                </tbody>
-
-                <tfoot>
-
-                  <tr
-                    class="total-row"
-                  >
-
-                    <td>
-                      TOTAL
-                    </td>
-
-                    <td>
-                      ${totales.piezas}
-                    </td>
-
-                    <td>
-                      ${totales.pies.toFixed(2)}
-                    </td>
-
-                    <td>
-                      ${totales.barras}
-                    </td>
-
-                  </tr>
-
-                </tfoot>
-
-              </table>
-
-              <div
-                class="summary"
-              >
-
-                <div
-                  class="summary-box"
-                >
-
-                  <div
-                    class="summary-label"
-                  >
-                    TOTAL PIEZAS
-                  </div>
-
-                  <div
-                    class="summary-value"
-                  >
-                    ${totales.piezas}
-                  </div>
-
-                </div>
-
-                <div
-                  class="summary-box"
-                >
-
-                  <div
-                    class="summary-label"
-                  >
-                    TOTAL PIES
-                  </div>
-
-                  <div
-                    class="summary-value"
-                  >
-                    ${totales.pies.toFixed(2)}
-                  </div>
-
-                </div>
-
-                <div
-                  class="summary-box"
-                >
-
-                  <div
-                    class="summary-label"
-                  >
-                    TOTAL BARRAS
-                  </div>
-
-                  <div
-                    class="summary-value"
-                  >
-                    ${totales.barras}
-                  </div>
-
-                </div>
-
-              </div>
+              <span class="order-value">
+                Puerta Comercial Tradicional
+              </span>
 
             </div>
 
-          `
-          : ''
-      }
+            <div class="order-field">
 
-      <div
-        class="footer"
-      >
+              <span class="order-label">
+                Cliente:
+              </span>
 
-        <span>
-          © 2026 - Desglose Pro
-        </span>
+              <span class="order-value">
+                ${proyecto?.cliente || "—"}
+              </span>
 
-        <span>
-          ${date}
-        </span>
+            </div>
+
+            <div class="order-field">
+
+              <span class="order-label">
+                Obra/acabado:
+              </span>
+
+              <span class="order-value">
+                ${proyecto?.obra || "—"}
+              </span>
+
+            </div>
+
+            <div class="order-field">
+
+              <span class="order-label">
+                Color:
+              </span>
+
+              <span class="order-value">
+                ${proyecto?.color || "—"}
+              </span>
+
+            </div>
+
+            <div class="order-field">
+
+              <span class="order-label">
+                Notas:
+              </span>
+
+              <span class="order-value">
+            ${proyecto?.notas || "—"}
+              </span>
+
+            </div>
+
+          </div>
+
+        
+
+
+          <!-- MATERIALES -->
+
+          ${
+            materiales.length > 0
+              ? `
+                <div class="materials">
+
+                  <div class="section-title">
+                    Materiales
+                  </div>
+
+                  <table class="materials-table">
+
+                    <thead>
+
+                      <tr>
+
+                        <th>
+                          Material
+                        </th>
+
+                        <th>
+                          Piezas
+                        </th>
+
+                        <th>
+                          Pies
+                        </th>
+
+                        <th>
+                          Barras
+                        </th>
+
+                      </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                      ${materialRows}
+
+                      <tr class="total-row">
+
+                        
+
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+
+        <!-- ==========================================
+             MEDIDAS Y CORTES
+        =========================================== -->
+
+        <div class="windows">
+
+          <h2>
+            Medidas y Cortes
+          </h2>
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th rowspan="2">
+                  Hueco
+                </th>
+
+                <th rowspan="2">
+                  Ancho
+                </th>
+
+                <th rowspan="2">
+                  Alto
+                </th>
+
+                <th rowspan="2">
+                  Tipo
+                </th>
+
+                <th colspan="2">
+                  Hoja
+                </th>
+
+                <th colspan="2">
+                  Marco
+                </th>
+
+                <th colspan="2">
+                  Vidrio
+                </th>
+
+              </tr>
+
+              <tr>
+
+                <th>
+                  Cab-alf
+                </th>
+
+                <th>
+                  Jambas
+                </th>
+
+                <th>
+                  Cab-marco
+                </th>
+
+                <th>
+                  Lat-marco
+                </th>
+
+                <th>
+                  Ancho
+                </th>
+
+                <th>
+                  Alto
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              ${tableRows}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <!-- ==========================================
+             FOOTER
+        =========================================== -->
+
+        <div class="footer">
+
+          <span>
+            © 2026 - Desglose Pro
+          </span>
+          <span>
+            ${date}
+          </span>
+
+        </div>
 
       </div>
 
     </body>
 
     </html>
-  `
-}
+  `;
+};
 
 export default function PuertaComercial() {
 
@@ -795,7 +894,7 @@ export default function PuertaComercial() {
         id: Date.now(),
 
         hueco:
-          form.hueco,
+          form.hueco || `H-${results.length + 1}`,
 
         ancho:
           form.ancho,

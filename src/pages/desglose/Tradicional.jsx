@@ -65,429 +65,832 @@ const buildPrintHtml = (
     "es-DO"
   );
 
+  // ============================================================
+  // FILAS DE MEDIDAS Y CORTES
+  // ============================================================
+
   const rows = results
     .map(
       (row) => `
         <tr>
-          <td>${row.hueco}</td>
-          <td>${row.ancho}</td>
-          <td>${row.alto}</td>
-          <td>${row.hojas}</td>
-          <td>${row.cabAlf}</td>
-          <td>${row.jambas}</td>
-          <td>${row.marco}</td>
-          <td>${row.latMarco}</td>
-          <td>${row.vidrioAncho}</td>
-          <td>${row.vidrioAlto}</td>
+
+          <td>
+            ${row.hueco}
+          </td>
+
+          <td>
+            ${row.ancho}
+          </td>
+
+          <td>
+            ${row.alto}
+          </td>
+
+          <td>
+            ${row.hojas}
+          </td>
+
+          <td>
+            ${row.cabAlf}
+          </td>
+
+          <td>
+            ${row.jambas}
+          </td>
+
+          <td>
+            ${row.marco}
+          </td>
+
+          <td>
+            ${row.latMarco}
+          </td>
+
+          <td>
+            ${row.vidrioAncho}
+          </td>
+
+          <td>
+            ${row.vidrioAlto}
+          </td>
+
           ${
             hasVidrioMedio
-              ? `<td>${row.vidrioMedio || "—"}</td>`
+              ? `
+                <td>
+                  ${row.vidrioMedio || "—"}
+                </td>
+              `
               : ""
           }
+
         </tr>
       `
     )
     .join("");
+
+
+  // ============================================================
+  // MATERIALES
+  // ============================================================
 
   const materialRows = materiales
     .map(
       (item) => `
         <tr>
-          <td
-            style="
-              text-align:left;
-              font-family:Arial,sans-serif;
-            "
-          >
+
+          <td>
             ${item.material}
           </td>
 
-          <td>${item.piezas}</td>
+          <td>
+            ${item.piezas}
+          </td>
 
-          <td>${item.pies.toFixed(2)}</td>
+          <td>
+            ${item.pies.toFixed(2)}
+          </td>
 
-          <td>${item.barras}</td>
+          <td>
+            ${item.barras}
+          </td>
+
         </tr>
       `
     )
     .join("");
 
+
+  // ============================================================
+  // TOTALES
+  // ============================================================
+
   const totalPiezas = materiales.reduce(
-    (total, item) => total + item.piezas,
+    (total, item) =>
+      total + item.piezas,
     0
   );
 
   const totalPies = materiales.reduce(
-    (total, item) => total + item.pies,
+    (total, item) =>
+      total + item.pies,
     0
   );
 
   const totalBarras = materiales.reduce(
-    (total, item) => total + item.barras,
+    (total, item) =>
+      total + item.barras,
     0
   );
 
-  return `<!DOCTYPE html>
-<html>
+
+  // ============================================================
+  // HTML
+  // ============================================================
+
+  return `
+<!doctype html>
+
+<html lang="es">
+
 <head>
 
-<title>${title}</title>
+  <meta charset="UTF-8" />
 
-<style>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-* {
-  box-sizing: border-box;
-}
+  <title>${title}</title>
 
-body {
-  font-family: Arial, sans-serif;
-  margin: .5in;
-  background: white;
-  color: #1e293b;
-}
+  <style>
 
-h1 {
-  font-size: 18px;
-  text-align: center;
-  color: #1e2b3c;
-  margin-bottom: 4px;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-h2 {
-  font-size: 11px;
-  text-align: center;
-  color: #555;
-  font-weight: 400;
-  margin-bottom: 12px;
-}
+    @page {
+      size: A4 landscape;
+      margin: 10mm;
+    }
 
-h3 {
-  font-size: 13px;
-  color: #1e2b3c;
-  margin: 24px 0 8px;
-}
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #111;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+    }
 
-.info {
-  display: flex;
-  gap: 2rem;
-  font-size: 11px;
-  margin-bottom: 12px;
-  background: #f8f9fa;
-  padding: 8px;
-  border-radius: 4px;
-  flex-wrap: wrap;
-}
+    .page {
+      width: 100%;
+      max-width: 1400px;
+      min-height: 900px;
+      margin: 0 auto;
+      padding: 20px 26px 16px;
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 10px;
-  margin-bottom: 12px;
-}
+      display: flex;
+      flex-direction: column;
+    }
 
-th {
-  background: #1e2b3c;
-  color: white;
-  padding: 5px;
-  border: 1px solid #2c3e50;
-  text-align: center;
-}
 
-th[colspan] {
-  background: #2c3e50;
-}
+    /* ============================================================
+       HEADER
+    ============================================================ */
 
-td {
-  padding: 4px 5px;
-  border: 1px solid #cbd5e1;
-  text-align: center;
-  font-family: monospace;
-}
+    .top {
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-tr:nth-child(even) td {
-  background: #f8f9fa;
-}
+      padding-bottom: 20px;
 
-.material-table td {
-  font-family: Arial, sans-serif;
-}
+      border-bottom: 1px solid #cfcfcf;
 
-.material-total td {
-  font-weight: bold;
-  background: #f1f5f9 !important;
-}
+      text-align: center;
+    }
 
-.summary {
-  display: flex;
-  gap: 10px;
-  margin: 12px 0 18px;
-}
+    .company {
+      line-height: 1.1;
+      text-align: center;
+    }
 
-.summary-box {
-  flex: 1;
-  border: 1px solid #dbe3ec;
-  border-radius: 6px;
-  padding: 9px;
-  text-align: center;
-  background: #f8fafc;
-}
+    .company-name {
+      font-size: 17px;
+      font-weight: 700;
+    }
 
-.summary-label {
-  display: block;
-  font-size: 9px;
-  color: #64748b;
-  margin-bottom: 3px;
-}
+    .company-info {
+      color: #110e0e;
+      font-size: 12px;
+      margin-top: 2px;
+    }
 
-.summary-value {
-  display: block;
-  font-size: 15px;
-  font-weight: bold;
-  color: #1e293b;
-}
 
-.footer {
-  margin-top: 12px;
-  font-size: 9px;
-  color: #888;
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid #ddd;
-  padding-top: 6px;
-}
+    /* ============================================================
+       UPPER SECTION
+    ============================================================ */
 
-@media print {
+    .upper {
+      display: grid;
 
-  th {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
+      grid-template-columns:
+        240px
+        1fr;
 
-}
+      gap: 48px;
 
-</style>
+      margin-top: 14px;
+
+      align-items: start;
+    }
+
+
+    /* ============================================================
+       RESUMEN
+    ============================================================ */
+
+    .order-box {
+      border: 1px solid #d7d7d7;
+
+      border-radius: 6px;
+
+      background: #e5e7eb;
+
+      padding:
+        12px
+        14px
+        10px;
+    }
+
+    .order-box h2 {
+      margin:
+        0
+        0
+        8px;
+
+      font-size: 16px;
+
+      font-weight: 700;
+
+      text-align: left;
+
+      color: #111;
+    }
+
+    .order-box p {
+      margin:
+        5px
+        0;
+
+      font-size: 12px;
+
+      line-height: 1.25;
+    }
+
+
+    /* ============================================================
+       MATERIALS
+    ============================================================ */
+
+    .materials-section {
+      min-width: 0;
+    }
+
+    .section-title {
+      margin:
+        0
+        0
+        4px;
+
+      font-size: 14px;
+
+      font-weight: 700;
+    }
+
+
+    /* ============================================================
+       TABLES
+    ============================================================ */
+
+    table {
+      width: 100%;
+
+      border-collapse: collapse;
+
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      border:
+        1px
+        solid
+        #c9c9c9;
+
+      padding:
+        3px
+        5px;
+
+      vertical-align: middle;
+
+      line-height: 1.1;
+    }
+
+    th {
+      background: #e5e7eb;
+
+      color: #111;
+
+      font-weight: 700;
+
+      text-align: left;
+    }
+
+    td {
+      background: #fff;
+    }
+
+
+    /* ============================================================
+       MATERIAL TABLE
+    ============================================================ */
+
+    .materials th:nth-child(1) {
+      width: 55%;
+    }
+
+    .materials th:nth-child(2),
+    .materials th:nth-child(3),
+    .materials th:nth-child(4) {
+      width: 15%;
+    }
+
+    .materials td:nth-child(2),
+    .materials td:nth-child(3),
+    .materials td:nth-child(4) {
+      text-align: center;
+    }
+
+    .materials-total td {
+      background: #ddd !important;
+
+      font-weight: 700;
+    }
+
+
+    /* ============================================================
+       MEDIDAS Y CORTES
+    ============================================================ */
+
+    .windows {
+      margin-top: 30px;
+    }
+
+    .windows h2 {
+      margin:
+        0
+        0
+        5px;
+
+      font-size: 16px;
+
+      font-weight: 700;
+
+      text-align: left;
+
+      color: #111;
+    }
+
+    .windows table {
+      font-size: 11px;
+
+      width: 100%;
+
+      table-layout: fixed;
+    }
+
+    .windows th {
+      text-align: center;
+
+      font-size: 11px;
+
+      white-space: nowrap;
+
+      padding:
+        2px
+        3px;
+    }
+
+    .windows td {
+      text-align: center;
+
+      font-size: 11px;
+
+      padding:
+        2px
+        3px;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+
+
+    /* ============================================================
+       FIRST COLUMNS
+    ============================================================ */
+
+    .windows th:nth-child(1),
+    .windows td:nth-child(1),
+
+    .windows th:nth-child(2),
+    .windows td:nth-child(2),
+
+    .windows th:nth-child(3),
+    .windows td:nth-child(3),
+
+    .windows th:nth-child(4),
+    .windows td:nth-child(4) {
+      width: 6%;
+    }
+
+    .windows .group-header {
+      text-align: center;
+    }
+
+
+    /* ============================================================
+       SUMMARY
+    ============================================================ */
+
+    .summary {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 9px;
+
+      margin-top: 9px;
+    }
+
+    .summary-box {
+      border:
+        1px
+        solid
+        #d7d7d7;
+
+      background: #f4f4f4;
+
+      padding:
+        7px
+        8px;
+
+      text-align: center;
+    }
+
+    .summary-label {
+      display: block;
+
+      color: #666;
+
+      font-size: 10px;
+
+      margin-bottom: 2px;
+    }
+
+    .summary-value {
+      display: block;
+
+      color: #333;
+
+      font-size: 15px;
+
+      font-weight: 700;
+    }
+
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+
+    .footer {
+      margin-top: 9px;
+
+      font-size: 8px;
+
+      color: #888;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      border-top:
+        1px
+        solid
+        #ddd;
+
+      padding-top: 5px;
+    }
+
+
+    /* ============================================================
+       PRINT
+    ============================================================ */
+
+    @media print {
+
+      html,
+      body {
+        background: #fff;
+      }
+
+      .page {
+        max-width: none;
+
+        min-height: auto;
+      }
+
+      .order-box,
+      .summary-box,
+      th,
+      .materials-total td {
+        -webkit-print-color-adjust:
+          exact;
+
+        print-color-adjust:
+          exact;
+      }
+
+      tr {
+        page-break-inside: avoid;
+
+        page-break-after: auto;
+      }
+
+    }
+
+  </style>
 
 </head>
 
+
 <body>
 
-<h1>${title}</h1>
+  <div class="page">
 
-<h2>
-  SISTEMA PROFESIONAL DE CÁLCULO
-</h2>
 
-<div class="info">
+    <!-- ==========================================================
+         HEADER
+    =========================================================== -->
 
-  <span>
-    <strong>CUENTA:</strong>
-    ${projectInfo?.cuenta || "—"}
-  </span>
+    <header class="top">
 
-  <span>
-    <strong>OBRA:</strong>
-    ${projectInfo?.obra || "—"}
-  </span>
+      <div class="company">
 
-  <span>
-    <strong>COLOR:</strong>
-    ${projectInfo?.color || "—"}
-  </span>
+        <div class="company-name">
+          Desglose Pro
+        </div>
 
-</div>
+        <div class="company-info">
+          Software Profesional para talleres de aluminio
+        </div>
 
-<table>
+      </div>
 
-<thead>
+    </header>
 
-<tr>
 
-  <th rowspan="2">
-    Hueco
-  </th>
+    <!-- ==========================================================
+         UPPER SECTION
+    =========================================================== -->
 
-  <th rowspan="2">
-    Ancho
-  </th>
+    <section class="upper">
 
-  <th rowspan="2">
-    Alto
-  </th>
 
-  <th rowspan="2">
-    Hojas
-  </th>
+      <!-- ========================================================
+           RESUMEN DEL DESGLOSE
+      ========================================================= -->
 
-  <th colspan="2">
-    De la hoja
-  </th>
+      <div class="order-box">
 
-  <th colspan="2">
-    Del marco
-  </th>
+        <h2>
+          Resumen del Desglose
+        </h2>
 
-  <th colspan="2">
-    Vidrio
-  </th>
+        <p>
+          <strong>Tipo:</strong>
+          Ventana Tradicional
+        </p>
 
-  ${
-    hasVidrioMedio
-      ? '<th rowspan="2">V. Medio</th>'
-      : ""
-  }
+        <p>
+          <strong>Cuenta:</strong>
+          ${projectInfo?.cuenta || "—"}
+        </p>
 
-</tr>
+        <p>
+          <strong>Obra:</strong>
+          ${projectInfo?.obra || "—"}
+        </p>
 
-<tr>
+        <p>
+          <strong>Color:</strong>
+          ${projectInfo?.color || "—"}
+        </p>
 
-  <th>
-    Cab-alf
-  </th>
+        <p>
+          <strong>Fecha:</strong>
+          ${date}
+        </p>
 
-  <th>
-    Jambas
-  </th>
+      </div>
 
-  <th>
-    Cab-riel
-  </th>
 
-  <th>
-    Lat-marco
-  </th>
+      <!-- ========================================================
+           MATERIAL PREVIEW
+      ========================================================= -->
 
-  <th>
-    Ancho
-  </th>
+      <div class="materials-section">
 
-  <th>
-    Alto
-  </th>
+        <h2 class="section-title">
+          Materiales
+        </h2>
 
-</tr>
+        <table class="materials">
 
-</thead>
+          <thead>
 
-<tbody>
+            <tr>
 
-${rows}
+              <th>
+                Material
+              </th>
 
-</tbody>
+              <th>
+                Piezas
+              </th>
 
-</table>
+              <th>
+                Pies
+              </th>
 
-<h3>
-  MATERIALES VENTANA TRADICIONAL
-</h3>
+              <th>
+                Barras
+              </th>
 
-<table class="material-table">
+            </tr>
 
-<thead>
+          </thead>
 
-<tr>
+          <tbody>
 
-  <th>
-    Material
-  </th>
+            ${materialRows}
 
-  <th>
-    Piezas
-  </th>
+            <tr class="materials-total">
 
-  <th>
-    Pies
-  </th>
+              <td>
+                TOTAL
+              </td>
 
-  <th>
-    Barras
-  </th>
+              <td>
+                ${totalPiezas}
+              </td>
 
-</tr>
+              <td>
+                ${totalPies.toFixed(2)}
+              </td>
 
-</thead>
+              <td>
+                ${totalBarras}
+              </td>
 
-<tbody>
+            </tr>
 
-${materialRows}
+          </tbody>
 
-<tr class="material-total">
+        </table>
 
-  <td style="text-align:left;">
-    TOTAL
-  </td>
+      </div>
 
-  <td>
-    ${totalPiezas}
-  </td>
+    </section>
 
-  <td>
-    ${totalPies.toFixed(2)}
-  </td>
 
-  <td>
-    ${totalBarras}
-  </td>
+    <!-- ==========================================================
+         MEDIDAS Y CORTES
+    =========================================================== -->
 
-</tr>
+    <section class="windows">
 
-</tbody>
+      <h2>
+        MEDIDAS Y CORTES
+      </h2>
 
-</table>
+      <table>
 
-<div class="summary">
+        <thead>
 
-  <div class="summary-box">
+          <tr>
 
-    <span class="summary-label">
-      TOTAL PIEZAS
-    </span>
+            <th rowspan="2">
+              Hueco
+            </th>
 
-    <span class="summary-value">
-      ${totalPiezas}
-    </span>
+            <th rowspan="2">
+              Ancho
+            </th>
+
+            <th rowspan="2">
+              Alto
+            </th>
+
+            <th rowspan="2">
+              Hojas
+            </th>
+
+            <th
+              colspan="2"
+              class="group-header"
+            >
+              De la hoja
+            </th>
+
+            <th
+              colspan="2"
+              class="group-header"
+            >
+              Del marco
+            </th>
+
+            <th
+              colspan="2"
+              class="group-header"
+            >
+              Vidrio
+            </th>
+
+            ${
+              hasVidrioMedio
+                ? `
+                  <th rowspan="2">
+                    V. Medio
+                  </th>
+                `
+                : ""
+            }
+
+          </tr>
+
+
+          <tr>
+
+            <th>
+              Cab-alf
+            </th>
+
+            <th>
+              Jambas
+            </th>
+
+            <th>
+              Cab-riel
+            </th>
+
+            <th>
+              Lat-marco
+            </th>
+
+            <th>
+              Ancho
+            </th>
+
+            <th>
+              Alto
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          ${rows}
+
+        </tbody>
+
+      </table>
+
+    </section>
+
+
+    <!-- ==========================================================
+         FOOTER
+    =========================================================== -->
+
+    <footer class="footer">
+
+      <span>
+        © 2026 - Desglose Pro
+      </span>
+
+      <span>
+        ${date}
+      </span>
+
+    </footer>
+
 
   </div>
-
-  <div class="summary-box">
-
-    <span class="summary-label">
-      TOTAL PIES
-    </span>
-
-    <span class="summary-value">
-      ${totalPies.toFixed(2)}
-    </span>
-
-  </div>
-
-  <div class="summary-box">
-
-    <span class="summary-label">
-      TOTAL BARRAS
-    </span>
-
-    <span class="summary-value">
-      ${totalBarras}
-    </span>
-
-  </div>
-
-</div>
-
-<div class="footer">
-
-  <span>
-    © 2026 - Desglose Pro
-  </span>
-
-  <span>
-    ${date}
-  </span>
-
-</div>
 
 </body>
-</html>`;
+
+</html>
+`;
 };
 
 export default function Tradicional() {
@@ -588,13 +991,10 @@ export default function Tradicional() {
     setResults([
       ...results,
       {
-        hueco: form.hueco,
-
-        ancho: form.ancho,
-
-        alto: form.alto,
-
-        hojas: `${hojas} hojas`,
+       hueco: form.hueco || `H-${results.length + 1}`,
+  ancho: form.ancho,
+  alto: form.alto,
+  hojas: `${hojas} hojas`,
 
         anchoDec,
 

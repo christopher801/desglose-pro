@@ -11,9 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 import { checkAndIncrementUsage } from "../../services/usageService";
 import DailyLimitModal from "../../components/DailyLimitModal";
 
-import {
-  calcularResumenMaterialesP65,
-} from "../../utils/p65Materials";
+import { calcularResumenMaterialesP65 } from "../../utils/p65Materials";
 
 const calcular = (ancho, alto, hojas) => {
   if (hojas === 2) {
@@ -51,14 +49,8 @@ const calcular = (ancho, alto, hojas) => {
   };
 };
 
-const buildPrintHtml = (
-  proyecto,
-  results,
-  materiales
-) => {
-  const hasVidrioMedio = results.some(
-    (r) => r.vidrioMedio
-  );
+const buildPrintHtml = (proyecto, results, materiales) => {
+  const hasVidrioMedio = results.some((r) => r.vidrioMedio);
 
   const date = new Date().toLocaleDateString("es-DO");
 
@@ -76,13 +68,9 @@ const buildPrintHtml = (
         <td>${row.latMarco}</td>
         <td>${row.vidrioAncho}</td>
         <td>${row.vidrioAlto}</td>
-        ${
-          hasVidrioMedio
-            ? `<td>${row.vidrioMedio || "—"}</td>`
-            : ""
-        }
+        ${hasVidrioMedio ? `<td>${row.vidrioMedio || "—"}</td>` : ""}
       </tr>
-    `
+    `,
     )
     .join("");
 
@@ -97,23 +85,20 @@ const buildPrintHtml = (
         <td>${item.pies.toFixed(2)}</td>
         <td>${item.barras}</td>
       </tr>
-    `
+    `,
     )
     .join("");
 
   const totalPiezas = materiales.reduce(
     (total, item) => total + item.piezas,
-    0
+    0,
   );
 
-  const totalPies = materiales.reduce(
-    (total, item) => total + item.pies,
-    0
-  );
+  const totalPies = materiales.reduce((total, item) => total + item.pies, 0);
 
   const totalBarras = materiales.reduce(
     (total, item) => total + item.barras,
-    0
+    0,
   );
 
   return `
@@ -123,266 +108,588 @@ const buildPrintHtml = (
   <title>VENTANA P-65</title>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
 
+    @page {
+      size: A4 landscape;
+      margin: 10mm;
+    }
+
+    html,
     body {
-      font-family: Arial, sans-serif;
-      margin: .5in;
-      background: white;
-      color: #1e293b;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #111;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
     }
 
-    h1 {
-      font-size: 18px;
-      text-align: center;
-      color: #1e2b3c;
-      margin-bottom: 4px;
-    }
-
-    h2 {
-      font-size: 11px;
-      text-align: center;
-      color: #555;
-      font-weight: 400;
-      margin-bottom: 12px;
-    }
-
-    h3 {
-      font-size: 13px;
-      color: #1e2b3c;
-      margin: 24px 0 8px;
-    }
-
-    .info {
+    .page {
+      width: 100%;
+      max-width: 1400px;
+      min-height: 900px;
+      margin: 0 auto;
+      padding: 20px 26px 16px;
       display: flex;
-      gap: 2rem;
-      font-size: 11px;
-      margin-bottom: 12px;
-      background: #f8f9fa;
-      padding: 8px;
-      border-radius: 4px;
-      flex-wrap: wrap;
+      flex-direction: column;
     }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .top {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #cfcfcf;
+      text-align: center;
+    }
+
+    .company {
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .company-name {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .company-info {
+      color: #110e0e;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .document-title {
+      text-align: right;
+    }
+
+    .document-title h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 700;
+      color: #444;
+    }
+
+    .document-title .sub {
+      margin-top: 4px;
+      color: #110e0e;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    /* ============================================================
+       UPPER SECTION
+    ============================================================ */
+
+    .upper {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      margin-top: 14px;
+      align-items: start;
+    }
+
+    /* ============================================================
+       ORDER BOX
+    ============================================================ */
+
+    .order-box {
+      border: 1px solid #d7d7d7;
+      border-radius: 6px;
+      background: #e5e7eb;
+      padding: 12px 14px 10px;
+    }
+
+    .order-box h2 {
+      margin: 0 0 5px;
+      font-size: 16px;
+    }
+
+    .order-box .type {
+      font-size: 14px;
+      font-weight: 700;
+      color: #444;
+      margin-bottom: 9px;
+    }
+
+    .order-box p {
+      margin: 4px 0;
+      font-size: 12px;
+    }
+
+    /* ============================================================
+       MATERIALS
+    ============================================================ */
+
+    .materials-section {
+      min-width: 0;
+    }
+
+    .section-title {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* ============================================================
+       TABLES
+    ============================================================ */
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 10px;
-      margin-bottom: 12px;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      border: 1px solid #c9c9c9;
+      padding: 3px 5px;
+      vertical-align: middle;
+      line-height: 1.1;
     }
 
     th {
-      background: #1e2b3c;
-      color: white;
-      padding: 5px;
-      border: 1px solid #2c3e50;
-      text-align: center;
-    }
-
-    th[colspan] {
-      background: #2c3e50;
+      background: #e5e7eb;
+      font-weight: 700;
+      text-align: left;
     }
 
     td {
-      padding: 4px 5px;
-      border: 1px solid #cbd5e1;
+      background: #fff;
+    }
+
+    .materials th:nth-child(1) {
+      width: 55%;
+    }
+
+    .materials th:nth-child(2) {
+      width: 15%;
+    }
+
+    .materials th:nth-child(3) {
+      width: 15%;
+    }
+
+    .materials th:nth-child(4) {
+      width: 15%;
+    }
+
+    .materials td:nth-child(2),
+    .materials td:nth-child(3),
+    .materials td:nth-child(4) {
       text-align: center;
-      font-family: monospace;
     }
 
-    tr:nth-child(even) td {
-      background: #f8f9fa;
+    /* ============================================================
+       MEASURES / CUTTING
+    ============================================================ */
+    .windows {
+      margin-top: 30px;
     }
 
-    .material-table td {
-      font-family: Arial, sans-serif;
+    .windows h2 {
+      margin: 0 0 5px;
+      font-size: 16px;
     }
 
-    .material-total td {
-      font-weight: bold;
-      background: #f1f5f9 !important;
+    .windows table {
+      font-size: 11px;
+      width: 100%;
+      table-layout: fixed;
     }
+
+    .windows th {
+      text-align: center;
+      font-size: 11px;
+      white-space: nowrap;
+      padding: 2px 3px;
+    }
+
+    .windows td {
+      text-align: center;
+      font-size: 11px;
+      padding: 2px 3px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .windows th,
+    .windows td {
+      width: auto;
+    }
+
+    .windows th:nth-child(1),
+    .windows td:nth-child(1),
+    .windows th:nth-child(2),
+    .windows td:nth-child(2),
+    .windows th:nth-child(3),
+    .windows td:nth-child(3),
+    .windows th:nth-child(4),
+    .windows td:nth-child(4) {
+      width: 6%;
+    }
+
+    .windows .group-header {
+      text-align: center;
+    }
+    /* ============================================================
+       MATERIAL SECTION
+    ============================================================ */
+
+    .material-section {
+      margin-top: 22px;
+      page-break-inside: avoid;
+    }
+
+    .material-info {
+      margin-bottom: 5px;
+      color: #555;
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .material-table {
+      font-size: 11px;
+    }
+
+    .material-table th {
+      text-align: left;
+    }
+
+    .material-table th:not(:first-child),
+    .material-table td:not(:first-child) {
+      text-align: center;
+    }
+
+    .material-table td:first-child {
+      text-align: left;
+    }
+
+    .total-row td {
+      background: #ddd !important;
+      font-weight: 700;
+    }
+
+    /* ============================================================
+       SUMMARY
+    ============================================================ */
 
     .summary {
-      display: flex;
-      gap: 10px;
-      margin: 12px 0 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 9px;
     }
 
     .summary-box {
-      flex: 1;
-      border: 1px solid #dbe3ec;
-      border-radius: 6px;
-      padding: 9px;
+      border: 1px solid #d7d7d7;
+      background: #f4f4f4;
+      padding: 7px 8px;
       text-align: center;
-      background: #f8fafc;
     }
 
     .summary-label {
       display: block;
-      font-size: 9px;
-      color: #64748b;
-      margin-bottom: 3px;
+      color: #666;
+      font-size: 10px;
+      margin-bottom: 2px;
     }
 
     .summary-value {
       display: block;
+      color: #333;
       font-size: 15px;
-      font-weight: bold;
-      color: #1e293b;
+      font-weight: 700;
     }
 
+    /* ============================================================
+       FOOTER
+    ============================================================ */
     .footer {
-      margin-top: 12px;
-      font-size: 9px;
+      margin-top: 9px;
+      font-size: 8px;
       color: #888;
       display: flex;
       justify-content: space-between;
       border-top: 1px solid #ddd;
-      padding-top: 6px;
+      padding-top: 5px;
     }
 
+    /* ============================================================
+       PRINT
+    ============================================================ */
+
     @media print {
-      th {
+
+      html,
+      body {
+        background: #fff;
+      }
+
+      .page {
+        max-width: none;
+        min-height: auto;
+      }
+
+      .order-box,
+      .summary-box,
+      th,
+      .total-row td {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
+
+      .material-section {
+        page-break-inside: avoid;
+      }
+
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+
     }
+
+
   </style>
 </head>
 
 <body>
 
-  <h1>VENTANA P-65</h1>
+  <div class="page">
 
-  <h2>
-    SISTEMA PROFESIONAL DE CÁLCULO
-  </h2>
+    <!-- ==========================================================
+         HEADER
+    =========================================================== -->
 
-  <div class="info">
-    <span>
-      <strong>Cliente:</strong>
-      ${proyecto?.cliente || "—"}
-    </span>
+    <header class="top">
 
-    <span>
-      <strong>Obra:</strong>
-      ${proyecto?.obra || "—"}
-    </span>
+      <div class="company">
 
-    <span>
-      <strong>Color:</strong>
-      ${proyecto?.color || "—"}
-    </span>
-  </div>
+        <div class="company-name">
+          Desglose Pro
+        </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th rowspan="2">Hueco</th>
-        <th rowspan="2">Ancho</th>
-        <th rowspan="2">Alto</th>
-        <th rowspan="2">Hojas</th>
+        <div class="company-info">
+          Software Profesional para talleres de aluminio
+        </div>
 
-        <th colspan="2">
-          De la hoja
-        </th>
+      </div>
+    </header>
 
-        <th colspan="2">
-          Del marco
-        </th>
 
-        <th colspan="2">
-          Vidrio
-        </th>
+    <!-- ==========================================================
+         UPPER SECTION
+    =========================================================== -->
 
-        ${
-          hasVidrioMedio
-            ? '<th rowspan="2">V. Medio</th>'
-            : ""
-        }
-      </tr>
+    <section class="upper">
 
-      <tr>
-        <th>Cab-alf</th>
-        <th>Jambas</th>
-        <th>Cab-riel</th>
-        <th>Lat-marco</th>
-        <th>Ancho</th>
-        <th>Alto</th>
-      </tr>
-    </thead>
 
-    <tbody>
-      ${rows}
-    </tbody>
-  </table>
+      <!-- ========================================================
+           ORDEN DE PRODUCCIÓN
+      ========================================================= -->
 
-  <h3>
-    MATERIALES P-65
-  </h3>
+      <div class="order-box">
 
-  <table class="material-table">
-    <thead>
-      <tr>
-        <th>Material</th>
-        <th>Piezas</th>
-        <th>Pies</th>
-        <th>Barras</th>
-      </tr>
-    </thead>
+        <h2>
+          Resumen del Desglose
+        </h2>
 
-    <tbody>
-      ${materialRows}
+        <p>
+        <strong>tipo:</strong>
+          Ventana P-65
+        </p>
 
-      <tr class="material-total">
-        <td style="text-align:left;">
-          TOTAL
-        </td>
-        <td>${totalPiezas}</td>
-        <td>${totalPies.toFixed(2)}</td>
-        <td>${totalBarras}</td>
-      </tr>
-    </tbody>
-  </table>
+        <p>
+          <strong>Cliente:</strong>
+          ${proyecto?.cliente || "—"}
+        </p>
 
-  <div class="summary">
+        <p>
+          <strong>Obra/acabado:</strong>
+          ${proyecto?.obra || "—"}
+        </p>
 
-    <div class="summary-box">
-      <span class="summary-label">
-        TOTAL PIEZAS
-      </span>
+        <p>
+          <strong>Color:</strong>
+          ${proyecto?.color || "—"}
+        </p>
+        <p>
+          <strong>Notas:</strong>
+          ${proyecto?.notas || "—"}
+        </p>
+        <P>
+        <Strong>Fecha:</strong>
+        ${date}
+        </p>
 
-      <span class="summary-value">
-        ${totalPiezas}
-      </span>
-    </div>
+      </div>
 
-    <div class="summary-box">
-      <span class="summary-label">
-        TOTAL PIES
-      </span>
 
-      <span class="summary-value">
-        ${totalPies.toFixed(2)}
-      </span>
-    </div>
+      <!-- ========================================================
+           MATERIAL PREVIEW
+      ========================================================= -->
 
-    <div class="summary-box">
-      <span class="summary-label">
-        TOTAL BARRAS
-      </span>
+      <div class="materials-section">
 
-      <span class="summary-value">
-        ${totalBarras}
-      </span>
-    </div>
+        <h2 class="section-title">
+          Materiales
+        </h2>
 
-  </div>
+        <table class="materials">
 
-  <div class="footer">
+          <thead>
+
+            <tr>
+
+              <th>
+                Material
+              </th>
+
+              <th>
+                Piezas
+              </th>
+
+              <th>
+                Pies
+              </th>
+
+              <th>
+                Barras
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${materialRows}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         MEDIDAS Y CORTES
+    =========================================================== -->
+
+    <section class="windows">
+
+      <h2>
+        MEDIDAS Y CORTES
+      </h2>
+
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th rowspan="2">
+              Hueco
+            </th>
+
+            <th rowspan="2">
+              Ancho
+            </th>
+
+            <th rowspan="2">
+              Alto
+            </th>
+
+            <th rowspan="2">
+              Hojas
+            </th>
+
+            <th colspan="2" class="group-header">
+              De la hoja
+            </th>
+
+            <th colspan="2" class="group-header">
+              Del marco
+            </th>
+
+            <th colspan="2" class="group-header">
+              Vidrio
+            </th>
+
+            ${
+              hasVidrioMedio
+                ? `
+                  <th rowspan="2">
+                    V. Medio
+                  </th>
+                `
+                : ""
+            }
+
+          </tr>
+
+
+          <tr>
+
+            <th>
+              Cab-alf
+            </th>
+
+            <th>
+              Jambas
+            </th>
+
+            <th>
+              Cab-riel
+            </th>
+
+            <th>
+              Lat-marco
+            </th>
+
+            <th>
+              Ancho
+            </th>
+
+            <th>
+              Alto
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          ${rows}
+
+        </tbody>
+
+      </table>
+
+    </section>
+
+
+
+    <!-- ==========================================================
+         FOOTER
+    =========================================================== -->
+
+    <footer class="footer">
+
     <span>
       © 2026 - Desglose Pro
     </span>
@@ -390,6 +697,9 @@ const buildPrintHtml = (
     <span>
       ${date}
     </span>
+
+    </footer>
+
   </div>
 
 </body>
@@ -432,50 +742,36 @@ export default function P65() {
     setError("");
 
     const allowed = await checkAndIncrementUsage(user?.uid, fullAccess);
-    if (!allowed) { setShowLimitModal(true); return; }
+    if (!allowed) {
+      setShowLimitModal(true);
+      return;
+    }
 
     if (!form.ancho || !form.alto) {
       setError("❌ Ingresa ANCHO y ALTO");
       return;
     }
 
-    const anchoDec =
-      FractionUtils.parseFraction(form.ancho);
+    const anchoDec = FractionUtils.parseFraction(form.ancho);
 
-    const altoDec =
-      FractionUtils.parseFraction(form.alto);
+    const altoDec = FractionUtils.parseFraction(form.alto);
 
-    if (
-      anchoDec <= 0 ||
-      altoDec <= 0
-    ) {
-      setError(
-        "❌ Las medidas deben ser mayores a 0"
-      );
+    if (anchoDec <= 0 || altoDec <= 0) {
+      setError("❌ Las medidas deben ser mayores a 0");
 
       return;
     }
 
-    const hojas = parseInt(
-      form.hojas,
-      10
-    );
+    const hojas = parseInt(form.hojas, 10);
 
-    const calc = calcular(
-      anchoDec,
-      altoDec,
-      hojas
-    );
+    const calc = calcular(anchoDec, altoDec, hojas);
 
     setResults([
       ...results,
       {
-        hueco: form.hueco,
-
+        hueco: form.hueco || `H-${results.length + 1}`,
         ancho: form.ancho,
-
         alto: form.alto,
-
         hojas: `${hojas} hojas`,
 
         anchoDec,
@@ -484,42 +780,21 @@ export default function P65() {
 
         hojasNum: hojas,
 
-        cabAlf:
-          FractionUtils.toSixteenths(
-            calc.cabAlf
-          ),
+        cabAlf: FractionUtils.toSixteenths(calc.cabAlf),
 
-        jambas:
-          FractionUtils.toSixteenths(
-            calc.jambas
-          ),
+        jambas: FractionUtils.toSixteenths(calc.jambas),
 
-        marco:
-          FractionUtils.toSixteenths(
-            calc.marco
-          ),
+        marco: FractionUtils.toSixteenths(calc.marco),
 
-        latMarco:
-          FractionUtils.toSixteenths(
-            calc.latMarco
-          ),
+        latMarco: FractionUtils.toSixteenths(calc.latMarco),
 
-        vidrioAncho:
-          FractionUtils.toSixteenths(
-            calc.vidrioAncho
-          ),
+        vidrioAncho: FractionUtils.toSixteenths(calc.vidrioAncho),
 
-        vidrioAlto:
-          FractionUtils.toSixteenths(
-            calc.vidrioAlto
-          ),
+        vidrioAlto: FractionUtils.toSixteenths(calc.vidrioAlto),
 
-        vidrioMedio:
-          calc.vidrioMedio
-            ? FractionUtils.toSixteenths(
-                calc.vidrioMedio
-              )
-            : null,
+        vidrioMedio: calc.vidrioMedio
+          ? FractionUtils.toSixteenths(calc.vidrioMedio)
+          : null,
       },
     ]);
 
@@ -550,10 +825,7 @@ export default function P65() {
       return;
     }
 
-    const materiales =
-      calcularResumenMaterialesP65(
-        results
-      );
+    const materiales = calcularResumenMaterialesP65(results);
 
     saveDesglose({
       sistema: "Ventana P-65",
@@ -575,31 +847,17 @@ export default function P65() {
       return;
     }
 
-    const materiales =
-      calcularResumenMaterialesP65(
-        results
-      );
+    const materiales = calcularResumenMaterialesP65(results);
 
-    const w = window.open(
-      "",
-      "_blank"
-    );
+    const w = window.open("", "_blank");
 
     if (!w) {
-      alert(
-        "No se pudo abrir la ventana de impresión."
-      );
+      alert("No se pudo abrir la ventana de impresión.");
 
       return;
     }
 
-    w.document.write(
-      buildPrintHtml(
-        proyecto,
-        results,
-        materiales
-      )
-    );
+    w.document.write(buildPrintHtml(proyecto, results, materiales));
 
     w.document.close();
 
@@ -608,13 +866,10 @@ export default function P65() {
     }, 500);
   };
 
-  const hasVidrioMedio = results.some(
-    (r) => r.vidrioMedio
-  );
+  const hasVidrioMedio = results.some((r) => r.vidrioMedio);
 
   return (
     <Layout>
-
       {showLimitModal && (
         <DailyLimitModal onClose={() => setShowLimitModal(false)} />
       )}
@@ -625,87 +880,60 @@ export default function P65() {
             setProyecto(data);
             setStep("formulario");
           }}
-          onCancel={() =>
-            navigate("/desglose")
-          }
+          onCancel={() => navigate("/desglose")}
         />
       )}
 
       <div className="page-content">
-
         <div className="desglose-header">
-
-          <button
-            className="btn-back"
-            onClick={() =>
-              navigate("/desglose")
-            }
-          >
+          <button className="btn-back" onClick={() => navigate("/desglose")}>
             <i
               className="bi bi-arrow-left"
               style={{
                 marginRight: "6px",
               }}
             ></i>
-
             Volver
           </button>
 
-          <h1 className="page-title">
-            Ventana P-65
-          </h1>
+          <h1 className="page-title">Ventana P-65</h1>
 
           <div className="desglose-header-actions">
-
             {results.length > 0 && (
               <>
                 {savedMsg ? (
                   <span
                     style={{
                       fontSize: "13px",
-                      color:
-                        "var(--success)",
+                      color: "var(--success)",
                       fontWeight: 600,
                     }}
                   >
                     {savedMsg}
                   </span>
                 ) : (
-                  <button
-                    className="btn-secondary-sm"
-                    onClick={
-                      handleGuardar
-                    }
-                  >
+                  <button className="btn-secondary-sm" onClick={handleGuardar}>
                     <i
                       className="bi bi-save"
                       style={{
-                        marginRight:
-                          "6px",
+                        marginRight: "6px",
                       }}
                     ></i>
-
                     Guardar
                   </button>
                 )}
 
-                <button
-                  className="btn-primary-sm"
-                  onClick={handlePrint}
-                >
+                <button className="btn-primary-sm" onClick={handlePrint}>
                   <i
                     className="bi bi-printer"
                     style={{
-                      marginRight:
-                        "6px",
+                      marginRight: "6px",
                     }}
                   ></i>
-
                   Imprimir
                 </button>
               </>
             )}
-
           </div>
         </div>
 
@@ -714,15 +942,13 @@ export default function P65() {
             className="card-modern mb-4"
             style={{
               background: "#f0f9ff",
-              border:
-                "1px solid #bfdbfe",
+              border: "1px solid #bfdbfe",
             }}
           >
             <div
               style={{
                 display: "flex",
-                justifyContent:
-                  "space-between",
+                justifyContent: "space-between",
                 alignItems: "center",
                 flexWrap: "wrap",
                 gap: "8px",
@@ -737,36 +963,25 @@ export default function P65() {
                 }}
               >
                 <span>
-                  <strong>
-                    Cliente:
-                  </strong>{" "}
-                  {proyecto.cliente}
+                  <strong>Cliente:</strong> {proyecto.cliente}
                 </span>
 
                 {proyecto.obra && (
                   <span>
-                    <strong>
-                      Obra:
-                    </strong>{" "}
-                    {proyecto.obra}
+                    <strong>Obra:</strong> {proyecto.obra}
                   </span>
                 )}
 
                 {proyecto.color && (
                   <span>
-                    <strong>
-                      Color:
-                    </strong>{" "}
-                    {proyecto.color}
+                    <strong>Color:</strong> {proyecto.color}
                   </span>
                 )}
               </div>
 
               <button
                 className="btn-ghost-sm"
-                onClick={() =>
-                  setStep("proyecto")
-                }
+                onClick={() => setStep("proyecto")}
                 style={{
                   fontSize: "11px",
                 }}
@@ -774,11 +989,9 @@ export default function P65() {
                 <i
                   className="bi bi-pencil"
                   style={{
-                    marginRight:
-                      "4px",
+                    marginRight: "4px",
                   }}
                 ></i>
-
                 Editar
               </button>
             </div>
@@ -797,8 +1010,7 @@ export default function P65() {
                 <i
                   className="bi bi-sticky"
                   style={{
-                    marginRight:
-                      "4px",
+                    marginRight: "4px",
                   }}
                 ></i>
 
@@ -810,89 +1022,62 @@ export default function P65() {
 
         {step === "formulario" && (
           <div className="card-modern mb-4">
-
             <div className="form-grid-4">
-
               <div className="auth-field">
-                <label className="auth-label">
-                  Hueco #
-                </label>
+                <label className="auth-label">Hueco #</label>
 
                 <input
                   type="text"
                   name="hueco"
                   value={form.hueco}
-                  onChange={
-                    handleFormChange
-                  }
+                  onChange={handleFormChange}
                   placeholder="ej: A-1"
                   className="auth-input"
                 />
               </div>
 
               <div className="auth-field">
-                <label className="auth-label">
-                  Ancho
-                </label>
+                <label className="auth-label">Ancho</label>
 
                 <input
                   type="text"
                   name="ancho"
                   value={form.ancho}
-                  onChange={
-                    handleFormChange
-                  }
+                  onChange={handleFormChange}
                   placeholder={'ej: 91 1/2"'}
                   className="auth-input"
                 />
               </div>
 
               <div className="auth-field">
-                <label className="auth-label">
-                  Alto
-                </label>
+                <label className="auth-label">Alto</label>
 
                 <input
                   type="text"
                   name="alto"
                   value={form.alto}
-                  onChange={
-                    handleFormChange
-                  }
+                  onChange={handleFormChange}
                   placeholder={'ej: 74 7/8"'}
                   className="auth-input"
                 />
               </div>
 
               <div className="auth-field">
-
-                <label className="auth-label">
-                  Hojas
-                </label>
+                <label className="auth-label">Hojas</label>
 
                 <select
                   name="hojas"
                   value={form.hojas}
-                  onChange={
-                    handleFormChange
-                  }
+                  onChange={handleFormChange}
                   className="auth-input"
                 >
-                  <option value={2}>
-                    2 hojas
-                  </option>
+                  <option value={2}>2 hojas</option>
 
-                  <option value={3}>
-                    3 hojas
-                  </option>
+                  <option value={3}>3 hojas</option>
 
-                  <option value={4}>
-                    4 hojas
-                  </option>
+                  <option value={4}>4 hojas</option>
                 </select>
-
               </div>
-
             </div>
 
             {error && (
@@ -907,52 +1092,36 @@ export default function P65() {
             )}
 
             <div className="form-actions">
-
-              <button
-                className="auth-btn"
-                onClick={handleAdd}
-              >
+              <button className="auth-btn" onClick={handleAdd}>
                 <i
                   className="bi bi-plus-circle"
                   style={{
-                    marginRight:
-                      "6px",
+                    marginRight: "6px",
                   }}
                 ></i>
-
                 Agregar
               </button>
 
               {results.length > 0 && (
-                <button
-                  className="btn-outline-lg"
-                  onClick={handleReset}
-                >
+                <button className="btn-outline-lg" onClick={handleReset}>
                   <i
                     className="bi bi-arrow-counterclockwise"
                     style={{
-                      marginRight:
-                        "6px",
+                      marginRight: "6px",
                     }}
                   ></i>
-
                   Reset
                 </button>
               )}
-
             </div>
           </div>
         )}
 
         {results.length > 0 && (
           <div className="table-container">
-
-            <div className="table-title">
-              VENTANA P-65
-            </div>
+            <div className="table-title">VENTANA P-65</div>
 
             <div className="table-responsive">
-
               <table
                 className="table-professional"
                 style={{
@@ -960,43 +1129,22 @@ export default function P65() {
                 }}
               >
                 <thead>
-
                   <tr>
+                    <th rowSpan="2">Hueco</th>
 
-                    <th rowSpan="2">
-                      Hueco
-                    </th>
+                    <th rowSpan="2">Ancho</th>
 
-                    <th rowSpan="2">
-                      Ancho
-                    </th>
+                    <th rowSpan="2">Alto</th>
 
-                    <th rowSpan="2">
-                      Alto
-                    </th>
+                    <th rowSpan="2">Hojas</th>
 
-                    <th rowSpan="2">
-                      Hojas
-                    </th>
+                    <th colSpan="2">De la hoja</th>
 
-                    <th colSpan="2">
-                      De la hoja
-                    </th>
+                    <th colSpan="2">Del marco</th>
 
-                    <th colSpan="2">
-                      Del marco
-                    </th>
+                    <th colSpan="2">Vidrio</th>
 
-                    <th colSpan="2">
-                      Vidrio
-                    </th>
-
-                    {hasVidrioMedio && (
-                      <th rowSpan="2">
-                        V. Medio
-                      </th>
-                    )}
-
+                    {hasVidrioMedio && <th rowSpan="2">V. Medio</th>}
                   </tr>
 
                   <tr>
@@ -1007,94 +1155,53 @@ export default function P65() {
                     <th>Ancho</th>
                     <th>Alto</th>
                   </tr>
-
                 </thead>
 
                 <tbody>
+                  {results.map((row, idx) => (
+                    <tr key={idx}>
+                      <td>{row.hueco}</td>
 
-                  {results.map(
-                    (row, idx) => (
-                      <tr key={idx}>
+                      <td>{row.ancho}</td>
 
-                        <td>
-                          {row.hueco}
-                        </td>
+                      <td>{row.alto}</td>
 
-                        <td>
-                          {row.ancho}
-                        </td>
+                      <td>{row.hojas}</td>
 
-                        <td>
-                          {row.alto}
-                        </td>
+                      <td>{row.cabAlf}</td>
 
-                        <td>
-                          {row.hojas}
-                        </td>
+                      <td>{row.jambas}</td>
 
-                        <td>
-                          {row.cabAlf}
-                        </td>
+                      <td>{row.marco}</td>
 
-                        <td>
-                          {row.jambas}
-                        </td>
+                      <td>{row.latMarco}</td>
 
-                        <td>
-                          {row.marco}
-                        </td>
+                      <td>{row.vidrioAncho}</td>
 
-                        <td>
-                          {row.latMarco}
-                        </td>
+                      <td>{row.vidrioAlto}</td>
 
-                        <td>
-                          {row.vidrioAncho}
-                        </td>
-
-                        <td>
-                          {row.vidrioAlto}
-                        </td>
-
-                        {hasVidrioMedio && (
-                          <td>
-                            {row.vidrioMedio ||
-                              "—"}
-                          </td>
-                        )}
-
-                      </tr>
-                    )
-                  )}
-
+                      {hasVidrioMedio && <td>{row.vidrioMedio || "—"}</td>}
+                    </tr>
+                  ))}
                 </tbody>
               </table>
-
             </div>
           </div>
         )}
 
-        {results.length > 0 && (
-          <MaterialP65
-            medidas={results}
-          />
+        {results.length > 0 && <MaterialP65 medidas={results} />}
+
+        {results.length === 0 && step === "formulario" && (
+          <div
+            className="card-modern text-center"
+            style={{
+              padding: "2rem",
+              color: "var(--gray-500)",
+            }}
+          >
+            Ingresa las medidas y haz clic en "Agregar"
+          </div>
         )}
-
-        {results.length === 0 &&
-          step === "formulario" && (
-            <div
-              className="card-modern text-center"
-              style={{
-                padding: "2rem",
-                color:
-                  "var(--gray-500)",
-              }}
-            >
-              Ingresa las medidas y haz clic
-              en "Agregar"
-            </div>
-          )}
-
       </div>
     </Layout>
   );

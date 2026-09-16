@@ -111,12 +111,7 @@ const buildPrintHtml = (proyecto, results) => {
       (item) => `
         <tr>
 
-          <td
-            style="
-              text-align:left;
-              font-weight:600;
-            "
-          >
+          <td>
             ${item.material}
           </td>
 
@@ -129,9 +124,7 @@ const buildPrintHtml = (proyecto, results) => {
           </td>
 
           <td>
-            <span class="barra-badge">
-              ${item.barras}
-            </span>
+            ${item.barras}
           </td>
 
         </tr>
@@ -162,245 +155,329 @@ const buildPrintHtml = (proyecto, results) => {
           box-sizing: border-box;
         }
 
-        body {
-          font-family:
-            Arial,
-            Helvetica,
-            sans-serif;
+        @page {
+          size: A4 landscape;
 
-          margin: .5in;
+          margin: 10mm;
+        }
+
+        html,
+        body {
+          margin: 0;
+
+          padding: 0;
 
           background: #ffffff;
 
-          color: #1e293b;
-        }
+          color: #111827;
 
-        h1 {
-          font-size: 18px;
-
-          text-align: center;
-
-          color: #1e2b3c;
-
-          margin:
-            0 0 4px;
-        }
-
-        h2 {
-          font-size: 11px;
-
-          text-align: center;
-
-          color: #64748b;
-
-          font-weight: 400;
-
-          margin:
-            0 0 16px;
-        }
-
-        h3 {
-          font-size: 13px;
-
-          color: #1e2b3c;
-
-          margin:
-            20px 0 8px;
-
-          border-bottom:
-            2px solid #1e2b3c;
-
-          padding-bottom: 5px;
-        }
-
-        .info {
-          display: flex;
-
-          gap: 2rem;
-
-          flex-wrap: wrap;
-
-          font-size: 11px;
-
-          margin-bottom: 14px;
-
-          background: #f8f9fa;
-
-          padding: 9px 10px;
-
-          border:
-            1px solid #e2e8f0;
-
-          border-radius: 4px;
-        }
-
-        table {
-          width: 100%;
-
-          border-collapse:
-            collapse;
-
-          font-size: 10px;
-
-          margin-bottom: 16px;
-        }
-
-        th {
-          background: #1e2b3c;
-
-          color: #ffffff;
-
-          padding: 6px 5px;
-
-          border:
-            1px solid #2c3e50;
-
-          text-align: center;
-
-          font-weight: 700;
-        }
-
-        th[colspan] {
-          background: #2c3e50;
-        }
-
-        td {
-          padding: 5px;
-
-          border:
-            1px solid #cbd5e1;
-
-          text-align: center;
-
-          font-family:
-            monospace;
-        }
-
-        tr:nth-child(even) td {
-          background: #f8f9fa;
-        }
-
-        /* ======================================
-           MATERIAL
-        ====================================== */
-
-        .material-section {
-          margin-top: 24px;
-
-          page-break-inside:
-            avoid;
-        }
-
-        .material-info {
-          background: #f8fafc;
-
-          border:
-            1px solid #e2e8f0;
-
-          padding:
-            8px 10px;
-
-          font-size: 10px;
-
-          color: #64748b;
-
-          margin-bottom: 8px;
-        }
-
-        .material-table {
-          margin-bottom: 10px;
-        }
-
-        .material-table td {
           font-family:
             Arial,
             Helvetica,
             sans-serif;
+
+          font-size: 12px;
         }
 
-        .barra-badge {
-          display: inline-block;
+        .page {
+          width: 100%;
 
-          min-width: 28px;
+          max-width: 1400px;
+
+          min-height: 900px;
+
+          margin: 0 auto;
 
           padding:
-            3px 7px;
+            20px
+            26px
+            16px;
 
-          border-radius: 5px;
-
-          background: #eff6ff;
-
-          color: #1d4ed8;
-
-          font-weight: 700;
-        }
-
-        .total-row td {
-          background:
-            #e2e8f0 !important;
-
-          font-weight: 700;
-
-          color: #0f172a;
-        }
-
-        /* ======================================
-           SUMMARY
-        ====================================== */
-
-        .summary {
           display: flex;
 
-          gap: 10px;
-
-          margin-top: 10px;
-
-          margin-bottom: 16px;
+          flex-direction: column;
         }
 
-        .summary-box {
-          flex: 1;
+        /* =========================================
+           HEADER
+        ========================================= */
 
-          border:
-            1px solid #e2e8f0;
+        .top {
+          display: flex;
 
-          background: #f8fafc;
+          justify-content: center;
 
-          padding: 8px;
+          align-items: center;
 
           text-align: center;
+
+          padding-bottom: 20px;
+
+          border-bottom:
+            1px solid
+            #cfcfcf;
         }
 
-        .summary-label {
-          display: block;
-
-          font-size: 9px;
-
-          color: #64748b;
-
-          margin-bottom: 3px;
+        .company {
+          line-height: 1.15;
         }
 
-        .summary-value {
-          display: block;
+        .company-name {
+          font-size: 17px;
+
+          font-weight: 700;
+        }
+
+        .company-info {
+          font-size: 12px;
+
+          color: #555;
+
+          margin-top: 3px;
+        }
+
+        /* =========================================
+           UPPER
+        ========================================= */
+
+        .upper {
+          display: grid;
+
+          grid-template-columns:
+            240px
+            1fr;
+
+          gap: 48px;
+
+          margin-top: 14px;
+
+          align-items: start;
+        }
+
+        /* =========================================
+           RESUMEN
+        ========================================= */
+
+        .order-box {
+          border:
+            1px solid
+            #d7d7d7;
+
+          border-radius: 6px;
+
+          background:
+            #e5e7eb;
+
+          padding:
+            12px
+            14px
+            10px;
+        }
+
+        .order-box h2 {
+          margin:
+            0
+            0
+            9px;
+
+          font-size: 16px;
+
+          font-weight: 700;
+
+          text-align: left;
+
+          color: #111827;
+        }
+
+        .order-box p {
+          margin:
+            4px
+            0;
+
+          font-size: 12px;
+
+          line-height: 1.25;
+        }
+
+        /* =========================================
+           MATERIALS
+        ========================================= */
+
+        .section-title {
+          margin:
+            0
+            0
+            7px;
 
           font-size: 14px;
 
           font-weight: 700;
 
-          color: #1e293b;
+          color: #111827;
         }
 
-        /* ======================================
+        .materials-table {
+          width: 100%;
+
+          border-collapse:
+            collapse;
+
+          table-layout: fixed;
+        }
+
+        .materials-table th,
+        .materials-table td {
+          border:
+            1px solid
+            #c9c9c9;
+
+          padding:
+            3px
+            5px;
+
+          line-height: 1.1;
+        }
+
+        .materials-table th {
+          background:
+            #e5e7eb;
+
+          color: #111827;
+
+          font-size: 11px;
+
+          font-weight: 700;
+
+          text-align: center;
+        }
+
+        .materials-table td {
+          background: #ffffff;
+
+          font-size: 11px;
+
+          text-align: center;
+        }
+
+        .materials-table th:first-child,
+        .materials-table td:first-child {
+          width: 55%;
+
+          text-align: left;
+        }
+
+        .materials-table th:nth-child(2),
+        .materials-table td:nth-child(2),
+        .materials-table th:nth-child(3),
+        .materials-table td:nth-child(3),
+        .materials-table th:nth-child(4),
+        .materials-table td:nth-child(4) {
+          width: 15%;
+
+          text-align: center;
+        }
+
+        .total-row th,
+        .total-row td {
+          background:
+            #eef2f7;
+
+          font-weight: 700;
+        }
+
+        /* =========================================
+           WINDOWS
+        ========================================= */
+
+        .windows {
+          margin-top: 30px;
+        }
+
+        .windows h2 {
+          margin:
+            0
+            0
+            7px;
+
+          font-size: 16px;
+
+          font-weight: 700;
+
+          text-align: left;
+
+          color: #111827;
+        }
+
+        .windows table {
+          width: 100%;
+
+          border-collapse:
+            collapse;
+
+          table-layout: fixed;
+
+          font-size: 11px;
+        }
+
+        .windows th,
+        .windows td {
+          border:
+            1px solid
+            #c9c9c9;
+
+          padding:
+            3px
+            5px;
+
+          line-height: 1.1;
+
+          vertical-align: middle;
+        }
+
+        .windows th {
+          background:
+            #e5e7eb;
+
+          color: #111827;
+
+          font-size: 10px;
+
+          font-weight: 700;
+
+          text-align: center;
+
+          white-space: nowrap;
+        }
+
+        .windows td {
+          background: #ffffff;
+
+          font-size: 10px;
+
+          text-align: center;
+
+          white-space: nowrap;
+        }
+
+        .windows th:nth-child(1),
+        .windows td:nth-child(1),
+        .windows th:nth-child(2),
+        .windows td:nth-child(2),
+        .windows th:nth-child(3),
+        .windows td:nth-child(3) {
+          width: 7%;
+        }
+
+        /* =========================================
            FOOTER
-        ====================================== */
+        ========================================= */
 
         .footer {
-          margin-top: 24px;
+          margin-top: 9px;
 
-          font-size: 9px;
+          font-size: 8px;
 
-          color: #888888;
+          color: #888;
 
           display: flex;
 
@@ -408,37 +485,21 @@ const buildPrintHtml = (proyecto, results) => {
             space-between;
 
           border-top:
-            1px solid #dddddd;
+            1px solid
+            #ddd;
 
-          padding-top: 6px;
+          padding-top: 5px;
         }
 
-        /* ======================================
+        /* =========================================
            PRINT
-        ====================================== */
+        ========================================= */
 
         @media print {
 
-          body {
-            margin: .4in;
-          }
-
-          th {
-            -webkit-print-color-adjust:
-              exact;
-
-            print-color-adjust:
-              exact;
-          }
-
-          .barra-badge {
-            -webkit-print-color-adjust:
-              exact;
-
-            print-color-adjust:
-              exact;
-          }
-
+          th,
+          .order-box,
+          .total-row th,
           .total-row td {
             -webkit-print-color-adjust:
               exact;
@@ -447,30 +508,9 @@ const buildPrintHtml = (proyecto, results) => {
               exact;
           }
 
-          .summary-box {
-            -webkit-print-color-adjust:
-              exact;
-
-            print-color-adjust:
-              exact;
-          }
-
-          .material-section {
-            page-break-inside:
-              avoid;
-          }
-
-          table {
-            page-break-inside:
-              auto;
-          }
-
           tr {
             page-break-inside:
               avoid;
-
-            page-break-after:
-              auto;
           }
 
         }
@@ -481,309 +521,253 @@ const buildPrintHtml = (proyecto, results) => {
 
     <body>
 
-      <!-- ======================================
-           HEADER
-      ======================================= -->
+      <div class="page">
 
-      <h1>
-        VENTANA PROYECTADA P-40
-      </h1>
+        <!-- =========================================
+             HEADER
+        ========================================= -->
 
-      <h2>
-        SISTEMA PROFESIONAL DE CÁLCULO
-      </h2>
+        <div class="top">
 
+          <div class="company">
 
-      <!-- ======================================
-           PROYECTO
-      ======================================= -->
+            <div class="company-name">
+              DESGLOSE PRO
+            </div>
 
-      <div class="info">
-
-        <span>
-          <strong>
-            Cliente:
-          </strong>
-
-          ${proyecto?.cliente || "—"}
-        </span>
-
-        <span>
-          <strong>
-            Obra:
-          </strong>
-
-          ${proyecto?.obra || "—"}
-        </span>
-
-        <span>
-          <strong>
-            Color:
-          </strong>
-
-          ${proyecto?.color || "—"}
-        </span>
-
-      </div>
-
-
-      <!-- ======================================
-           MEDIDAS
-      ======================================= -->
-
-      <h3>
-        MEDIDAS Y CORTES
-      </h3>
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th rowspan="2">
-              Hueco
-            </th>
-
-            <th rowspan="2">
-              Ancho
-            </th>
-
-            <th rowspan="2">
-              Alto
-            </th>
-
-            <th colspan="2">
-              De la hoja
-            </th>
-
-            <th colspan="2">
-              Del marco
-            </th>
-
-            <th colspan="2">
-              Vidrio
-            </th>
-
-          </tr>
-
-          <tr>
-
-            <th>
-              Cab-ven
-            </th>
-
-            <th>
-              Lat-ven
-            </th>
-
-            <th>
-              Cab-marco
-            </th>
-
-            <th>
-              Lat-marco
-            </th>
-
-            <th>
-              Ancho
-            </th>
-
-            <th>
-              Alto
-            </th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${tableRows}
-
-        </tbody>
-
-      </table>
-
-
-      <!-- ======================================
-           MATERIALES
-      ======================================= -->
-
-      <div class="material-section">
-
-        <h3>
-          MATERIALES P-40
-        </h3>
-
-        <div class="material-info">
-
-          <strong>
-            Resumen de materiales
-          </strong>
-
-          &nbsp; — &nbsp;
-
-          ${results.length}
-
-          medida${
-            results.length !== 1
-              ? "s"
-              : ""
-          }
-
-          &nbsp; | &nbsp;
-
-          Barra estándar:
-
-          <strong>
-            21 pies (252")
-          </strong>
-
-        </div>
-
-
-        <table
-          class="material-table"
-        >
-
-          <thead>
-
-            <tr>
-
-              <th
-                style="
-                  text-align:left;
-                "
-              >
-                Material
-              </th>
-
-              <th>
-                Piezas
-              </th>
-
-              <th>
-                Pies
-              </th>
-
-              <th>
-                Barras
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            ${materialRows}
-
-            <tr
-              class="total-row"
-            >
-
-              <td
-                style="
-                  text-align:left;
-                "
-              >
-                TOTAL
-              </td>
-
-              <td>
-                ${totalPiezas}
-              </td>
-
-              <td>
-                ${totalPies.toFixed(2)}
-              </td>
-
-              <td>
-                ${totalBarras}
-              </td>
-
-            </tr>
-
-          </tbody>
-
-        </table>
-
-
-        <!-- ====================================
-             RESUMEN GENERAL
-        ===================================== -->
-
-        <div class="summary">
-
-          <div class="summary-box">
-
-            <span
-              class="summary-label"
-            >
-              TOTAL PIEZAS
-            </span>
-
-            <span
-              class="summary-value"
-            >
-              ${totalPiezas}
-            </span>
-
-          </div>
-
-
-          <div class="summary-box">
-
-            <span
-              class="summary-label"
-            >
-              TOTAL PIES
-            </span>
-
-            <span
-              class="summary-value"
-            >
-              ${totalPies.toFixed(2)}
-            </span>
-
-          </div>
-
-
-          <div class="summary-box">
-
-            <span
-              class="summary-label"
-            >
-              TOTAL BARRAS
-            </span>
-
-            <span
-              class="summary-value"
-            >
-              ${totalBarras}
-            </span>
+            <div class="company-info">
+              Software profesional para talleres de aluminio
+            </div>
 
           </div>
 
         </div>
 
-      </div>
+
+        <!-- =========================================
+             RESUMEN + MATERIALES
+        ========================================= -->
+
+        <div class="upper">
+
+          <div class="order-box">
+
+            <h2>
+              Resumen del Desglose
+            </h2>
+
+            <p>
+
+              <strong>
+                Tipo:
+              </strong>
+
+              Ventana Proyectada P-40
+
+            </p>
+
+            <p>
+
+              <strong>
+                Cliente:
+              </strong>
+
+              ${
+                proyecto?.cliente ||
+                "—"
+              }
+
+            </p>
+
+            <p>
+
+              <strong>
+                Obra/acabado:
+              </strong>
+
+              ${
+                proyecto?.obra ||
+                "—"
+              }
+
+            </p>
+
+            <p>
+
+              <strong>
+                Color:
+              </strong>
+
+              ${
+                proyecto?.color ||
+                "—"
+              }
+
+            </p>
+
+            <p>
+
+              <strong>
+                Notas:
+              </strong>
+
+              ${
+                proyecto?.notas ||
+                "—"
+              }
+
+            </p>
+
+          </div>
 
 
-      <!-- ======================================
-           FOOTER
-      ======================================= -->
+          <div>
 
-      <div class="footer">
+            <div class="section-title">
+              Materiales
+            </div>
 
-        <span>
-          © 2026 - Desglose Pro
-        </span>
+            <table class="materials-table">
 
-        <span>
-          ${date}
-        </span>
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Material
+                  </th>
+
+                  <th>
+                    Piezas
+                  </th>
+
+                  <th>
+                    Pies
+                  </th>
+
+                  <th>
+                    Barras
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                ${materialRows}
+
+                <tr class="total-row">
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================================
+             MEDIDAS Y CORTES
+        ========================================= -->
+
+        <div class="windows">
+
+          <h2>
+            Medidas y Cortes
+          </h2>
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th rowspan="2">
+                  Hueco
+                </th>
+
+                <th rowspan="2">
+                  Ancho
+                </th>
+
+                <th rowspan="2">
+                  Alto
+                </th>
+
+                <th colspan="2">
+                  De la hoja
+                </th>
+
+                <th colspan="2">
+                  Del marco
+                </th>
+
+                <th colspan="2">
+                  Vidrio
+                </th>
+
+              </tr>
+
+              <tr>
+
+                <th>
+                  Cab-ven
+                </th>
+
+                <th>
+                  Lat-ven
+                </th>
+
+                <th>
+                  Cab-marco
+                </th>
+
+                <th>
+                  Lat-marco
+                </th>
+
+                <th>
+                  Ancho
+                </th>
+
+                <th>
+                  Alto
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              ${tableRows}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <!-- =========================================
+             FOOTER
+        ========================================= -->
+
+        <div class="footer">
+
+          <span>
+            © 2026 - Desglose Pro
+          </span>
+
+          <span>
+            ${date}
+          </span>
+
+        </div>
 
       </div>
 

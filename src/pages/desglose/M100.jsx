@@ -336,187 +336,441 @@ export default function M100() {
       );
 
     const html = `
-      <!DOCTYPE html>
+  <!DOCTYPE html>
 
-      <html>
+  <html lang="es">
 
-      <head>
+  <head>
 
-        <title>
-          VENTANA M-100
-        </title>
+    <meta charset="UTF-8" />
 
-        <style>
+    <title>
+      VENTANA M-100
+    </title>
 
-          * {
-            box-sizing: border-box;
-          }
+    <style>
 
-          body {
-            font-family:
-              Arial,
-              sans-serif;
+      * {
+        box-sizing: border-box;
+      }
 
-            margin: .5in;
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
 
-            background: white;
+      html,
+      body {
+        margin: 0;
+        padding: 0;
 
-            color: #1e293b;
-          }
+        background: white;
 
-          h1 {
-            font-size: 18px;
+        color: #111827;
 
-            text-align: center;
+        font-family:
+          Arial,
+          Helvetica,
+          sans-serif;
 
-            color: #1e2b3c;
+        font-size: 12px;
+      }
 
-            margin-bottom: 4px;
-          }
+      .page {
+        width: 100%;
 
-          h2 {
-            font-size: 11px;
+        max-width: 1400px;
 
-            text-align: center;
+        min-height: 900px;
 
-            color: #555;
+        margin: 0 auto;
 
-            font-weight: 400;
+        padding:
+          20px
+          26px
+          16px;
 
-            margin-bottom: 12px;
-          }
+        display: flex;
 
-          h3 {
-            font-size: 12px;
+        flex-direction: column;
+      }
 
-            color: #1e2b3c;
+      /* =====================================================
+         HEADER
+      ===================================================== */
 
-            margin-top: 20px;
+      .top {
+        display: flex;
 
-            margin-bottom: 8px;
-          }
+        justify-content: center;
 
-          .info {
-            display: flex;
+        align-items: center;
 
-            gap: 2rem;
+        text-align: center;
 
-            font-size: 11px;
+        padding-bottom: 20px;
 
-            margin-bottom: 12px;
+        border-bottom:
+          1px solid
+          #cfcfcf;
+      }
 
-            background: #f8f9fa;
+      .company {
+        line-height: 1.15;
+      }
 
-            padding: 8px;
+      .company-name {
+        font-size: 17px;
 
-            border-radius: 4px;
+        font-weight: 700;
+      }
 
-            flex-wrap: wrap;
-          }
+      .company-info {
+        font-size: 12px;
 
-          table {
-            width: 100%;
+        color: #555;
 
-            border-collapse:
-              collapse;
+        margin-top: 3px;
+      }
 
-            font-size: 10px;
+      /* =====================================================
+         UPPER
+      ===================================================== */
 
-            margin-bottom: 12px;
-          }
+      .upper {
+        display: grid;
 
-          th {
-            background: #1e2b3c;
+        grid-template-columns:
+          240px
+          1fr;
 
-            color: white;
+        gap: 48px;
 
-            padding: 5px;
+        margin-top: 14px;
 
-            border:
-              1px solid #2c3e50;
+        align-items: start;
+      }
 
-            text-align: center;
-          }
+      /* =====================================================
+         RESUMEN
+      ===================================================== */
 
-          th[colspan] {
-            background:
-              #2c3e50;
-          }
+      .order-box {
+        border:
+          1px solid
+          #d7d7d7;
 
-          td {
-            padding: 4px 5px;
+        border-radius: 6px;
 
-            border:
-              1px solid #cbd5e1;
+        background:
+          #e5e7eb;
 
-            text-align: center;
+        padding:
+          12px
+          14px
+          10px;
+      }
 
-            font-family:
-              monospace;
-          }
+      .order-box h2 {
+        margin:
+          0
+          0
+          9px;
 
-          tr:nth-child(even)
-            td {
-            background:
-              #f8f9fa;
-          }
+        font-size: 16px;
 
-          .total-row td,
-          .total-row th {
-            font-weight: 700;
+        font-weight: 700;
 
-            background:
-              #eef2f7;
-          }
+        text-align: left;
 
-          .footer {
-            margin-top: 12px;
+        color: #111827;
+      }
 
-            font-size: 9px;
+      .order-box p {
+        margin:
+          4px
+          0;
 
-            color: #888;
+        font-size: 12px;
 
-            display: flex;
+        line-height: 1.25;
+      }
 
-            justify-content:
-              space-between;
+      /* =====================================================
+         MATERIALS
+      ===================================================== */
 
-            border-top:
-              1px solid #ddd;
+      .section-title {
+        margin:
+          0
+          0
+          7px;
 
-            padding-top: 6px;
-          }
+        font-size: 14px;
 
-          @media print {
+        font-weight: 700;
 
-            th {
-              -webkit-print-color-adjust:
-                exact;
+        color: #111827;
+      }
 
-              print-color-adjust:
-                exact;
-            }
+      .materials-table {
+        width: 100%;
 
-          }
+        border-collapse:
+          collapse;
 
-        </style>
+        table-layout: fixed;
+      }
 
-      </head>
+      .materials-table th,
+      .materials-table td {
+        border:
+          1px solid
+          #c9c9c9;
 
-      <body>
+        padding:
+          3px
+          5px;
 
-        <h1>
-          VENTANA M-100
-        </h1>
+        line-height: 1.1;
+      }
 
-        <h2>
-          SISTEMA PROFESIONAL
-          DE CÁLCULO
-        </h2>
+      .materials-table th {
+        background:
+          #e5e7eb;
 
-        <div class="info">
+        color: #111827;
 
-          <span>
+        font-size: 11px;
+
+        font-weight: 700;
+
+        text-align: center;
+      }
+
+      .materials-table td {
+        background: white;
+
+        font-size: 11px;
+
+        text-align: center;
+      }
+
+      .materials-table th:first-child,
+      .materials-table td:first-child {
+        width: 55%;
+
+        text-align: left;
+      }
+
+      .materials-table th:nth-child(2),
+      .materials-table td:nth-child(2),
+      .materials-table th:nth-child(3),
+      .materials-table td:nth-child(3),
+      .materials-table th:nth-child(4),
+      .materials-table td:nth-child(4) {
+        width: 15%;
+
+        text-align: center;
+      }
+
+      .materials-table td:first-child {
+        font-family:
+          Arial,
+          Helvetica,
+          sans-serif;
+      }
+
+      .total-row th,
+      .total-row td {
+        background:
+          #eef2f7;
+
+        font-weight: 700;
+      }
+
+      /* =====================================================
+         WINDOWS
+      ===================================================== */
+
+      .windows {
+        margin-top: 30px;
+      }
+
+      .windows h2 {
+        margin:
+          0
+          0
+          7px;
+
+        font-size: 16px;
+
+        font-weight: 700;
+
+        text-align: left;
+
+        color: #111827;
+      }
+
+      .windows table {
+        width: 100%;
+
+        border-collapse:
+          collapse;
+
+        table-layout: fixed;
+
+        font-size: 11px;
+      }
+
+      .windows th,
+      .windows td {
+        border:
+          1px solid
+          #c9c9c9;
+
+        padding:
+          3px
+          5px;
+
+        line-height: 1.1;
+
+        vertical-align: middle;
+      }
+
+      .windows th {
+        background:
+          #e5e7eb;
+
+        color: #111827;
+
+        font-size: 10px;
+
+        font-weight: 700;
+
+        text-align: center;
+
+        white-space: nowrap;
+      }
+
+      .windows td {
+        background: white;
+
+        font-size: 10px;
+
+        text-align: center;
+
+        white-space: nowrap;
+      }
+
+      .windows th:nth-child(1),
+      .windows td:nth-child(1),
+      .windows th:nth-child(2),
+      .windows td:nth-child(2),
+      .windows th:nth-child(3),
+      .windows td:nth-child(3),
+      .windows th:nth-child(4),
+      .windows td:nth-child(4) {
+        width: 6%;
+      }
+
+      /* =====================================================
+         FOOTER
+      ===================================================== */
+
+      .footer {
+        margin-top: 9px;
+
+        font-size: 8px;
+
+        color: #888;
+
+        display: flex;
+
+        justify-content:
+          space-between;
+
+        border-top:
+          1px solid
+          #ddd;
+
+        padding-top: 5px;
+      }
+
+      /* =====================================================
+         PRINT
+      ===================================================== */
+
+      @media print {
+
+        th,
+        .order-box,
+        .total-row th,
+        .total-row td {
+          -webkit-print-color-adjust:
+            exact;
+
+          print-color-adjust:
+            exact;
+        }
+
+        tr {
+          page-break-inside:
+            avoid;
+        }
+
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <div class="page">
+
+      <!-- =================================================
+           HEADER
+      ================================================= -->
+
+      <div class="top">
+
+        <div class="company">
+
+          <div class="company-name">
+            DESGLOSE PRO
+          </div>
+
+          <div class="company-info">
+            Software profesional para talleres de aluminio
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           RESUMEN + MATERIALES
+      ================================================= -->
+
+      <div class="upper">
+
+        <div class="order-box">
+
+          <h2>
+            Resumen del Desglose
+          </h2>
+
+          <p>
+            <strong>
+              Tipo:
+            </strong>
+
+            Ventana M-100
+          </p>
+
+          <p>
             <strong>
               Cliente:
             </strong>
@@ -525,20 +779,20 @@ export default function M100() {
               proyecto?.cliente ||
               "—"
             }
-          </span>
+          </p>
 
-          <span>
+          <p>
             <strong>
-              Obra:
+              Obra/acabado:
             </strong>
 
             ${
               proyecto?.obra ||
               "—"
             }
-          </span>
+          </p>
 
-          <span>
+          <p>
             <strong>
               Color:
             </strong>
@@ -547,13 +801,80 @@ export default function M100() {
               proyecto?.color ||
               "—"
             }
-          </span>
+          </p>
+
+          <p>
+            <strong>
+              Notas:
+            </strong>
+
+            ${
+              proyecto?.notas ||
+              "—"
+            }
+          </p>
 
         </div>
 
-        <h3>
-          CÁLCULO DE MEDIDAS
-        </h3>
+
+        <div>
+
+          <div class="section-title">
+            Materiales
+          </div>
+
+          <table class="materials-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Material
+                </th>
+
+                <th>
+                  Piezas
+                </th>
+
+                <th>
+                  Pies
+                </th>
+
+                <th>
+                  Barras
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              ${materialRows}
+
+              <tr class="total-row">
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           MEDIDAS Y CORTES
+      ================================================= -->
+
+      <div class="windows">
+
+        <h2>
+          Medidas y Cortes
+        </h2>
 
         <table>
 
@@ -639,88 +960,32 @@ export default function M100() {
 
         </table>
 
-        <h3>
-          MATERIALES M-100
-        </h3>
+      </div>
 
-        <table>
 
-          <thead>
+      <!-- =================================================
+           FOOTER
+      ================================================= -->
 
-            <tr>
+      <div class="footer">
 
-              <th>
-                Material
-              </th>
+        <span>
+          © 2026 - Desglose Pro
+        </span>
 
-              <th>
-                Piezas
-              </th>
 
-              <th>
-                Pies
-              </th>
+        <span>
+          ${date}
+        </span>
 
-              <th>
-                Barras
-              </th>
+      </div>
 
-            </tr>
+    </div>
 
-          </thead>
+  </body>
 
-          <tbody>
-
-            ${materialRows}
-
-          </tbody>
-
-          <tfoot>
-
-            <tr class="total-row">
-
-              <th>
-                TOTAL
-              </th>
-
-              <th>
-                ${totalPiezas}
-              </th>
-
-              <th>
-                ${totalPies.toFixed(2)}
-              </th>
-
-              <th>
-                ${totalBarras}
-              </th>
-
-            </tr>
-
-          </tfoot>
-
-        </table>
-
-        <div class="footer">
-
-          <span>
-            © 2026 - Desglose Pro
-          </span>
-
-          <span>
-            Barra: 21 pies (252")
-          </span>
-
-          <span>
-            ${date}
-          </span>
-
-        </div>
-
-      </body>
-
-      </html>
-    `;
+  </html>
+`;
 
     const w =
       window.open(
