@@ -5,7 +5,7 @@
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from './firebase'
 
-const DAILY_LIMIT = 5
+const DAILY_LIMIT = 20
 
 /**
  * Retounen dat lokal República Dominicana nan fòma:
@@ -129,7 +129,7 @@ export const getResetTimeFormatted = () => {
  * - Pa modifye dailyUsage
  *
  * USER NORMAL:
- * - Maksimòm 5 itilizasyon pa jou
+ * - Maksimòm 20 itilizasyon pa jou
  * - Chak itilizasyon ajoute +1
  *
  * Retounen:
@@ -240,7 +240,7 @@ export const checkAndIncrementUsage = async (
  * Infinity
  *
  * USER NORMAL:
- * 0 - 5
+ * 0 - 20
  */
 export const getRemainingUsage = async (
   uid,
@@ -281,7 +281,7 @@ export const getRemainingUsage = async (
     /**
      * NOUVO JOUNEN
      *
-     * User la gen tout 5 itilizasyon li yo.
+     * User la gen tout 20 itilizasyon li yo.
      */
     if (usage.date !== todayStr) {
       return DAILY_LIMIT

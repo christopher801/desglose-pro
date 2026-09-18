@@ -428,18 +428,6 @@ export default function Layout({ children, unreadCount = 0 }) {
             <InstallButton className="topbar-install-slot" />
 
             {/* ==================================================
-                PLANES
-            ================================================== */}
-
-            <Link
-              to="/planes"
-              className="topbar-notif-btn"
-              title="Planes y precios"
-            >
-              <i className="bi bi-gem"></i>
-            </Link>
-
-            {/* ==================================================
                 USER DROPDOWN
             ================================================== */}
 

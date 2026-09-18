@@ -174,7 +174,7 @@ export default function DailyLimitModal({ onClose, onVerPlanes }) {
                 color: "#334155",
               }}
             >
-              5 desgloses gratuitos
+               desgloses gratuitos
             </strong>{" "}
             de hoy.
             <br />
