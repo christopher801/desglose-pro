@@ -10,20 +10,43 @@
 
 /**
  * Expande la lista de piezas (con cantidad) en instancias individuales.
+ *
+ * Cada instancia física recibe un pieceId único para evitar conflictos
+ * de keys en React y para identificar correctamente cada pieza colocada.
+ *
  * @param {Array<{id: string, ancho: number, alto: number, cantidad: number}>} piezas
- * @returns {Array<{pieceId: string, ancho: number, alto: number}>}
+ * @returns {Array<{
+ *   pieceId: string,
+ *   sourcePieceId: string,
+ *   piezaNumero: number,
+ *   ancho: number,
+ *   alto: number
+ * }>}
  */
 function expandirPiezas(piezas) {
   const instancias = [];
+
   piezas.forEach((pieza) => {
-    for (let i = 0; i < pieza.cantidad; i++) {
+    const cantidad = Number(pieza.cantidad) || 0;
+
+    for (let i = 0; i < cantidad; i++) {
       instancias.push({
-        pieceId: pieza.id,
-        ancho: pieza.ancho,
-        alto: pieza.alto,
+        // ID único de cada pieza física.
+        // Ejemplo: pieza_123_1, pieza_123_2, pieza_123_3
+        pieceId: `${pieza.id}_${i + 1}`,
+
+        // Conserva el ID original de la fila de piezas.
+        sourcePieceId: pieza.id,
+
+        // Número de instancia dentro de la cantidad.
+        piezaNumero: i + 1,
+
+        ancho: Number(pieza.ancho),
+        alto: Number(pieza.alto),
       });
     }
   });
+
   return instancias;
 }
 
@@ -34,13 +57,21 @@ function ordenarPorArea(instancias) {
   return [...instancias].sort((a, b) => {
     const areaA = a.ancho * a.alto;
     const areaB = b.ancho * b.alto;
-    if (areaB !== areaA) return areaB - areaA;
-    return Math.max(b.ancho, b.alto) - Math.max(a.ancho, a.alto);
+
+    if (areaB !== areaA) {
+      return areaB - areaA;
+    }
+
+    return (
+      Math.max(b.ancho, b.alto) -
+      Math.max(a.ancho, a.alto)
+    );
   });
 }
 
 /**
- * Busca el mejor rectángulo libre (best area fit) donde encaje la pieza.
+ * Busca el mejor rectángulo libre (best area fit)
+ * donde encaje la pieza.
  */
 function buscarMejorRectangulo(freeRects, ancho, alto) {
   let mejorIndex = -1;
@@ -48,7 +79,10 @@ function buscarMejorRectangulo(freeRects, ancho, alto) {
 
   freeRects.forEach((rect, index) => {
     if (rect.width >= ancho && rect.height >= alto) {
-      const areaSobrante = rect.width * rect.height - ancho * alto;
+      const areaSobrante =
+        rect.width * rect.height -
+        ancho * alto;
+
       if (areaSobrante < mejorAreaSobrante) {
         mejorAreaSobrante = areaSobrante;
         mejorIndex = index;
@@ -66,10 +100,12 @@ function buscarMejorRectangulo(freeRects, ancho, alto) {
 function dividirRectangulo(rect, ancho, alto) {
   const sobranteAncho = rect.width - ancho;
   const sobranteAlto = rect.height - alto;
+
   const nuevos = [];
 
   if (sobranteAncho > sobranteAlto) {
-    // Corte vertical: la franja derecha ocupa todo el alto original.
+    // Corte vertical:
+    // la franja derecha ocupa todo el alto original.
     if (sobranteAncho > 0) {
       nuevos.push({
         x: rect.x + ancho,
@@ -78,6 +114,7 @@ function dividirRectangulo(rect, ancho, alto) {
         height: rect.height,
       });
     }
+
     if (sobranteAlto > 0) {
       nuevos.push({
         x: rect.x,
@@ -87,7 +124,8 @@ function dividirRectangulo(rect, ancho, alto) {
       });
     }
   } else {
-    // Corte horizontal: la franja inferior ocupa todo el ancho original.
+    // Corte horizontal:
+    // la franja inferior ocupa todo el ancho original.
     if (sobranteAlto > 0) {
       nuevos.push({
         x: rect.x,
@@ -96,6 +134,7 @@ function dividirRectangulo(rect, ancho, alto) {
         height: sobranteAlto,
       });
     }
+
     if (sobranteAncho > 0) {
       nuevos.push({
         x: rect.x + ancho,
@@ -123,16 +162,21 @@ function podarRectangulos(freeRects) {
   return freeRects.filter((rect, i) => {
     for (let j = 0; j < freeRects.length; j++) {
       if (i !== j && contenido(rect, freeRects[j])) {
-        // Si son idénticos, conserva solo uno (el de menor índice).
+        // Si son idénticos, conserva solo uno.
         const esIdentico =
           rect.x === freeRects[j].x &&
           rect.y === freeRects[j].y &&
           rect.width === freeRects[j].width &&
           rect.height === freeRects[j].height;
-        if (esIdentico && i < j) continue;
+
+        if (esIdentico && i < j) {
+          continue;
+        }
+
         return false;
       }
     }
+
     return true;
   });
 }
@@ -145,7 +189,16 @@ function crearPlancha(anchoPlancha, altoPlancha, numero) {
     numero,
     width: anchoPlancha,
     height: altoPlancha,
-    freeRects: [{ x: 0, y: 0, width: anchoPlancha, height: altoPlancha }],
+
+    freeRects: [
+      {
+        x: 0,
+        y: 0,
+        width: anchoPlancha,
+        height: altoPlancha,
+      },
+    ],
+
     piezas: [],
   };
 }
@@ -154,7 +207,13 @@ function crearPlancha(anchoPlancha, altoPlancha, numero) {
  * Ejecuta el algoritmo de optimización de corte.
  *
  * @param {{ anchoPlancha: number, altoPlancha: number }} plancha
- * @param {Array<{id: string, ancho: number, alto: number, cantidad: number}>} piezas
+ * @param {Array<{
+ *   id: string,
+ *   ancho: number,
+ *   alto: number,
+ *   cantidad: number
+ * }>} piezas
+ *
  * @returns {{
  *   sheets: Array,
  *   sheetsCount: number,
@@ -167,18 +226,33 @@ function crearPlancha(anchoPlancha, altoPlancha, numero) {
  *   piezasNoUbicadas: Array,
  * }}
  */
-export function optimizarCorte({ anchoPlancha, altoPlancha }, piezas) {
+export function optimizarCorte(
+  { anchoPlancha, altoPlancha },
+  piezas
+) {
   const anchoP = Number(anchoPlancha);
   const altoP = Number(altoPlancha);
 
-  const instancias = ordenarPorArea(expandirPiezas(piezas));
+  // Expandimos las cantidades para trabajar
+  // con cada pieza física individualmente.
+  const instancias = ordenarPorArea(
+    expandirPiezas(piezas)
+  );
+
   const sheets = [];
   const piezasNoUbicadas = [];
 
   instancias.forEach((instancia) => {
-    const { ancho, alto, pieceId } = instancia;
+    const {
+      ancho,
+      alto,
+      pieceId,
+      sourcePieceId,
+      piezaNumero,
+    } = instancia;
 
-    // No puede caber en ninguna plancha (en ninguna orientación fija).
+    // No puede caber en ninguna plancha
+    // en la orientación actual.
     if (ancho > anchoP || alto > altoP) {
       piezasNoUbicadas.push(instancia);
       return;
@@ -186,62 +260,141 @@ export function optimizarCorte({ anchoPlancha, altoPlancha }, piezas) {
 
     let colocada = false;
 
-    for (let s = 0; s < sheets.length && !colocada; s++) {
+    // Intentar colocar la pieza en una plancha existente.
+    for (
+      let s = 0;
+      s < sheets.length && !colocada;
+      s++
+    ) {
       const plancha = sheets[s];
-      const index = buscarMejorRectangulo(plancha.freeRects, ancho, alto);
+
+      const index = buscarMejorRectangulo(
+        plancha.freeRects,
+        ancho,
+        alto
+      );
 
       if (index !== -1) {
         const rect = plancha.freeRects[index];
 
         plancha.piezas.push({
+          // ID único de la pieza física.
           pieceId,
+
+          // ID de la pieza original.
+          sourcePieceId,
+
+          // Número de instancia.
+          piezaNumero,
+
           x: rect.x,
           y: rect.y,
           width: ancho,
           height: alto,
         });
 
-        const nuevosRects = dividirRectangulo(rect, ancho, alto);
+        const nuevosRects = dividirRectangulo(
+          rect,
+          ancho,
+          alto
+        );
+
         plancha.freeRects.splice(index, 1);
         plancha.freeRects.push(...nuevosRects);
-        plancha.freeRects = podarRectangulos(plancha.freeRects);
+
+        plancha.freeRects = podarRectangulos(
+          plancha.freeRects
+        );
 
         colocada = true;
       }
     }
 
+    // Si no cabe en ninguna plancha existente,
+    // crear una nueva.
     if (!colocada) {
-      const nuevaPlancha = crearPlancha(anchoP, altoP, sheets.length + 1);
-      const index = buscarMejorRectangulo(nuevaPlancha.freeRects, ancho, alto);
-      const rect = nuevaPlancha.freeRects[index];
+      const nuevaPlancha = crearPlancha(
+        anchoP,
+        altoP,
+        sheets.length + 1
+      );
+
+      const index = buscarMejorRectangulo(
+        nuevaPlancha.freeRects,
+        ancho,
+        alto
+      );
+
+      const rect =
+        nuevaPlancha.freeRects[index];
 
       nuevaPlancha.piezas.push({
+        // ID único de la pieza física.
         pieceId,
+
+        // ID de la pieza original.
+        sourcePieceId,
+
+        // Número de instancia.
+        piezaNumero,
+
         x: rect.x,
         y: rect.y,
         width: ancho,
         height: alto,
       });
 
-      const nuevosRects = dividirRectangulo(rect, ancho, alto);
+      const nuevosRects = dividirRectangulo(
+        rect,
+        ancho,
+        alto
+      );
+
       nuevaPlancha.freeRects.splice(index, 1);
       nuevaPlancha.freeRects.push(...nuevosRects);
-      nuevaPlancha.freeRects = podarRectangulos(nuevaPlancha.freeRects);
+
+      nuevaPlancha.freeRects = podarRectangulos(
+        nuevaPlancha.freeRects
+      );
 
       sheets.push(nuevaPlancha);
     }
   });
 
-  const totalArea = sheets.length * anchoP * altoP;
+  const totalArea =
+    sheets.length *
+    anchoP *
+    altoP;
+
   const usedArea = sheets.reduce(
     (acc, plancha) =>
-      acc + plancha.piezas.reduce((a, p) => a + p.width * p.height, 0),
+      acc +
+      plancha.piezas.reduce(
+        (a, p) =>
+          a +
+          p.width *
+            p.height,
+        0
+      ),
     0
   );
-  const wasteArea = totalArea - usedArea;
-  const usedPercentage = totalArea > 0 ? (usedArea / totalArea) * 100 : 0;
-  const wastePercentage = totalArea > 0 ? (wasteArea / totalArea) * 100 : 0;
-  const piecesCount = instancias.length - piezasNoUbicadas.length;
+
+  const wasteArea =
+    totalArea - usedArea;
+
+  const usedPercentage =
+    totalArea > 0
+      ? (usedArea / totalArea) * 100
+      : 0;
+
+  const wastePercentage =
+    totalArea > 0
+      ? (wasteArea / totalArea) * 100
+      : 0;
+
+  const piecesCount =
+    instancias.length -
+    piezasNoUbicadas.length;
 
   return {
     sheets: sheets.map((s) => ({
@@ -250,13 +403,21 @@ export function optimizarCorte({ anchoPlancha, altoPlancha }, piezas) {
       height: s.height,
       piezas: s.piezas,
     })),
+
     sheetsCount: sheets.length,
+
     piecesCount,
+
     totalArea,
+
     usedArea,
+
     wasteArea,
+
     usedPercentage,
+
     wastePercentage,
+
     piezasNoUbicadas,
   };
 }

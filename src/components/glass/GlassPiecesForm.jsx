@@ -4,137 +4,155 @@ export default function GlassPiecesForm({
   anchoPlancha,
   altoPlancha,
   onAdd,
-  disabled,
+  disabled = false,
 }) {
   const [ancho, setAncho] = useState("");
   const [alto, setAlto] = useState("");
   const [cantidad, setCantidad] = useState("1");
   const [error, setError] = useState("");
 
-  const validar = (a, h, c) => {
-    const anchoNum = Number(a);
-    const altoNum = Number(h);
-    const cantidadNum = Number(c);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    if (!a || !h || anchoNum <= 0 || altoNum <= 0) {
-      return "El ancho y el alto deben ser mayores a cero.";
-    }
-    if (!c || cantidadNum < 1 || !Number.isInteger(cantidadNum)) {
-      return "La cantidad debe ser un número entero mayor o igual a 1.";
-    }
-    if (anchoNum < 0 || altoNum < 0) {
-      return "No se permiten valores negativos.";
+    const width = Number(ancho);
+    const height = Number(alto);
+    const qty = Number(cantidad);
+
+    if (!width || width <= 0) {
+      setError("Ingresa un ancho válido.");
+      return;
     }
 
-    const plancha = Number(anchoPlancha);
-    const plancha2 = Number(altoPlancha);
-    if (plancha > 0 && plancha2 > 0) {
-      const cabeNormal = anchoNum <= plancha && altoNum <= plancha2;
-      const cabeRotada = anchoNum <= plancha2 && altoNum <= plancha;
-      if (!cabeNormal && !cabeRotada) {
-        return "La pieza es más grande que la plancha definida.";
+    if (!height || height <= 0) {
+      setError("Ingresa un alto válido.");
+      return;
+    }
+
+    if (!Number.isInteger(qty) || qty < 1) {
+      setError("La cantidad debe ser un número entero mayor que 0.");
+      return;
+    }
+
+    const sheetWidth = Number(anchoPlancha);
+    const sheetHeight = Number(altoPlancha);
+
+    if (sheetWidth > 0 && sheetHeight > 0) {
+      const normal =
+        width <= sheetWidth && height <= sheetHeight;
+
+      const rotated =
+        width <= sheetHeight && height <= sheetWidth;
+
+      if (!normal && !rotated) {
+        setError(
+          `La pieza ${width} × ${height} no cabe en la plancha ${sheetWidth} × ${sheetHeight}.`
+        );
+        return;
       }
     }
 
-    return "";
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const mensaje = validar(ancho, alto, cantidad);
-    if (mensaje) {
-      setError(mensaje);
-      return;
-    }
-    setError("");
     onAdd({
-      ancho: Number(ancho),
-      alto: Number(alto),
-      cantidad: Number(cantidad),
+      ancho: width,
+      alto: height,
+      cantidad: qty,
     });
+
     setAncho("");
     setAlto("");
     setCantidad("1");
+    setError("");
   };
 
   return (
-    <div className="card-modern mb-4">
-      <h3 className="section-title">
-        <i className="bi bi-plus-square me-2"></i>
-        Agregar Pieza
-      </h3>
-
-      {error && (
-        <div
-          className="empty-state"
-          style={{
-            color: "var(--danger, #ef4444)",
-            textAlign: "left",
-            padding: "10px 14px",
-          }}
-        >
-          <i className="bi bi-exclamation-circle me-2"></i>
-          {error}
+    <section className="glass-card">
+      <div className="glass-card-header">
+        <div className="glass-section-icon">
+          <i className="bi bi-plus-square"></i>
         </div>
-      )}
 
-      <form onSubmit={handleSubmit} className="auth-form">
-        <div className="form-grid-4">
-          <div className="auth-field">
-            <label className="auth-label">Ancho</label>
+        <div>
+          <h2>Agregar piezas</h2>
+          <p>
+            Define las dimensiones y cantidad de cada pieza.
+          </p>
+        </div>
+      </div>
+
+      <div className="glass-card-body">
+        <form
+          className="glass-piece-form"
+          onSubmit={handleSubmit}
+        >
+          <div className="glass-field">
+            <label>Ancho</label>
+
             <input
               type="number"
-              className="auth-input"
+              min="0"
+              step="any"
               value={ancho}
               onChange={(e) => setAncho(e.target.value)}
+              placeholder="40"
               disabled={disabled}
-              min="0"
-              step="any"
-              placeholder="0"
             />
           </div>
 
-          <div className="auth-field">
-            <label className="auth-label">Alto</label>
+          <div className="glass-piece-x">×</div>
+
+          <div className="glass-field">
+            <label>Alto</label>
+
             <input
               type="number"
-              className="auth-input"
+              min="0"
+              step="any"
               value={alto}
               onChange={(e) => setAlto(e.target.value)}
+              placeholder="50"
               disabled={disabled}
-              min="0"
-              step="any"
-              placeholder="0"
             />
           </div>
 
-          <div className="auth-field">
-            <label className="auth-label">Cantidad</label>
+          <div className="glass-field">
+            <label>Cantidad</label>
+
             <input
               type="number"
-              className="auth-input"
-              value={cantidad}
-              onChange={(e) => setCantidad(e.target.value)}
-              disabled={disabled}
               min="1"
               step="1"
-              placeholder="1"
+              value={cantidad}
+              onChange={(e) =>
+                setCantidad(e.target.value)
+              }
+              disabled={disabled}
             />
           </div>
 
-          <div className="auth-field" style={{ justifyContent: "flex-end" }}>
-            <button
-              type="submit"
-              className="btn-primary-sm"
-              disabled={disabled}
-              style={{ marginTop: "22px" }}
-            >
-              <i className="bi bi-plus-lg me-1"></i>
-              Agregar
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="glass-add-button"
+            disabled={disabled}
+          >
+            <i className="bi bi-plus-lg"></i>
+            Agregar pieza
+          </button>
+        </form>
+
+        <div className="glass-form-help">
+          <i className="bi bi-info-circle"></i>
+          <span>
+            Las dimensiones deben utilizar la misma unidad
+            seleccionada para la plancha.
+          </span>
         </div>
-      </form>
-    </div>
+
+        {error && (
+          <div className="glass-inline-error">
+            <i className="bi bi-exclamation-circle"></i>
+            {error}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

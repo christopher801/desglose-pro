@@ -1,60 +1,91 @@
 import React from "react";
 
-function TarjetaResumen({ etiqueta, valor, color }) {
-  return (
-    <div className="stat-card" style={{ borderLeft: `4px solid ${color}` }}>
-      <div className="stat-card-title">{etiqueta}</div>
-      <div className="stat-card-value" style={{ color }}>
-        {valor}
-      </div>
-    </div>
-  );
+function formatNumber(value) {
+  return Number(value || 0).toLocaleString("es-DO", {
+    maximumFractionDigits: 2,
+  });
 }
 
 export default function GlassSummary({ resultado }) {
-  if (!resultado) return null;
+  if (!resultado) {
+    return (
+      <section className="glass-summary glass-summary-empty">
+        <div>
+          <i className="bi bi-bar-chart"></i>
 
-  const {
-    sheetsCount,
-    piecesCount,
-    usedArea,
-    wasteArea,
-    usedPercentage,
-    wastePercentage,
-  } = resultado;
+          <div>
+            <strong>Resumen de optimización</strong>
+            <span>
+              Ejecuta la optimización para visualizar los
+              resultados del corte.
+            </span>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const stats = [
+    {
+      icon: "bi-grid-3x3-gap",
+      label: "Planchas necesarias",
+      value: formatNumber(resultado.sheetsCount),
+    },
+    {
+      icon: "bi-grid",
+      label: "Piezas totales",
+      value: formatNumber(resultado.piecesCount),
+    },
+    {
+      icon: "bi-check2-circle",
+      label: "Área utilizada",
+      value: `${formatNumber(resultado.usedPercentage)}%`,
+      detail: formatNumber(resultado.usedArea),
+    },
+    {
+      icon: "bi-recycle",
+      label: "Área desperdiciada",
+      value: `${formatNumber(resultado.wastePercentage)}%`,
+      detail: formatNumber(resultado.wasteArea),
+    },
+  ];
 
   return (
-    <div className="mb-4">
-      <h3 className="section-title">
-        <i className="bi bi-clipboard-data me-2"></i>
-        Resumen de Optimización
-      </h3>
-      <div className="dashboard-stats">
-        <TarjetaResumen
-          etiqueta="Planchas necesarias"
-          valor={sheetsCount}
-          color="var(--primary, #1a56db)"
-        />
-        <TarjetaResumen
-          etiqueta="Piezas totales"
-          valor={piecesCount}
-          color="var(--primary, #1a56db)"
-        />
-        <TarjetaResumen
-          etiqueta="Área utilizada"
-          valor={`${usedArea.toLocaleString(undefined, {
-            maximumFractionDigits: 0,
-          })} (${usedPercentage.toFixed(1)}%)`}
-          color="var(--success, #10b981)"
-        />
-        <TarjetaResumen
-          etiqueta="Área desperdiciada"
-          valor={`${wasteArea.toLocaleString(undefined, {
-            maximumFractionDigits: 0,
-          })} (${wastePercentage.toFixed(1)}%)`}
-          color="var(--warning, #f59e0b)"
-        />
+    <section className="glass-summary">
+      <div className="glass-summary-header">
+        <div>
+          <span className="glass-summary-kicker">
+            RESULTADO
+          </span>
+
+          <h2>Resumen de optimización</h2>
+        </div>
+
+        <div className="glass-summary-status">
+          <i className="bi bi-check-circle-fill"></i>
+          Optimización completada
+        </div>
       </div>
-    </div>
+
+      <div className="glass-summary-grid">
+        {stats.map((stat) => (
+          <div className="glass-summary-card" key={stat.label}>
+            <div className="glass-summary-icon">
+              <i className={`bi ${stat.icon}`}></i>
+            </div>
+
+            <div>
+              <span>{stat.label}</span>
+
+              <strong>{stat.value}</strong>
+
+              {stat.detail && (
+                <small>{stat.detail}</small>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

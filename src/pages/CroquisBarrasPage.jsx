@@ -19,15 +19,11 @@ const DEFAULT_SAW = 1 / 16;
 const DEFAULT_UNIT = "in";
 
 function createId() {
-  return `${Date.now()}-${Math.random()
-    .toString(36)
-    .slice(2, 9)}`;
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
 export default function CroquisBarrasPage() {
-  const [barLength, setBarLength] = useState(
-    DEFAULT_BAR_LENGTH
-  );
+  const [barLength, setBarLength] = useState(DEFAULT_BAR_LENGTH);
 
   const [saw, setSaw] = useState(DEFAULT_SAW);
 
@@ -37,8 +33,7 @@ export default function CroquisBarrasPage() {
 
   const [result, setResult] = useState(null);
 
-  const [editingCut, setEditingCut] =
-    useState(null);
+  const [editingCut, setEditingCut] = useState(null);
 
   const [error, setError] = useState("");
 
@@ -46,9 +41,7 @@ export default function CroquisBarrasPage() {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(
-        STORAGE_KEY
-      );
+      const stored = localStorage.getItem(STORAGE_KEY);
 
       if (!stored) {
         return;
@@ -76,10 +69,7 @@ export default function CroquisBarrasPage() {
         setResult(data.result);
       }
     } catch (storageError) {
-      console.error(
-        "No se pudo cargar Croquis de barras:",
-        storageError
-      );
+      console.error("No se pudo cargar Croquis de barras:", storageError);
     }
   }, []);
 
@@ -95,8 +85,8 @@ export default function CroquisBarrasPage() {
                 ...cut,
                 id: editingCut.id,
               }
-            : item
-        )
+            : item,
+        ),
       );
 
       setEditingCut(null);
@@ -114,9 +104,7 @@ export default function CroquisBarrasPage() {
   };
 
   const handleRemoveCut = (id) => {
-    setCuts((currentCuts) =>
-      currentCuts.filter((cut) => cut.id !== id)
-    );
+    setCuts((currentCuts) => currentCuts.filter((cut) => cut.id !== id));
 
     setResult(null);
     setSaved(false);
@@ -145,17 +133,14 @@ export default function CroquisBarrasPage() {
       setResult(optimized);
     } catch (optimizationError) {
       setError(
-        optimizationError.message ||
-          "No fue posible optimizar los cortes."
+        optimizationError.message || "No fue posible optimizar los cortes.",
       );
     }
   };
 
   const handleSave = () => {
     if (!result) {
-      setError(
-        "Primero debes optimizar los cortes."
-      );
+      setError("Primero debes optimizar los cortes.");
       return;
     }
 
@@ -169,7 +154,7 @@ export default function CroquisBarrasPage() {
           cuts,
           result,
           savedAt: new Date().toISOString(),
-        })
+        }),
       );
 
       setSaved(true);
@@ -177,186 +162,177 @@ export default function CroquisBarrasPage() {
     } catch (storageError) {
       console.error(storageError);
 
-      setError(
-        "No fue posible guardar la optimización."
-      );
+      setError("No fue posible guardar la optimización.");
     }
   };
 
   const handleClear = () => {
-  setCuts([]);
-  setResult(null);
-  setEditingCut(null);
-  setError("");
-  setSaved(false);
+    setCuts([]);
+    setResult(null);
+    setEditingCut(null);
+    setError("");
+    setSaved(false);
 
-  localStorage.removeItem(STORAGE_KEY);
-};
+    localStorage.removeItem(STORAGE_KEY);
+  };
 
   return (
     <Layout>
-    <div className="page-content barras-page">
-      <div className="barras-header no-print">
-        <div className="barras-header-main">
-          <div className="barras-title-icon">
-            <i className="bi bi-scissors" />
-          </div>
+      <div className="page-content barras-page">
+        <div className="barras-header no-print">
+          <div className="barras-header-main">
+            <div className="barras-title-icon">
+              <i className="bi bi-scissors" />
+            </div>
 
-          <div>
-            <h1 className="page-title">
-              Croquis de barras
-            </h1>
-
-            <p className="barras-subtitle">
-              Optimiza el corte de perfiles y reduce
-              el desperdicio de material.
-            </p>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="btn-secondary-sm"
-          onClick={handleClear}
-          disabled={!cuts.length}
-        >
-          <i className="bi bi-arrow-counterclockwise me-1" />
-          Reiniciar
-        </button>
-      </div>
-
-      {error && (
-        <div className="auth-error no-print">
-          <i className="bi bi-exclamation-circle me-2" />
-          {error}
-        </div>
-      )}
-
-      {saved && (
-        <div className="alert-info no-print">
-          <i className="bi bi-check-circle me-2" />
-          Optimización guardada correctamente.
-        </div>
-      )}
-
-      <div className="barras-section no-print">
-        <BarraControls
-          barLength={barLength}
-          setBarLength={setBarLength}
-          saw={saw}
-          setSaw={setSaw}
-          unit={unit}
-          setUnit={setUnit}
-        />
-      </div>
-
-      <div className="barras-section no-print">
-        <div className="barras-panel">
-          <div className="barras-panel-header">
             <div>
-              <div className="barras-panel-title">
-                <i className="bi bi-scissors me-2" />
-                CORTES DE PERFIL
-              </div>
+              <h1 className="page-title">Croquis de barras</h1>
 
-              <div className="barras-panel-subtitle">
-                Agrega cada pieza que debe ser cortada.
-              </div>
-            </div>
-
-            <div className="barras-cut-counter">
-              {cuts.length} referencia
-              {cuts.length !== 1 ? "s" : ""}
-            </div>
-          </div>
-
-          <div className="barras-panel-body">
-            <BarraForm
-              unit={unit}
-              onAdd={handleAddCut}
-              onCancel={() => setEditingCut(null)}
-              editingCut={editingCut}
-            />
-
-            <div className="barras-table-wrapper">
-              <BarraTable
-                cuts={cuts}
-                unit={unit}
-                onRemove={handleRemoveCut}
-                onEdit={handleEditCut}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="barras-optimize-area no-print">
-        <button
-          type="button"
-          className="barras-optimize-btn"
-          onClick={handleOptimize}
-          disabled={!cuts.length}
-        >
-          <i className="bi bi-magic me-2" />
-          Optimizar Corte
-        </button>
-
-        <p>
-          El cálculo considera una pérdida de sierra de{" "}
-          <strong>1/16"</strong> por corte.
-        </p>
-      </div>
-
-      {result && (
-        <div className="barras-results">
-          <div className="barras-results-header no-print">
-            <div>
-              <h2>
-                Resultado de optimización
-              </h2>
-
-              <p>
-                Distribución calculada para minimizar
-                el desperdicio.
+              <p className="barras-subtitle">
+                Optimiza el corte de perfiles y reduce el desperdicio de
+                material.
               </p>
             </div>
-
-            <span className="barras-result-status">
-              <i className="bi bi-check-circle-fill me-1" />
-              Optimizado
-            </span>
           </div>
 
-          <OptimizationSummary
-            result={result}
+          <button
+            type="button"
+            className="btn-secondary-sm"
+            onClick={handleClear}
+            disabled={!cuts.length}
+          >
+            <i className="bi bi-arrow-counterclockwise me-1" />
+            Reiniciar
+          </button>
+          
+        </div>
+
+        {error && (
+          <div className="auth-error no-print">
+            <i className="bi bi-exclamation-circle me-2" />
+            {error}
+          </div>
+        )}
+
+        {saved && (
+          <div className="alert-info no-print">
+            <i className="bi bi-check-circle me-2" />
+            Optimización guardada correctamente.
+          </div>
+        )}
+
+        <div className="barras-section no-print">
+          <BarraControls
+            barLength={barLength}
+            setBarLength={setBarLength}
+            saw={saw}
+            setSaw={setSaw}
+            unit={unit}
+            setUnit={setUnit}
           />
+        </div>
 
-          <BarraVisualizer
-            result={result}
-          />
+        <div className="barras-section no-print">
+          <div className="barras-panel">
+            <div className="barras-panel-header">
+              <div>
+                <div className="barras-panel-title">
+                  <i className="bi bi-scissors me-2" />
+                  CORTES DE PERFIL
+                </div>
 
-          <div className="barras-actions no-print">
-            <button
-              type="button"
-              className="btn-primary-sm barras-action-save"
-              onClick={handleSave}
-            >
-              <i className="bi bi-floppy2 me-2" />
-              Guardar
-            </button>
+                <div className="barras-panel-subtitle">
+                  Agrega cada pieza que debe ser cortada.
+                </div>
+              </div>
 
-            <button
-              type="button"
-              className="btn-secondary-sm barras-action-pdf"
-              onClick={exportBarsToPdf}
-            >
-              <i className="bi bi-file-earmark-pdf me-2" />
-              Exportar PDF
-            </button>
+              <div className="barras-cut-counter">
+                {cuts.length} referencia
+                {cuts.length !== 1 ? "s" : ""}
+              </div>
+            </div>
+
+            <div className="barras-panel-body">
+              <BarraForm
+                unit={unit}
+                onAdd={handleAddCut}
+                onCancel={() => setEditingCut(null)}
+                editingCut={editingCut}
+              />
+
+              <div className="barras-table-wrapper">
+                <BarraTable
+                  cuts={cuts}
+                  unit={unit}
+                  onRemove={handleRemoveCut}
+                  onEdit={handleEditCut}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      )}
-    </div>
+
+        <div className="barras-actions no-print">
+          <button
+            type="button"
+            className="barras-optimize-btn"
+            onClick={handleOptimize}
+            disabled={!cuts.length}
+          >
+            <i className="bi bi-magic me-2" />
+            Optimizar Corte
+          </button>
+
+        
+              <button
+                type="button"
+                className="btn-primary-sm barras-action-save"
+                onClick={handleSave}
+              >
+                <i className="bi bi-floppy2 me-2" />
+                Guardar
+              </button>
+
+              <button
+                type="button"
+                className="btn-secondary-sm barras-action-pdf"
+                onClick={() =>
+                  exportBarsToPdf({
+                    result,
+                    barLength,
+                    saw,
+                    unit,
+                  })
+                }
+              >
+                <i className="bi bi-file-earmark-pdf me-2" />
+                Exportar PDF
+              </button>
+            </div>
+
+        {result && (
+          <div className="barras-results">
+            <div className="barras-results-header no-print">
+              <div>
+                <h2>Resultado de optimización</h2>
+
+                <p>Distribución calculada para minimizar el desperdicio.</p>
+              </div>
+
+              <span className="barras-result-status">
+                <i className="bi bi-check-circle-fill me-1" />
+                Optimizado
+              </span>
+            </div>
+
+            <OptimizationSummary result={result} />
+
+            <BarraVisualizer result={result} />
+
+            
+          </div>
+        )}
+      </div>
     </Layout>
   );
 }

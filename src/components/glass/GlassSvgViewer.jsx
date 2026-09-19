@@ -5,108 +5,138 @@ function PlanchaSvg({ plancha }) {
   const layout = calcularLayoutSvg(plancha);
 
   return (
-    <div
-      style={{
-        border: "1px solid var(--gray-200, #e2e8f0)",
-        borderRadius: "var(--radius, 12px)",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "10px 14px",
-          borderBottom: "1px solid var(--gray-200, #e2e8f0)",
-          background: "var(--gray-50, #f8fafc)",
-        }}
-      >
-        <span style={{ fontWeight: 600, color: "var(--gray-800, #1e293b)" }}>
-          <i
-            className="bi bi-square me-2"
-            style={{ color: "var(--primary, #1a56db)" }}
-          ></i>
-          Plancha #{plancha.numero}
-        </span>
-        <span className="badge badge-active">
-          {plancha.piezas.length} pieza{plancha.piezas.length !== 1 ? "s" : ""}
-        </span>
+    <div className="glass-sheet-card">
+      <div className="glass-sheet-header">
+        <div>
+          <span>PLANCHA</span>
+          <strong>#{plancha.numero}</strong>
+        </div>
+
+        <div className="glass-sheet-meta">
+          {plancha.width} × {plancha.height}
+        </div>
+
+        <div className="glass-sheet-count">
+          <i className="bi bi-grid"></i>
+          {plancha.piezas.length} piezas
+        </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "16px",
-        }}
-      >
-        <svg
-          width={layout.viewBoxWidth}
-          height={layout.viewBoxHeight}
-          viewBox={`0 0 ${layout.viewBoxWidth} ${layout.viewBoxHeight}`}
-          style={{ maxWidth: "100%" }}
-        >
-          <rect
-            x={0}
-            y={0}
-            width={layout.viewBoxWidth}
-            height={layout.viewBoxHeight}
-            fill="var(--gray-50, #f8fafc)"
-            stroke="var(--gray-300, #cbd5e1)"
-            strokeWidth={2}
-          />
+      <div className="glass-sheet-body">
+        <div className="glass-sheet-svg-wrap">
+          <svg
+            viewBox={`0 0 ${layout.viewBoxWidth} ${layout.viewBoxHeight}`}
+            className="glass-sheet-svg"
+            role="img"
+            aria-label={`Plancha ${plancha.numero}`}
+          >
+            <rect
+              x="0"
+              y="0"
+              width={layout.sheetWidth}
+              height={layout.sheetHeight}
+              className="glass-svg-sheet"
+            />
 
-          {layout.rects.map((rect, i) => (
-            <g key={i}>
-              <rect
-                x={rect.x}
-                y={rect.y}
-                width={rect.width}
-                height={rect.height}
-                fill="var(--primary-light, #3b82f6)"
-                fillOpacity={0.25}
-                stroke="var(--primary, #1a56db)"
-                strokeWidth={1.5}
-              />
-              <text
-                x={rect.x + rect.width / 2}
-                y={rect.y + rect.height / 2}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize={11}
-                fill="var(--gray-700, #334155)"
-              >
-                {rect.realWidth} x {rect.realHeight}
-              </text>
-            </g>
-          ))}
-        </svg>
+            {layout.rects.map((rect, index) => (
+              <g key={rect.pieceId || index}>
+                <rect
+                  x={rect.x}
+                  y={rect.y}
+                  width={rect.width}
+                  height={rect.height}
+                  className="glass-svg-piece"
+                />
+
+                {rect.width > 45 &&
+                  rect.height > 28 && (
+                    <>
+                      <text
+                        x={
+                          rect.x +
+                          rect.width / 2
+                        }
+                        y={
+                          rect.y +
+                          rect.height / 2 -
+                          4
+                        }
+                        textAnchor="middle"
+                        className="glass-svg-piece-number"
+                      >
+                        {index + 1}
+                      </text>
+
+                      <text
+                        x={
+                          rect.x +
+                          rect.width / 2
+                        }
+                        y={
+                          rect.y +
+                          rect.height / 2 +
+                          11
+                        }
+                        textAnchor="middle"
+                        className="glass-svg-piece-size"
+                      >
+                        {rect.realWidth} ×{" "}
+                        {rect.realHeight}
+                      </text>
+                    </>
+                  )}
+              </g>
+            ))}
+          </svg>
+        </div>
+
+        <div className="glass-sheet-footer">
+          <span>
+            <i className="bi bi-rulers"></i>
+            Dimensiones: {plancha.width} ×{" "}
+            {plancha.height}
+          </span>
+
+          <span>
+            <i className="bi bi-grid"></i>
+            {plancha.piezas.length} piezas
+          </span>
+        </div>
       </div>
     </div>
   );
 }
 
 export default function GlassSvgViewer({ sheets }) {
-  if (!sheets || sheets.length === 0) return null;
+  if (!sheets || sheets.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="card-modern mb-4">
-      <h3 className="section-title">
-        <i className="bi bi-grid-3x3-gap me-2"></i>
-        Distribución de Corte
-      </h3>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "16px",
-        }}
-      >
-        {sheets.map((plancha) => (
-          <PlanchaSvg key={plancha.numero} plancha={plancha} />
-        ))}
+    <section className="glass-card glass-drawings-section">
+      <div className="glass-card-header">
+        <div className="glass-section-icon">
+          <i className="bi bi-diagram-3"></i>
+        </div>
+
+        <div>
+          <h2>Croquis de corte</h2>
+          <p>
+            Distribución visual de las piezas en cada plancha.
+          </p>
+        </div>
       </div>
-    </div>
+
+      <div className="glass-card-body">
+        <div className="glass-sheets-grid">
+          {sheets.map((plancha) => (
+            <PlanchaSvg
+              key={plancha.numero}
+              plancha={plancha}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

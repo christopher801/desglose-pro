@@ -1,179 +1,259 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-export default function GlassPiecesTable({ piezas, onEdit, onDelete, disabled }) {
-  const [editandoId, setEditandoId] = useState(null);
-  const [valores, setValores] = useState({ ancho: "", alto: "", cantidad: "" });
+export default function GlassPiecesTable({
+  piezas,
+  onEdit,
+  onDelete,
+  disabled = false,
+}) {
+  const [editingId, setEditingId] = useState(null);
 
-  const totalPiezas = piezas.reduce((acc, p) => acc + Number(p.cantidad), 0);
+  const totalPiezas = useMemo(
+    () =>
+      piezas.reduce(
+        (total, pieza) =>
+          total + Number(pieza.cantidad || 0),
+        0
+      ),
+    [piezas]
+  );
 
-  const iniciarEdicion = (pieza) => {
-    setEditandoId(pieza.id);
-    setValores({
-      ancho: pieza.ancho,
-      alto: pieza.alto,
-      cantidad: pieza.cantidad,
-    });
-  };
+  const areaTotal = useMemo(
+    () =>
+      piezas.reduce(
+        (total, pieza) =>
+          total +
+          Number(pieza.ancho || 0) *
+            Number(pieza.alto || 0) *
+            Number(pieza.cantidad || 0),
+        0
+      ),
+    [piezas]
+  );
 
-  const cancelarEdicion = () => {
-    setEditandoId(null);
-  };
+  const handleEdit = (pieza, field, value) => {
+    const numericValue = Number(value);
 
-  const guardarEdicion = (id) => {
-    const anchoNum = Number(valores.ancho);
-    const altoNum = Number(valores.alto);
-    const cantidadNum = Number(valores.cantidad);
-
-    if (
-      !valores.ancho ||
-      !valores.alto ||
-      anchoNum <= 0 ||
-      altoNum <= 0 ||
-      !Number.isInteger(cantidadNum) ||
-      cantidadNum < 1
-    ) {
+    if (!numericValue || numericValue <= 0) {
       return;
     }
 
-    onEdit(id, { ancho: anchoNum, alto: altoNum, cantidad: cantidadNum });
-    setEditandoId(null);
+    onEdit(pieza.id, {
+      [field]: field === "cantidad"
+        ? Math.max(1, Math.round(numericValue))
+        : numericValue,
+    });
   };
 
-  if (piezas.length === 0) {
-    return (
-      <div className="card-modern mb-4">
-        <div className="empty-state">
-          <i className="bi bi-inbox fs-2 d-block mb-2"></i>
-          Todavía no se han agregado piezas.
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="card-modern mb-4">
-      <div className="admin-header">
-        <h3 className="section-title" style={{ marginBottom: 0 }}>
-          <i className="bi bi-list-ul me-2"></i>
-          Piezas a Cortar
-        </h3>
-        <span className="badge badge-active">
-          Total: {totalPiezas} pieza{totalPiezas !== 1 ? "s" : ""}
-        </span>
+    <section className="glass-card">
+      <div className="glass-card-header">
+        <div className="glass-section-icon">
+          <i className="bi bi-list-check"></i>
+        </div>
+
+        <div>
+          <h2>Detalle de piezas</h2>
+          <p>
+            {totalPiezas} pieza{totalPiezas === 1 ? "" : "s"}{" "}
+            registradas.
+          </p>
+        </div>
+
+        {piezas.length > 0 && (
+          <div className="glass-card-header-stat">
+            <span>Área total</span>
+            <strong>
+              {areaTotal.toLocaleString("es-DO")}
+            </strong>
+          </div>
+        )}
       </div>
 
-      <div className="table-responsive">
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Ancho</th>
-              <th>Alto</th>
-              <th>Cantidad</th>
-              <th>Área</th>
-              <th style={{ textAlign: "right" }}>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {piezas.map((pieza) => {
-              const enEdicion = editandoId === pieza.id;
-              const area = pieza.ancho * pieza.alto * pieza.cantidad;
+      <div className="glass-card-body glass-table-body">
+        {piezas.length === 0 ? (
+          <div className="glass-empty-state">
+            <div className="glass-empty-icon">
+              <i className="bi bi-grid"></i>
+            </div>
 
-              return (
-                <tr key={pieza.id}>
-                  <td>
-                    {enEdicion ? (
-                      <input
-                        type="number"
-                        className="auth-input"
-                        value={valores.ancho}
-                        min="0"
-                        step="any"
-                        onChange={(e) =>
-                          setValores({ ...valores, ancho: e.target.value })
-                        }
-                      />
-                    ) : (
-                      pieza.ancho
-                    )}
-                  </td>
-                  <td>
-                    {enEdicion ? (
-                      <input
-                        type="number"
-                        className="auth-input"
-                        value={valores.alto}
-                        min="0"
-                        step="any"
-                        onChange={(e) =>
-                          setValores({ ...valores, alto: e.target.value })
-                        }
-                      />
-                    ) : (
-                      pieza.alto
-                    )}
-                  </td>
-                  <td>
-                    {enEdicion ? (
-                      <input
-                        type="number"
-                        className="auth-input"
-                        value={valores.cantidad}
-                        min="1"
-                        step="1"
-                        onChange={(e) =>
-                          setValores({ ...valores, cantidad: e.target.value })
-                        }
-                      />
-                    ) : (
-                      pieza.cantidad
-                    )}
-                  </td>
-                  <td>{area.toLocaleString()}</td>
-                  <td style={{ textAlign: "right" }}>
-                    {enEdicion ? (
-                      <>
-                        <button
-                          className="btn-primary-sm me-1"
-                          onClick={() => guardarEdicion(pieza.id)}
-                          disabled={disabled}
-                        >
-                          <i className="bi bi-check-lg"></i>
-                        </button>
-                        <button
-                          className="btn-secondary-sm"
-                          onClick={cancelarEdicion}
-                          disabled={disabled}
-                        >
-                          <i className="bi bi-x-lg"></i>
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          className="btn-secondary-sm me-1"
-                          onClick={() => iniciarEdicion(pieza)}
-                          disabled={disabled}
-                          title="Editar"
-                        >
-                          <i className="bi bi-pencil"></i>
-                        </button>
-                        <button
-                          className="btn-danger-sm"
-                          onClick={() => onDelete(pieza.id)}
-                          disabled={disabled}
-                          title="Eliminar"
-                        >
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </>
-                    )}
-                  </td>
+            <strong>No hay piezas agregadas</strong>
+
+            <span>
+              Agrega las piezas del proyecto para comenzar
+              la optimización.
+            </span>
+          </div>
+        ) : (
+          <div className="glass-table-responsive">
+            <table className="glass-pieces-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>ANCHO</th>
+                  <th>ALTO</th>
+                  <th>CANTIDAD</th>
+                  <th>ÁREA</th>
+                  <th>ACCIONES</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+
+              <tbody>
+                {piezas.map((pieza, index) => {
+                  const area =
+                    Number(pieza.ancho || 0) *
+                    Number(pieza.alto || 0) *
+                    Number(pieza.cantidad || 0);
+
+                  const editing =
+                    editingId === pieza.id;
+
+                  return (
+                    <tr key={pieza.id}>
+                      <td>
+                        <span className="glass-piece-number">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                      </td>
+
+                      <td>
+                        {editing ? (
+                          <input
+                            className="glass-table-input"
+                            type="number"
+                            min="0"
+                            step="any"
+                            value={pieza.ancho}
+                            onChange={(e) =>
+                              handleEdit(
+                                pieza,
+                                "ancho",
+                                e.target.value
+                              )
+                            }
+                          />
+                        ) : (
+                          `${pieza.ancho}`
+                        )}
+                      </td>
+
+                      <td>
+                        {editing ? (
+                          <input
+                            className="glass-table-input"
+                            type="number"
+                            min="0"
+                            step="any"
+                            value={pieza.alto}
+                            onChange={(e) =>
+                              handleEdit(
+                                pieza,
+                                "alto",
+                                e.target.value
+                              )
+                            }
+                          />
+                        ) : (
+                          `${pieza.alto}`
+                        )}
+                      </td>
+
+                      <td>
+                        {editing ? (
+                          <input
+                            className="glass-table-input glass-table-input-small"
+                            type="number"
+                            min="1"
+                            step="1"
+                            value={pieza.cantidad}
+                            onChange={(e) =>
+                              handleEdit(
+                                pieza,
+                                "cantidad",
+                                e.target.value
+                              )
+                            }
+                          />
+                        ) : (
+                          <span className="glass-quantity-badge">
+                            {pieza.cantidad}
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="glass-area-cell">
+                        {area.toLocaleString("es-DO")}
+                      </td>
+
+                      <td>
+                        <div className="glass-row-actions">
+                          <button
+                            type="button"
+                            className="glass-icon-button"
+                            title={
+                              editing
+                                ? "Finalizar edición"
+                                : "Editar pieza"
+                            }
+                            disabled={disabled}
+                            onClick={() =>
+                              setEditingId(
+                                editing
+                                  ? null
+                                  : pieza.id
+                              )
+                            }
+                          >
+                            <i
+                              className={
+                                editing
+                                  ? "bi bi-check-lg"
+                                  : "bi bi-pencil"
+                              }
+                            ></i>
+                          </button>
+
+                          <button
+                            type="button"
+                            className="glass-icon-button glass-icon-danger"
+                            title="Eliminar pieza"
+                            disabled={disabled}
+                            onClick={() =>
+                              onDelete(pieza.id)
+                            }
+                          >
+                            <i className="bi bi-trash3"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+
+              <tfoot>
+                <tr>
+                  <td colSpan="3">
+                    <strong>Total</strong>
+                  </td>
+
+                  <td>
+                    <strong>{totalPiezas}</strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {areaTotal.toLocaleString("es-DO")}
+                    </strong>
+                  </td>
+
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        )}
       </div>
-    </div>
+    </section>
   );
 }

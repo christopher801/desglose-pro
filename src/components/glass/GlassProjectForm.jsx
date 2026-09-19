@@ -2,12 +2,12 @@ import React from "react";
 
 const TIPOS_VIDRIO = [
   "Vidrio Monolítico",
-  "Vidrio laminado",
-  "Vidrio texturizado",
+  "Vidrio Laminado",
+  "Vidrio Texturizado",
   "Espejo",
 ];
 
-const ESPESOR = [
+const ESPESORES = [
   '1/8" (3mm)',
   '3/16" (4mm)',
   '1/4" (6mm)',
@@ -18,7 +18,7 @@ const ESPESOR = [
   '3/4" (19mm)',
 ];
 
-const COLOR = [
+const COLORES = [
   "Incoloro",
   "Bronce",
   "Gris",
@@ -29,57 +29,98 @@ const COLOR = [
 ];
 
 const UNIDADES = [
-  { value: "in", label: "Pulgadas (in)" },
-  { value: "mm", label: "Milímetros (mm)" },
-  { value: "cm", label: "Centímetros (cm)" },
-  { value: "m", label: "Metros (m)" },
+  {
+    value: "in",
+    label: "Pulgadas (in)",
+  },
+  {
+    value: "mm",
+    label: "Milímetros (mm)",
+  },
+  {
+    value: "cm",
+    label: "Centímetros (cm)",
+  },
+  {
+    value: "m",
+    label: "Metros (m)",
+  },
 ];
 
-export default function GlassProjectForm({ proyecto, onChange, disabled }) {
-  const handle = (campo) => (e) => {
-    onChange({ ...proyecto, [campo]: e.target.value });
+export default function GlassProjectForm({
+  proyecto,
+  onChange,
+}) {
+  const handleChange = (field, value) => {
+    onChange({
+      ...proyecto,
+      [field]: value,
+    });
   };
 
   return (
-    <div className="card-modern mb-4">
-      <h3 className="section-title">
-        <i className="bi bi-info-circle me-2"></i>
-        Datos del Proyecto
-      </h3>
+    <section className="glass-card">
+      <div className="glass-card-header">
+        <div className="glass-section-icon">
+          <i className="bi bi-file-earmark-text"></i>
+        </div>
 
-      <form className="auth-form">
-        <div className="form-grid-4">
-          <div className="auth-field">
-            <label className="auth-label">Cliente</label>
-            <input
-              type="text"
-              className="auth-input"
-              value={proyecto.cliente}
-              onChange={handle("cliente")}
-              disabled={disabled}
-              placeholder="Nombre del cliente"
-            />
+        <div>
+          <h2>Información del proyecto</h2>
+          <p>
+            Datos generales y especificaciones del vidrio.
+          </p>
+        </div>
+      </div>
+
+      <div className="glass-card-body">
+
+        <div className="glass-form-grid glass-form-grid-2">
+          <div className="glass-field">
+            <label>Cliente</label>
+
+            <div className="glass-input-wrap">
+              <i className="bi bi-person"></i>
+
+              <input
+                type="text"
+                value={proyecto.cliente}
+                onChange={(e) =>
+                  handleChange("cliente", e.target.value)
+                }
+                placeholder="Nombre del cliente"
+              />
+            </div>
           </div>
 
-          <div className="auth-field">
-            <label className="auth-label">Proyecto</label>
-            <input
-              type="text"
-              className="auth-input"
-              value={proyecto.proyecto}
-              onChange={handle("proyecto")}
-              disabled={disabled}
-              placeholder="Nombre o referencia"
-            />
-          </div>
+          <div className="glass-field">
+            <label>Proyecto / Obra</label>
 
-          <div className="auth-field">
-            <label className="auth-label">Tipo de vidrio</label>
+            <div className="glass-input-wrap">
+              <i className="bi bi-building"></i>
+
+              <input
+                type="text"
+                value={proyecto.proyecto}
+                onChange={(e) =>
+                  handleChange("proyecto", e.target.value)
+                }
+                placeholder="Nombre del proyecto"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="glass-form-grid glass-form-grid-3">
+
+          <div className="glass-field">
+            <label>Tipo de vidrio</label>
+
             <select
-              className="auth-input"
               value={proyecto.tipoVidrio}
-              onChange={handle("tipoVidrio")}
-              disabled={disabled}
+              onChange={(e) =>
+                handleChange("tipoVidrio", e.target.value)
+              }
             >
               {TIPOS_VIDRIO.map((tipo) => (
                 <option key={tipo} value={tipo}>
@@ -89,95 +130,125 @@ export default function GlassProjectForm({ proyecto, onChange, disabled }) {
             </select>
           </div>
 
-          <div className="auth-field">
-            <label className="auth-label">Espesor</label>
+          <div className="glass-field">
+            <label>Espesor</label>
+
             <select
-              className="auth-input"
               value={proyecto.espesor}
-              onChange={handle("espesor")}
-              disabled={disabled}
+              onChange={(e) =>
+                handleChange("espesor", e.target.value)
+              }
             >
-              {ESPESOR.map((e) => (
-                <option key={e} value={e}>
-                  {e}
+              <option value="">Seleccionar espesor</option>
+
+              {ESPESORES.map((espesor) => (
+                <option key={espesor} value={espesor}>
+                  {espesor}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="auth-field">
-            <label className="auth-label">Color</label>
+          <div className="glass-field">
+            <label>Color</label>
+
             <select
-              className="auth-input"
               value={proyecto.color}
-              onChange={handle("color")}
-              disabled={disabled}
+              onChange={(e) =>
+                handleChange("color", e.target.value)
+              }
             >
-              {COLOR.map((c) => (
-                <option key={c} value={c}>
-                  {c}
+              <option value="">Seleccionar color</option>
+
+              {COLORES.map((color) => (
+                <option key={color} value={color}>
+                  {color}
                 </option>
               ))}
             </select>
           </div>
+        </div>
 
-          <div className="auth-field">
-            <label className="auth-label">Unidad</label>
+        <div className="glass-subsection-title">
+          <i className="bi bi-rulers"></i>
+          Dimensiones de la plancha
+        </div>
+
+        <div className="glass-form-grid glass-form-grid-3">
+
+          <div className="glass-field">
+            <label>Unidad</label>
+
             <select
-              className="auth-input"
               value={proyecto.unidad}
-              onChange={handle("unidad")}
-              disabled={disabled}
+              onChange={(e) =>
+                handleChange("unidad", e.target.value)
+              }
             >
-              {UNIDADES.map((u) => (
-                <option key={u.value} value={u.value}>
-                  {u.label}
+              {UNIDADES.map((unidad) => (
+                <option
+                  key={unidad.value}
+                  value={unidad.value}
+                >
+                  {unidad.label}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="auth-field">
-            <label className="auth-label">Ancho de plancha</label>
+          <div className="glass-field">
+            <label>Ancho de plancha</label>
+
             <input
               type="number"
-              className="auth-input"
-              value={proyecto.anchoPlancha}
-              onChange={handle("anchoPlancha")}
-              disabled={disabled}
               min="0"
               step="any"
+              value={proyecto.anchoPlancha}
+              onChange={(e) =>
+                handleChange(
+                  "anchoPlancha",
+                  e.target.value
+                )
+              }
               placeholder="Ej. 130"
             />
           </div>
 
-          <div className="auth-field">
-            <label className="auth-label">Alto de plancha</label>
+          <div className="glass-field">
+            <label>Alto de plancha</label>
+
             <input
               type="number"
-              className="auth-input"
-              value={proyecto.altoPlancha}
-              onChange={handle("altoPlancha")}
-              disabled={disabled}
               min="0"
               step="any"
+              value={proyecto.altoPlancha}
+              onChange={(e) =>
+                handleChange(
+                  "altoPlancha",
+                  e.target.value
+                )
+              }
               placeholder="Ej. 84"
             />
           </div>
         </div>
 
-        <div className="auth-field">
-          <label className="auth-label">Observaciones</label>
+        <div className="glass-field">
+          <label>Observaciones</label>
+
           <textarea
-            className="auth-input"
+            rows="3"
             value={proyecto.observaciones}
-            onChange={handle("observaciones")}
-            disabled={disabled}
-            rows={2}
-            placeholder="Notas adicionales sobre el proyecto"
+            onChange={(e) =>
+              handleChange(
+                "observaciones",
+                e.target.value
+              )
+            }
+            placeholder="Notas adicionales del proyecto..."
           />
         </div>
-      </form>
-    </div>
+      </div>
+    </section>
   );
 }
