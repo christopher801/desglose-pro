@@ -5,7 +5,8 @@ const PULGADAS_POR_PIE = 12
 
 export const calcularMaterialesPuertaP40 = ({
   ancho,
-  alto
+  alto,
+  hojas = 1
 }) => {
   if (
     !Number.isFinite(ancho) ||
@@ -14,12 +15,39 @@ export const calcularMaterialesPuertaP40 = ({
     return []
   }
 
-  // Fórmulas originales de Puerta P40
-  const cabMarco = ancho - (1 / 8)
-  const latMarco = alto - (1 / 8)
-  const cabezal = ancho - (3 + 3 / 4)
-  const alfeizar = ancho - (8 + 15 / 16)
-  const jambas = alto - 2
+  // ================================================
+  // FÓRMULAS SEGÚN CANTIDAD DE HOJAS
+  // ================================================
+
+  let cabMarco
+  let latMarco
+  let cabezal
+  let alfeizar
+  let jambas
+
+  if (hojas === 2) {
+    cabMarco = ancho - (1 / 8)
+    latMarco = alto - (1 / 8)
+    cabezal = ancho / 2 - (1 + 15 / 16)
+    alfeizar = ancho / 2 - (7 + 14 / 16)
+    jambas = alto - 2
+  } else {
+    cabMarco = ancho - (1 / 8)
+    latMarco = alto - (1 / 8)
+    cabezal = ancho - (3 + 3 / 4)
+    alfeizar = ancho - (8 + 15 / 16)
+    jambas = alto - 2
+  }
+
+  // ================================================
+  // CANTIDADES SEGÚN CANTIDAD DE HOJAS
+  // ================================================
+
+  // Marco: siempre 1 cab-marco + 2 lat-marco (no depende de hojas)
+  // Hoja: se multiplica por cantidad de hojas
+  const cantidadCabezal = hojas
+  const cantidadAlfeizar = hojas
+  const cantidadJambas = hojas * 2
 
   return [
     {
@@ -35,17 +63,17 @@ export const calcularMaterialesPuertaP40 = ({
     {
       material: 'Jambas',
       longitud: jambas,
-      cantidad: 2
+      cantidad: cantidadJambas
     },
     {
       material: 'Cabezal de la hoja',
       longitud: cabezal,
-      cantidad: 1
+      cantidad: cantidadCabezal
     },
     {
       material: 'Alfeizar de la hoja',
       longitud: alfeizar,
-      cantidad: 1
+      cantidad: cantidadAlfeizar
     }
   ]
 }
@@ -59,7 +87,8 @@ export const calcularResumenMaterialesPuertaP40 = (
     const materiales =
       calcularMaterialesPuertaP40({
         ancho: Number(medida.anchoDec),
-        alto: Number(medida.altoDec)
+        alto: Number(medida.altoDec),
+        hojas: Number(medida.hojas) || 1
       })
 
     materiales.forEach((item) => {

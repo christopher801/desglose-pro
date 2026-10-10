@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-
 const COLORES = [
   "Aluminio natural",
   "Blanco",
   "Negro",
   "Bronce",
-  "Champagne",
+  "Caoba",
+  "Roble",
   "Gris",
+  "Grafito",
+  "Champagne",
   "Otro",
 ];
 
@@ -30,12 +32,12 @@ export default function ProyectoModal({ onConfirm, onCancel }) {
   };
 
   const handleConfirm = () => {
-    if (!form.cliente.trim()) {
-      setError("El nombre del cliente es requerido");
-      return;
-    }
+    const data = {
+      ...form,
+      cliente: form.cliente.trim() || "Sin nombre",
+    };
 
-    onConfirm(form);
+    onConfirm(data);
   };
 
   return (

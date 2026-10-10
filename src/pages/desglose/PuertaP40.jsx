@@ -11,15 +11,29 @@ import {
   calcularTotalesMaterialesPuertaP40,
 } from "../../utils/puertaP40Materials";
 
-const calcular = (ancho, alto) => ({
-  cabMarco: ancho - 1 / 8,
-  latMarco: alto - 1 / 8,
-  cabezal: ancho - (3 + 3 / 4),
-  alfeizar: ancho - (8 + 15 / 16),
-  jambas: alto - 2,
-  vidrioAncho: ancho - (9 + 1 / 4),
-  vidrioAlto: alto - (8 + 1 / 8),
-});
+const calcular = (ancho, alto, hojas) => {
+  if (hojas === 1) {
+    return {
+      cabMarco: ancho - 1 / 8,
+      latMarco: alto - 1 / 8,
+      cabezal: ancho - (3 + 3 / 4),
+      alfeizar: ancho - (8 + 15 / 16),
+      jambas: alto - 2,
+      vidrioAncho: ancho - (9 + 1 / 4),
+      vidrioAlto: alto - (8 + 1 / 8),
+    };
+  } else {
+    return {
+      cabMarco: ancho - 1 / 8,
+      latMarco: alto - 1 / 8,
+      cabezal: ancho / 2 - (1 + 15 / 16),
+      alfeizar: ancho / 2 - (7 + 6 / 16),
+      jambas: alto - 2,
+      vidrioAncho: ancho / 2 - (7 + 5 / 8),
+      vidrioAlto: alto - (8 + 1 / 8),
+    };
+  }
+};
 
 const buildPrintHtml = (proyecto, results) => {
   // ================================================
@@ -51,6 +65,10 @@ const buildPrintHtml = (proyecto, results) => {
 
           <td>
             ${row.hueco || "—"}
+          </td>
+
+          <td>
+            ${row.hojas === 2 ? "2 Hojas" : "1 Hoja"}
           </td>
 
           <td>
@@ -615,8 +633,7 @@ const buildPrintHtml = (proyecto, results) => {
               </span>
 
               <span class="order-value">
-                — <p>
-            ${proyecto?.notas || "—"}
+                ${proyecto?.notas || "—"}
               </span>
 
             </div>
@@ -693,6 +710,10 @@ const buildPrintHtml = (proyecto, results) => {
 
                 <th rowspan="2">
                   Hueco
+                </th>
+
+                <th rowspan="2">
+                  Hojas
                 </th>
 
                 <th rowspan="2">
@@ -797,6 +818,7 @@ export default function NuevoPuertaP40() {
     hueco: "",
     ancho: "",
     alto: "",
+    hojas: 1,
   });
 
   const [results, setResults] = useState([]);
@@ -806,9 +828,11 @@ export default function NuevoPuertaP40() {
   const [savedMsg, setSavedMsg] = useState("");
 
   const handleFormChange = (e) => {
+    const { name, value } = e.target;
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: name === "hojas" ? Number(value) : value,
     });
   };
 
@@ -829,7 +853,7 @@ export default function NuevoPuertaP40() {
       return;
     }
 
-    const calc = calcular(anchoDec, altoDec);
+    const calc = calcular(anchoDec, altoDec, form.hojas);
 
     setResults([
       ...results,
@@ -841,10 +865,12 @@ export default function NuevoPuertaP40() {
         ancho: form.ancho,
         alto: form.alto,
 
+        hojas: form.hojas,
+        hojasNum: form.hojas,
+
         // Valores numéricos para el cálculo de materiales
         anchoDec,
         altoDec,
-        hojasNum: 1,
 
         cabMarco: FractionUtils.toSixteenths(calc.cabMarco),
 
@@ -866,6 +892,7 @@ export default function NuevoPuertaP40() {
       hueco: "",
       ancho: "",
       alto: "",
+      hojas: 1,
     });
   };
 
@@ -877,6 +904,7 @@ export default function NuevoPuertaP40() {
       hueco: "",
       ancho: "",
       alto: "",
+      hojas: 1,
     });
   };
 
@@ -1073,7 +1101,7 @@ export default function NuevoPuertaP40() {
         {/* FORMULARIO */}
         {step === "formulario" && (
           <div className="card-modern mb-4">
-            <div className="form-grid-3">
+            <div className="form-grid-4">
               <div className="auth-field">
                 <label className="auth-label">Hueco #</label>
 
@@ -1110,6 +1138,20 @@ export default function NuevoPuertaP40() {
                   placeholder='ej: 86"'
                   className="auth-input"
                 />
+              </div>
+
+              <div className="auth-field">
+                <label className="auth-label">Hojas</label>
+
+                <select
+                  name="hojas"
+                  value={form.hojas}
+                  onChange={handleFormChange}
+                  className="auth-input"
+                >
+                  <option value={1}>1 Hoja (Simple)</option>
+                  <option value={2}>2 Hojas (Doble)</option>
+                </select>
               </div>
             </div>
 
@@ -1160,12 +1202,14 @@ export default function NuevoPuertaP40() {
                 <table
                   className="table-professional"
                   style={{
-                    minWidth: "820px",
+                    minWidth: "880px",
                   }}
                 >
                   <thead>
                     <tr>
                       <th rowSpan="2">Hueco</th>
+
+                      <th rowSpan="2">Hojas</th>
 
                       <th rowSpan="2">Ancho</th>
 
@@ -1199,6 +1243,8 @@ export default function NuevoPuertaP40() {
                     {results.map((row, idx) => (
                       <tr key={row.id || idx}>
                         <td>{row.hueco}</td>
+
+                        <td>{row.hojas === 2 ? "2 Hojas" : "1 Hoja"}</td>
 
                         <td>{row.ancho}</td>
 
