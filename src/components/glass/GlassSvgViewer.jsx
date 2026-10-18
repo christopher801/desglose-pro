@@ -1,5 +1,5 @@
 import React from "react";
-import { calcularLayoutSvg } from "../../utils/glassSvg";
+import { calcularLayoutSvg } from "../../utils/glass/glassSvg";
 
 function PlanchaSvg({ plancha }) {
   const layout = calcularLayoutSvg(plancha);

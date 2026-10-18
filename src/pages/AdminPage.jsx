@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef
+} from 'react'
 import { useAuth } from '../context/AuthContext'
 
 import {
@@ -18,7 +24,6 @@ import {
 
 import {
   getActividad,
-  getActionLabel,
   logActividad,
   deleteActividad,
   deleteAllActividad
@@ -26,64 +31,26 @@ import {
 
 import Layout from '../components/Layout'
 
+import AdminSidebar from '../components/admin/AdminSidebar'
+import AdminHeader from '../components/admin/AdminHeader'
+import AdminOverview from '../components/admin/AdminOverview'
+import AdminUsers from '../components/admin/AdminUsers'
+import AdminUserDetails from '../components/admin/AdminUserDetails'
+import AdminUsage from '../components/admin/AdminUsage'
+import AdminNotifications from '../components/admin/AdminNotifications'
+import AdminActivity from '../components/admin/AdminActivity'
+
+import '../styles/admin.css'
+
 // =========================================================
 // UTILIDADES
 // =========================================================
 
-const getDaysSince = (createdAt) => {
-  if (!createdAt) return null
+const byFechaDesc = (a, b) => {
+  const ta = new Date(a.fecha).getTime()
+  const tb = new Date(b.fecha).getTime()
 
-  const date = new Date(createdAt)
-
-  if (Number.isNaN(date.getTime())) return null
-
-  return Math.floor(
-    (new Date() - date) / (1000 * 60 * 60 * 24)
-  )
-}
-
-// =========================================================
-// BADGE DÍAS
-// =========================================================
-
-const DaysBadge = ({ days }) => {
-  if (days === null) {
-    return (
-      <span className="badge badge-user">
-        —
-      </span>
-    )
-  }
-
-  let bg
-  let color
-
-  if (days <= 30) {
-    bg = '#dcfce7'
-    color = '#166534'
-  } else if (days <= 60) {
-    bg = '#fef3c7'
-    color = '#92400e'
-  } else {
-    bg = '#fee2e2'
-    color = '#991b1b'
-  }
-
-  return (
-    <span
-      style={{
-        background: bg,
-        color,
-        fontSize: '11px',
-        fontWeight: 600,
-        padding: '2px 8px',
-        borderRadius: '20px',
-        whiteSpace: 'nowrap'
-      }}
-    >
-      {days}d
-    </span>
-  )
+  return (Number.isNaN(tb) ? 0 : tb) - (Number.isNaN(ta) ? 0 : ta)
 }
 
 // =========================================================
@@ -102,90 +69,106 @@ export default function AdminPage() {
   const [actividad, setActividad] = useState([])
 
   const [loading, setLoading] = useState(true)
-  const [message, setMessage] = useState('')
+  const [refreshing, setRefreshing] = useState(false)
+  const [lastUpdated, setLastUpdated] = useState(null)
 
-  const [tab, setTab] = useState('users')
+  const [toast, setToast] = useState(null)
+  const toastTimer = useRef(null)
 
-  // Search users
-  const [searchUsers, setSearchUsers] = useState('')
+  const [section, setSection] = useState('overview')
+  const [userFilter, setUserFilter] = useState('all')
+  const [selectedUserId, setSelectedUserId] = useState(null)
 
-  // Filtros actividad
-  const [filterUser, setFilterUser] = useState('')
-  const [filterAction, setFilterAction] = useState('')
+  // =======================================================
+  // MESSAGE (TOAST)
+  // =======================================================
 
-  // Announcement
-  const [announcementTitle, setAnnouncementTitle] = useState('')
-  const [announcementMessage, setAnnouncementMessage] = useState('')
-  const [sendingAnnouncement, setSendingAnnouncement] = useState(false)
+  const showMessage = useCallback((text, type = 'success') => {
+    setToast({ text, type })
+
+    clearTimeout(toastTimer.current)
+
+    toastTimer.current = setTimeout(() => {
+      setToast(null)
+    }, 3500)
+  }, [])
+
+  useEffect(() => {
+    return () => clearTimeout(toastTimer.current)
+  }, [])
 
   // =======================================================
   // LOAD DATA
   // =======================================================
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  const loadData = async () => {
-    setLoading(true)
+  const loadData = useCallback(async () => {
+    setRefreshing(true)
 
     try {
-      const [
-        usersResult,
-        notifsResult,
-        actividadResult
-      ] = await Promise.all([
-        getAllUsers(),
-        getAdminNotifications(),
-        getActividad(200)
-      ])
+      const [usersResult, notifsResult, actividadResult] =
+        await Promise.all([
+          getAllUsers(),
+          getAdminNotifications(),
+          getActividad(200)
+        ])
+
+      const failed = []
 
       if (usersResult.success) {
         setUsers(usersResult.users || [])
+      } else {
+        console.error('Error cargando usuarios:', usersResult.error)
+        failed.push('usuarios')
       }
 
       if (notifsResult.success) {
         setNotifications(notifsResult.notifications || [])
       } else {
-        console.error(
-          'Error cargando notificaciones:',
-          notifsResult.error
-        )
+        console.error('Error cargando notificaciones:', notifsResult.error)
         setNotifications([])
+        failed.push('notificaciones')
       }
 
       if (actividadResult.success) {
-        setActividad(actividadResult.actividad || [])
+        setActividad(
+          (actividadResult.actividad || []).slice().sort(byFechaDesc)
+        )
+      } else {
+        console.error('Error cargando actividad:', actividadResult.error)
+        failed.push('actividad')
       }
+
+      if (failed.length > 0) {
+        showMessage(`No se pudo cargar: ${failed.join(', ')}`, 'error')
+      }
+
+      setLastUpdated(new Date())
     } catch (error) {
       console.error('Error cargando panel admin:', error)
 
-      showMessage(
-        '❌ Error al cargar los datos'
-      )
+      showMessage('Error al cargar los datos', 'error')
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
-  }
+  }, [showMessage])
 
-  // =======================================================
-  // MESSAGE
-  // =======================================================
-
-  const showMessage = (msg) => {
-    setMessage(msg)
-
-    setTimeout(() => {
-      setMessage('')
-    }, 3000)
-  }
+  useEffect(() => {
+    if (isAdmin) loadData()
+  }, [isAdmin, loadData])
 
   // =======================================================
   // USER ACTIONS
   // =======================================================
 
-  const handleUnlock = async (userId, userName) => {
-    const result = await unlockUser(userId)
+  const runUserAction = async ({
+    action,
+    target,
+    detail,
+    okMsg,
+    errMsg
+  }) => {
+    const result = await action(target.id)
 
     if (result.success) {
       await logActividad({
@@ -193,182 +176,97 @@ export default function AdminPage() {
         nombre: userData?.nombre,
         email: userData?.email,
         action: 'admin_action',
-        detail: `Activó al usuario: ${userName}`
+        detail
       })
 
-      showMessage(
-        '✅ Usuario activado exitosamente'
-      )
+      showMessage(okMsg)
 
       await loadData()
     } else {
-      showMessage(
-        '❌ Error al activar usuario'
-      )
+      showMessage(errMsg, 'error')
     }
   }
 
-  const handleLock = async (userId, userName) => {
-    const result = await lockUser(userId)
+  const displayName = (target) => target.nombre || target.email
 
-    if (result.success) {
-      await logActividad({
-        uid: user?.uid,
-        nombre: userData?.nombre,
-        email: userData?.email,
-        action: 'admin_action',
-        detail: `Bloqueó al usuario: ${userName}`
-      })
+  const handleUnlock = (target) =>
+    runUserAction({
+      action: unlockUser,
+      target,
+      detail: `Activó al usuario: ${displayName(target)}`,
+      okMsg: 'Usuario activado exitosamente',
+      errMsg: 'Error al activar usuario'
+    })
 
-      showMessage(
-        '🔒 Usuario bloqueado'
-      )
+  const handleLock = (target) =>
+    runUserAction({
+      action: lockUser,
+      target,
+      detail: `Bloqueó al usuario: ${displayName(target)}`,
+      okMsg: 'Usuario bloqueado',
+      errMsg: 'Error al bloquear usuario'
+    })
 
-      await loadData()
-    } else {
-      showMessage(
-        '❌ Error al bloquear usuario'
-      )
-    }
-  }
+  const handleGrantFullAccess = (target) =>
+    runUserAction({
+      action: grantFullAccess,
+      target,
+      detail: `Full Access otorgado a: ${displayName(target)}`,
+      okMsg: 'Full Access otorgado',
+      errMsg: 'Error al otorgar Full Access'
+    })
 
-  const handleGrantFullAccess = async (
-    userId,
-    userName
-  ) => {
-    const result = await grantFullAccess(userId)
-
-    if (result.success) {
-      await logActividad({
-        uid: user?.uid,
-        nombre: userData?.nombre,
-        email: userData?.email,
-        action: 'admin_action',
-        detail: `Full Access otorgado a: ${userName}`
-      })
-
-      showMessage(
-        '⭐ Full Access otorgado'
-      )
-
-      await loadData()
-    } else {
-      showMessage(
-        '❌ Error al otorgar Full Access'
-      )
-    }
-  }
-
-  const handleRevokeFullAccess = async (
-    userId,
-    userName
-  ) => {
-    const result = await revokeFullAccess(userId)
-
-    if (result.success) {
-      await logActividad({
-        uid: user?.uid,
-        nombre: userData?.nombre,
-        email: userData?.email,
-        action: 'admin_action',
-        detail: `Full Access revocado a: ${userName}`
-      })
-
-      showMessage(
-        '🔒 Full Access revocado'
-      )
-
-      await loadData()
-    } else {
-      showMessage(
-        '❌ Error al revocar Full Access'
-      )
-    }
-  }
+  const handleRevokeFullAccess = (target) =>
+    runUserAction({
+      action: revokeFullAccess,
+      target,
+      detail: `Full Access revocado a: ${displayName(target)}`,
+      okMsg: 'Full Access revocado',
+      errMsg: 'Error al revocar Full Access'
+    })
 
   // =======================================================
   // NOTIFICATIONS
   // =======================================================
 
   const handleMarkRead = async (notifId) => {
-    const result =
-      await markAdminNotificationAsRead(
-        notifId
-      )
+    const result = await markAdminNotificationAsRead(notifId)
 
     if (result.success) {
       setNotifications((prev) =>
         prev.map((notification) =>
           notification.id === notifId
-            ? {
-                ...notification,
-                read: true
-              }
+            ? { ...notification, read: true }
             : notification
         )
       )
 
-      showMessage(
-        '✅ Notificación marcada como leída'
-      )
+      showMessage('Notificación marcada como leída')
     } else {
-      showMessage(
-        '❌ Error al marcar la notificación'
-      )
+      showMessage('Error al marcar la notificación', 'error')
     }
   }
 
   const handleDeleteNotif = async (notifId) => {
-    const result =
-      await deleteNotification(notifId)
+    const result = await deleteNotification(notifId)
 
     if (result.success) {
       setNotifications((prev) =>
-        prev.filter(
-          (notification) =>
-            notification.id !== notifId
-        )
+        prev.filter((notification) => notification.id !== notifId)
       )
 
-      showMessage(
-        '✅ Notificación eliminada'
-      )
+      showMessage('Notificación eliminada')
     } else {
-      showMessage(
-        '❌ Error al eliminar notificación'
-      )
+      showMessage('Error al eliminar notificación', 'error')
     }
   }
 
   // =======================================================
   // ANNOUNCEMENT
+  // Devuelve true si se envió bien (el formulario se limpia).
   // =======================================================
 
-  const handleSendAnnouncement = async (event) => {
-    event.preventDefault()
-
-    if (sendingAnnouncement) return
-
-    const title = announcementTitle.trim()
-    const messageText =
-      announcementMessage.trim()
-
-    if (!title) {
-      showMessage(
-        '❌ Escribe un título para el anuncio'
-      )
-      return
-    }
-
-    if (!messageText) {
-      showMessage(
-        '❌ Escribe el mensaje del anuncio'
-      )
-      return
-    }
-
-    setSendingAnnouncement(true)
-
+  const handleSendAnnouncement = async ({ title, message: messageText }) => {
     try {
       const result = await createAnnouncement({
         title,
@@ -386,30 +284,20 @@ export default function AdminPage() {
           detail: `Envió un anuncio a todos los usuarios: ${title}`
         })
 
-        setAnnouncementTitle('')
-        setAnnouncementMessage('')
+        showMessage('Anuncio enviado a todos los usuarios')
 
-        showMessage(
-          '✅ Anuncio enviado a todos los usuarios'
-        )
-
-        setTab('notifs')
-      } else {
-        showMessage(
-          `❌ ${result.error || 'Error al enviar el anuncio'}`
-        )
+        return true
       }
-    } catch (error) {
-      console.error(
-        'Error enviando anuncio:',
-        error
-      )
 
-      showMessage(
-        '❌ Error al enviar el anuncio'
-      )
-    } finally {
-      setSendingAnnouncement(false)
+      showMessage(result.error || 'Error al enviar el anuncio', 'error')
+
+      return false
+    } catch (error) {
+      console.error('Error enviando anuncio:', error)
+
+      showMessage('Error al enviar el anuncio', 'error')
+
+      return false
     }
   }
 
@@ -418,23 +306,14 @@ export default function AdminPage() {
   // =======================================================
 
   const handleDeleteActividad = async (id) => {
-    const result =
-      await deleteActividad(id)
+    const result = await deleteActividad(id)
 
     if (result.success) {
-      setActividad((prev) =>
-        prev.filter(
-          (item) => item.id !== id
-        )
-      )
+      setActividad((prev) => prev.filter((item) => item.id !== id))
 
-      showMessage(
-        '✅ Registro eliminado'
-      )
+      showMessage('Registro eliminado')
     } else {
-      showMessage(
-        '❌ Error al eliminar registro'
-      )
+      showMessage('Error al eliminar registro', 'error')
     }
   }
 
@@ -447,21 +326,65 @@ export default function AdminPage() {
       return
     }
 
-    const result =
-      await deleteAllActividad()
+    const result = await deleteAllActividad()
 
     if (result.success) {
       setActividad([])
 
-      showMessage(
-        '✅ Actividad eliminada'
-      )
+      showMessage('Actividad eliminada')
     } else {
-      showMessage(
-        '❌ Error al eliminar actividad'
-      )
+      showMessage('Error al eliminar actividad', 'error')
     }
   }
+
+  // =======================================================
+  // NAVIGATION
+  // =======================================================
+
+  const goTo = (id, usersFilter) => {
+    if (usersFilter) setUserFilter(usersFilter)
+
+    setSelectedUserId(null)
+    setSection(id)
+  }
+
+  const closeDetails = useCallback(() => setSelectedUserId(null), [])
+
+  // =======================================================
+  // STATS
+  // =======================================================
+
+  const stats = useMemo(() => {
+    const today = new Date().toDateString()
+
+    const yesterdayDate = new Date()
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+    const yesterday = yesterdayDate.toDateString()
+
+    let actionsToday = 0
+    let actionsYesterday = 0
+
+    actividad.forEach((a) => {
+      const day = new Date(a.fecha).toDateString()
+
+      if (day === today) actionsToday += 1
+      else if (day === yesterday) actionsYesterday += 1
+    })
+
+    return {
+      totalUsers: users.length,
+      activeUsers: users.filter((u) => u.isActive).length,
+      pendingUsers: users.filter((u) => !u.isActive && u.role !== 'admin')
+        .length,
+      fullAccessCount: users.filter((u) => u.fullAccess).length,
+      unreadNotifs: notifications.filter((n) => !n.read).length,
+      totalNotifs: notifications.length,
+      actionsToday,
+      actionsYesterday
+    }
+  }, [users, notifications, actividad])
+
+  const selectedUser = users.find((u) => u.id === selectedUserId) || null
 
   // =======================================================
   // ACCESS DENIED
@@ -470,1535 +393,131 @@ export default function AdminPage() {
   if (!isAdmin) {
     return (
       <Layout>
-        <div className="page-content">
-          <div className="card-modern text-center p-5">
-            <i
-              className="bi bi-shield-exclamation"
-              style={{ fontSize: '3rem' }}
-            ></i>
+        <div className="adm-denied">
+          <i className="bi bi-shield-exclamation" aria-hidden="true"></i>
 
-            <h4 style={{ marginTop: '1rem' }}>
-              Acceso denegado
-            </h4>
+          <h1>Acceso denegado</h1>
 
-            <p className="text-muted">
-              No tienes permisos de administrador
-            </p>
-          </div>
+          <p>No tienes permisos de administrador.</p>
         </div>
       </Layout>
     )
   }
 
   // =======================================================
-  // STATS
-  // =======================================================
-
-  const totalUsers =
-    users.length
-
-  const activeUsers =
-    users.filter(
-      (u) => u.isActive
-    ).length
-
-  const pendingUsers =
-    users.filter(
-      (u) =>
-        !u.isActive &&
-        u.role !== 'admin'
-    ).length
-
-  const unreadNotifs =
-    notifications.filter(
-      (n) => !n.read
-    ).length
-
-  // =======================================================
-  // USER SEARCH
-  // =======================================================
-
-  const filteredUsers =
-    users.filter((u) => {
-      if (!searchUsers) return true
-
-      const q =
-        searchUsers.toLowerCase()
-
-      return (
-        (u.nombre || '')
-          .toLowerCase()
-          .includes(q) ||
-        (u.email || '')
-          .toLowerCase()
-          .includes(q)
-      )
-    })
-
-  // =======================================================
-  // ACTIVIDAD FILTER
-  // =======================================================
-
-  const actividadFiltrada =
-    actividad.filter((a) => {
-      const matchUser =
-        filterUser === '' ||
-        a.uid === filterUser
-
-      const matchAction =
-        filterAction === '' ||
-        a.action === filterAction
-
-      return (
-        matchUser &&
-        matchAction
-      )
-    })
-
-  // =======================================================
-  // TOP USERS
-  // =======================================================
-
-  const loginCounts =
-    actividad
-      .filter(
-        (a) => a.action === 'login'
-      )
-      .reduce((acc, a) => {
-        acc[a.uid] = {
-          count:
-            (acc[a.uid]?.count || 0) +
-            1,
-          nombre: a.nombre,
-          email: a.email
-        }
-
-        return acc
-      }, {})
-
-  const topUsers =
-    Object.entries(loginCounts)
-      .sort(
-        (a, b) =>
-          b[1].count -
-          a[1].count
-      )
-      .slice(0, 5)
-
-  // =======================================================
   // RENDER
   // =======================================================
 
   return (
-    <Layout unreadCount={unreadNotifs}>
-      <div className="page-content">
-
-        {/* =================================================
-            HEADER
-        ================================================= */}
-
-        <div className="admin-header">
-          <h1 className="page-title">
-            <i
-              className="bi bi-shield-lock"
-              style={{
-                marginRight: '8px'
-              }}
-            ></i>
-
-            Panel de administración
-          </h1>
-
-          <button
-            className="btn-secondary-sm"
-            onClick={loadData}
-            disabled={loading}
-          >
-            <i
-              className="bi bi-arrow-clockwise"
-              style={{
-                marginRight: '6px'
-              }}
-            ></i>
-
-            Actualizar
-          </button>
-        </div>
-
-        {/* =================================================
-            PENDING USERS
-        ================================================= */}
-
-        {pendingUsers > 0 && (
-          <div className="notif-strip">
-            <i
-              className="bi bi-bell"
-              style={{
-                marginRight: '6px'
-              }}
-            ></i>
-
-            <strong>
-              {pendingUsers}
-            </strong>{' '}
-
-            usuario
-            {pendingUsers > 1
-              ? 's'
-              : ''}{' '}
-
-            esperando activación
-          </div>
-        )}
-
-        {/* =================================================
-            MESSAGE
-        ================================================= */}
-
-        {message && (
-          <div className="alert-info">
-            {message}
-          </div>
-        )}
-
-        {/* =================================================
-            STATS
-        ================================================= */}
-
-        <div className="dashboard-stats mb-4">
-
-          <div className="stat-card">
-            <div className="stat-card-title">
-              <i
-                className="bi bi-people"
-                style={{
-                  marginRight: '4px'
-                }}
-              ></i>
-              Total usuarios
-            </div>
-
-            <div className="stat-card-value">
-              {totalUsers}
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-card-title">
-              <i
-                className="bi bi-check-circle"
-                style={{
-                  marginRight: '4px'
-                }}
-              ></i>
-              Activos
-            </div>
-
-            <div
-              className="stat-card-value"
-              style={{
-                color: 'var(--success)'
-              }}
-            >
-              {activeUsers}
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-card-title">
-              <i
-                className="bi bi-clock-history"
-                style={{
-                  marginRight: '4px'
-                }}
-              ></i>
-              Pendientes
-            </div>
-
-            <div
-              className="stat-card-value"
-              style={{
-                color: 'var(--warning)'
-              }}
-            >
-              {pendingUsers}
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-card-title">
-              <i
-                className="bi bi-bell"
-                style={{
-                  marginRight: '4px'
-                }}
-              ></i>
-              Notificaciones
-            </div>
-
-            <div
-              className="stat-card-value"
-              style={{
-                color: 'var(--primary)'
-              }}
-            >
-              {unreadNotifs}
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-card-title">
-              <i
-                className="bi bi-activity"
-                style={{
-                  marginRight: '4px'
-                }}
-              ></i>
-              Acciones hoy
-            </div>
-
-            <div className="stat-card-value">
-              {
-                actividad.filter(
-                  (a) =>
-                    new Date(
-                      a.fecha
-                    ).toDateString() ===
-                    new Date().toDateString()
-                ).length
-              }
-            </div>
-          </div>
-
-        </div>
-
-        {/* =================================================
-            TABS
-        ================================================= */}
-
-        <div className="admin-tabs">
-
-          <button
-            className={`admin-tab ${
-              tab === 'users'
-                ? 'admin-tab-active'
-                : ''
-            }`}
-            onClick={() =>
-              setTab('users')
-            }
-          >
-            <i
-              className="bi bi-people"
-              style={{
-                marginRight: '6px'
-              }}
-            ></i>
-
-            Usuarios ({totalUsers})
-          </button>
-
-          <button
-            className={`admin-tab ${
-              tab === 'notifs'
-                ? 'admin-tab-active'
-                : ''
-            }`}
-            onClick={() =>
-              setTab('notifs')
-            }
-          >
-            <i
-              className="bi bi-bell"
-              style={{
-                marginRight: '6px'
-              }}
-            ></i>
-
-            Notificaciones{' '}
-
-            {unreadNotifs > 0 &&
-              `(${unreadNotifs})`}
-          </button>
-
-          <button
-            className={`admin-tab ${
-              tab === 'actividad'
-                ? 'admin-tab-active'
-                : ''
-            }`}
-            onClick={() =>
-              setTab('actividad')
-            }
-          >
-            <i
-              className="bi bi-bar-chart-line"
-              style={{
-                marginRight: '6px'
-              }}
-            ></i>
-
-            Actividad
-          </button>
-
-        </div>
-
-        {/* =================================================
-            LOADING
-        ================================================= */}
-
-        {loading ? (
-          <div className="loading-state">
-            Cargando...
-          </div>
-        ) : (
-          <>
-
-            {/* =================================================
-                TAB USUARIOS
-            ================================================= */}
-
-            {tab === 'users' && (
-              <div className="card-modern">
-
-                {/* SEARCH */}
-
-                <div
-                  style={{
-                    marginBottom: '1rem'
-                  }}
-                >
-                  <div
-                    style={{
-                      position: 'relative'
-                    }}
-                  >
-                    <i
-                      className="bi bi-search"
-                      style={{
-                        position:
-                          'absolute',
-                        left: '10px',
-                        top: '50%',
-                        transform:
-                          'translateY(-50%)',
-                        color:
-                          'var(--gray-400)',
-                        fontSize: '14px'
-                      }}
-                    ></i>
-
-                    <input
-                      type="text"
-                      className="auth-input"
-                      placeholder="Buscar por nombre o email..."
-                      value={searchUsers}
-                      onChange={(e) =>
-                        setSearchUsers(
-                          e.target.value
-                        )
-                      }
-                      style={{
-                        paddingLeft:
-                          '32px'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="table-responsive">
-
-                  <table className="admin-table">
-
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Acceso</th>
-                        <th>Días</th>
-                        <th>Registro</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-
-                      {filteredUsers.length === 0 ? (
-                        <tr>
-                          <td
-                            colSpan="9"
-                            style={{
-                              textAlign:
-                                'center',
-                              padding:
-                                '1.5rem',
-                              color:
-                                'var(--gray-400)'
-                            }}
-                          >
-                            No se encontraron usuarios
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredUsers.map(
-                          (u, idx) => {
-                            const days =
-                              getDaysSince(
-                                u.createdAt
-                              )
-
-                            return (
-                              <tr
-                                key={u.id}
-                                className={
-                                  !u.isActive &&
-                                  u.role !==
-                                    'admin'
-                                    ? 'row-pending'
-                                    : ''
-                                }
-                              >
-
-                                <td>
-                                  {idx + 1}
-                                </td>
-
-                                <td>
-                                  {u.nombre ||
-                                    '—'}
-                                </td>
-
-                                <td className="td-email">
-                                  {u.email}
-                                </td>
-
-                                <td>
-                                  <span
-                                    className={`badge ${
-                                      u.role ===
-                                      'admin'
-                                        ? 'badge-admin'
-                                        : 'badge-user'
-                                    }`}
-                                  >
-                                    {u.role ===
-                                    'admin'
-                                      ? 'Admin'
-                                      : 'Usuario'}
-                                  </span>
-                                </td>
-
-                                <td>
-                                  <span
-                                    className={`badge ${
-                                      u.isActive
-                                        ? 'badge-active'
-                                        : 'badge-inactive'
-                                    }`}
-                                  >
-                                    {u.isActive
-                                      ? 'Activo'
-                                      : 'Pendiente'}
-                                  </span>
-                                </td>
-
-                                <td>
-                                  {u.role !==
-                                    'admin' && (
-                                    u.fullAccess ? (
-                                      <span className="badge badge-admin">
-                                        <i
-                                          className="bi bi-star-fill"
-                                          style={{
-                                            marginRight:
-                                              '4px'
-                                          }}
-                                        ></i>
-
-                                        Full Access
-                                      </span>
-                                    ) : (
-                                      <span className="badge badge-user">
-                                        Normal
-                                      </span>
-                                    )
-                                  )}
-                                </td>
-
-                                <td>
-                                  {u.role !==
-                                    'admin' && (
-                                    <DaysBadge
-                                      days={days}
-                                    />
-                                  )}
-                                </td>
-
-                                <td className="td-date">
-                                  {u.createdAt
-                                    ? new Date(
-                                        u.createdAt
-                                      ).toLocaleDateString(
-                                        'es-DO'
-                                      )
-                                    : '—'}
-                                </td>
-
-                                <td>
-                                  {u.role !==
-                                    'admin' && (
-                                    <div
-                                      style={{
-                                        display:
-                                          'flex',
-                                        gap:
-                                          '4px',
-                                        flexWrap:
-                                          'wrap'
-                                      }}
-                                    >
-
-                                      {!u.isActive ? (
-                                        <button
-                                          className="btn-success-sm"
-                                          onClick={() =>
-                                            handleUnlock(
-                                              u.id,
-                                              u.nombre
-                                            )
-                                          }
-                                        >
-                                          <i
-                                            className="bi bi-unlock"
-                                            style={{
-                                              marginRight:
-                                                '4px'
-                                            }}
-                                          ></i>
-
-                                          Activar
-                                        </button>
-                                      ) : (
-                                        <button
-                                          className="btn-warning-sm"
-                                          onClick={() =>
-                                            handleLock(
-                                              u.id,
-                                              u.nombre
-                                            )
-                                          }
-                                        >
-                                          <i
-                                            className="bi bi-lock"
-                                            style={{
-                                              marginRight:
-                                                '4px'
-                                            }}
-                                          ></i>
-
-                                          Bloquear
-                                        </button>
-                                      )}
-
-                                      {u.fullAccess ? (
-                                        <button
-                                          className="btn-danger-sm"
-                                          onClick={() =>
-                                            handleRevokeFullAccess(
-                                              u.id,
-                                              u.nombre
-                                            )
-                                          }
-                                        >
-                                          <i
-                                            className="bi bi-star"
-                                            style={{
-                                              marginRight:
-                                                '4px'
-                                            }}
-                                          ></i>
-
-                                          Revocar
-                                        </button>
-                                      ) : (
-                                        <button
-                                          className="btn-ghost-sm"
-                                          onClick={() =>
-                                            handleGrantFullAccess(
-                                              u.id,
-                                              u.nombre
-                                            )
-                                          }
-                                        >
-                                          <i
-                                            className="bi bi-star-fill"
-                                            style={{
-                                              marginRight:
-                                                '4px'
-                                            }}
-                                          ></i>
-
-                                          Full Access
-                                        </button>
-                                      )}
-
-                                    </div>
-                                  )}
-                                </td>
-
-                              </tr>
-                            )
-                          }
-                        )
-                      )}
-
-                    </tbody>
-
-                  </table>
-
-                </div>
-
-                <div className="table-footer">
-                  {searchUsers
-                    ? `${filteredUsers.length} de ${totalUsers} usuarios`
-                    : `Total: ${totalUsers} usuarios`}
-                </div>
-
+      <div className="adm">
+        <AdminSidebar
+          section={section}
+          onChange={goTo}
+          adminName={userData?.nombre}
+          adminEmail={userData?.email || user?.email}
+          badges={{
+            users: { count: stats.pendingUsers, tone: 'warning' },
+            notifications: { count: stats.unreadNotifs, tone: 'primary' }
+          }}
+        />
+
+        <div className="adm-main">
+          <AdminHeader
+            section={section}
+            onRefresh={loadData}
+            refreshing={refreshing}
+            lastUpdated={lastUpdated}
+            unreadCount={stats.unreadNotifs}
+            onOpenNotifications={() => goTo('notifications')}
+          />
+
+          <main className="adm-content">
+            {loading ? (
+              <div className="adm-loading" role="status">
+                <span className="adm-spinner"></span>
+                Cargando datos
               </div>
-            )}
-
-            {/* =================================================
-                TAB NOTIFICACIONES
-            ================================================= */}
-
-            {tab === 'notifs' && (
-              <div>
-
-                {/* =================================================
-                    SEND ANNOUNCEMENT
-                ================================================= */}
-
-                <div
-                  className="card-modern mb-4"
-                  style={{
-                    border:
-                      '1px solid var(--gray-200)'
-                  }}
-                >
-
-                  <div
-                    style={{
-                      display:
-                        'flex',
-                      alignItems:
-                        'center',
-                      gap: '10px',
-                      marginBottom:
-                        '1rem'
-                    }}
-                  >
-                    <div
-                      style={{
-                        width:
-                          '40px',
-                        height:
-                          '40px',
-                        borderRadius:
-                          '10px',
-                        display:
-                          'flex',
-                        alignItems:
-                          'center',
-                        justifyContent:
-                          'center',
-                        background:
-                          '#eff6ff',
-                        color:
-                          'var(--primary)'
-                      }}
-                    >
-                      <i className="bi bi-megaphone"></i>
-                    </div>
-
-                    <div>
-                      <h5
-                        style={{
-                          margin:
-                            0,
-                          fontSize:
-                            '15px',
-                          fontWeight:
-                            700
-                        }}
-                      >
-                        Enviar anuncio
-                      </h5>
-
-                      <p
-                        style={{
-                          margin:
-                            '3px 0 0',
-                          fontSize:
-                            '12px',
-                          color:
-                            'var(--gray-500)'
-                        }}
-                      >
-                        Envía una notificación a todos los usuarios.
-                      </p>
-                    </div>
-                  </div>
-
-                  <form
-                    onSubmit={
-                      handleSendAnnouncement
-                    }
-                  >
-
-                    <div
-                      style={{
-                        marginBottom:
-                          '12px'
-                      }}
-                    >
-                      <label
-                        style={{
-                          display:
-                            'block',
-                          fontSize:
-                            '12px',
-                          fontWeight:
-                            600,
-                          marginBottom:
-                            '6px'
-                        }}
-                      >
-                        Título
-                      </label>
-
-                      <input
-                        type="text"
-                        className="auth-input"
-                        placeholder="Ej. Nueva actualización disponible"
-                        value={
-                          announcementTitle
-                        }
-                        onChange={(e) =>
-                          setAnnouncementTitle(
-                            e.target.value
-                          )
-                        }
-                        maxLength={120}
-                        disabled={
-                          sendingAnnouncement
-                        }
-                      />
-                    </div>
-
-                    <div
-                      style={{
-                        marginBottom:
-                          '12px'
-                      }}
-                    >
-                      <label
-                        style={{
-                          display:
-                            'block',
-                          fontSize:
-                            '12px',
-                          fontWeight:
-                            600,
-                          marginBottom:
-                            '6px'
-                        }}
-                      >
-                        Mensaje
-                      </label>
-
-                      <textarea
-                        className="auth-input"
-                        placeholder="Escribe el mensaje que recibirán los usuarios..."
-                        value={
-                          announcementMessage
-                        }
-                        onChange={(e) =>
-                          setAnnouncementMessage(
-                            e.target.value
-                          )
-                        }
-                        maxLength={1000}
-                        rows={4}
-                        disabled={
-                          sendingAnnouncement
-                        }
-                        style={{
-                          resize:
-                            'vertical',
-                          minHeight:
-                            '100px'
-                        }}
-                      />
-                    </div>
-
-                    <div
-                      style={{
-                        display:
-                          'flex',
-                        justifyContent:
-                          'flex-end'
-                      }}
-                    >
-                      <button
-                        type="submit"
-                        className="btn-primary-sm"
-                        disabled={
-                          sendingAnnouncement ||
-                          !announcementTitle.trim() ||
-                          !announcementMessage.trim()
-                        }
-                      >
-                        {sendingAnnouncement ? (
-                          <>
-                            <span
-                              className="spinner-border spinner-border-sm"
-                              style={{
-                                marginRight:
-                                  '6px'
-                              }}
-                              role="status"
-                              aria-hidden="true"
-                            ></span>
-
-                            Enviando...
-                          </>
-                        ) : (
-                          <>
-                            <i
-                              className="bi bi-send"
-                              style={{
-                                marginRight:
-                                  '6px'
-                              }}
-                            ></i>
-
-                            Enviar a todos
-                          </>
-                        )}
-                      </button>
-                    </div>
-
-                  </form>
-                </div>
-
-                {/* =================================================
-                    NOTIFICATION LIST
-                ================================================= */}
-
-                <div className="card-modern">
-
-                  <div
-                    style={{
-                      display:
-                        'flex',
-                      alignItems:
-                        'center',
-                      justifyContent:
-                        'space-between',
-                      gap: '10px',
-                      marginBottom:
-                        '1rem'
-                    }}
-                  >
-                    <div>
-                      <h5
-                        style={{
-                          margin:
-                            0,
-                          fontSize:
-                            '15px',
-                          fontWeight:
-                            700
-                        }}
-                      >
-                        Notificaciones
-                      </h5>
-
-                      <p
-                        style={{
-                          margin:
-                            '3px 0 0',
-                          fontSize:
-                            '12px',
-                          color:
-                            'var(--gray-500)'
-                        }}
-                      >
-                        Notificaciones de nuevos usuarios.
-                      </p>
-                    </div>
-
-                    {unreadNotifs > 0 && (
-                      <span className="badge badge-active">
-                        {unreadNotifs} sin leer
-                      </span>
-                    )}
-                  </div>
-
-                  {notifications.length === 0 ? (
-                    <p className="empty-state">
-                      No hay notificaciones
-                    </p>
-                  ) : (
-                    <div className="notif-list">
-
-                      {notifications.map(
-                        (n) => (
-                          <div
-                            key={n.id}
-                            className={`notif-item ${
-                              !n.read
-                                ? 'notif-unread'
-                                : ''
-                            }`}
-                          >
-
-                            <div className="notif-item-body">
-
-                              <div className="notif-item-title">
-                                {n.title}
-                              </div>
-
-                              <div className="notif-item-msg">
-                                {n.message}
-                              </div>
-
-                              <div className="notif-item-date">
-                                {n.createdAt
-                                  ? new Date(
-                                      n.createdAt
-                                    ).toLocaleString(
-                                      'es-DO'
-                                    )
-                                  : n.timestamp
-                                    ? new Date(
-                                        n.timestamp
-                                      ).toLocaleString(
-                                        'es-DO'
-                                      )
-                                    : '—'}
-                              </div>
-
-                            </div>
-
-                            <div className="notif-item-actions">
-
-                              {!n.read && (
-                                <button
-                                  className="btn-ghost-sm"
-                                  onClick={() =>
-                                    handleMarkRead(
-                                      n.id
-                                    )
-                                  }
-                                >
-                                  <i
-                                    className="bi bi-check-circle"
-                                    style={{
-                                      marginRight:
-                                        '4px'
-                                    }}
-                                  ></i>
-
-                                  Marcar leída
-                                </button>
-                              )}
-
-                              <button
-                                className="btn-danger-sm"
-                                onClick={() =>
-                                  handleDeleteNotif(
-                                    n.id
-                                  )
-                                }
-                              >
-                                <i
-                                  className="bi bi-trash"
-                                  style={{
-                                    marginRight:
-                                      '4px'
-                                  }}
-                                ></i>
-
-                                Eliminar
-                              </button>
-
-                            </div>
-
-                          </div>
-                        )
-                      )}
-
-                    </div>
-                  )}
-
-                </div>
-
-              </div>
-            )}
-
-            {/* =================================================
-                TAB ACTIVIDAD
-            ================================================= */}
-
-            {tab === 'actividad' && (
-              <div>
-
-                {/* =================================================
-                    TOP USERS
-                ================================================= */}
-
-                {topUsers.length > 0 && (
-                  <div className="card-modern mb-4">
-
-                    <h3 className="info-card-title">
-                      <i
-                        className="bi bi-trophy"
-                        style={{
-                          marginRight:
-                            '6px',
-                          color:
-                            'var(--warning)'
-                        }}
-                      ></i>
-
-                      Usuarios más activos
-                    </h3>
-
-                    {topUsers.map(
-                      ([uid, data], idx) => (
-                        <div
-                          key={uid}
-                          className="info-row"
-                        >
-
-                          <div
-                            style={{
-                              display:
-                                'flex',
-                              alignItems:
-                                'center',
-                              gap: '8px'
-                            }}
-                          >
-
-                            <span
-                              style={{
-                                width:
-                                  '22px',
-                                height:
-                                  '22px',
-                                borderRadius:
-                                  '50%',
-                                background:
-                                  idx === 0
-                                    ? '#fbbf24'
-                                    : idx === 1
-                                      ? '#94a3b8'
-                                      : idx === 2
-                                        ? '#b45309'
-                                        : 'var(--gray-200)',
-                                display:
-                                  'flex',
-                                alignItems:
-                                  'center',
-                                justifyContent:
-                                  'center',
-                                fontSize:
-                                  '11px',
-                                fontWeight:
-                                  700,
-                                color:
-                                  'white',
-                                flexShrink:
-                                  0
-                              }}
-                            >
-                              {idx + 1}
-                            </span>
-
-                            <div>
-
-                              <div
-                                style={{
-                                  fontSize:
-                                    '13px',
-                                  fontWeight:
-                                    600
-                                }}
-                              >
-                                {data.nombre ||
-                                  '—'}
-                              </div>
-
-                              <div
-                                style={{
-                                  fontSize:
-                                    '11px',
-                                  color:
-                                    'var(--gray-500)'
-                                }}
-                              >
-                                {data.email}
-                              </div>
-
-                            </div>
-
-                          </div>
-
-                          <span className="badge badge-active">
-                            {data.count}{' '}
-                            logins
-                          </span>
-
-                        </div>
-                      )
-                    )}
-
-                  </div>
+            ) : (
+              <>
+                {section === 'overview' && (
+                  <AdminOverview
+                    stats={stats}
+                    users={users}
+                    actividad={actividad}
+                    onActivate={handleUnlock}
+                    onNavigate={goTo}
+                  />
                 )}
 
-                {/* =================================================
-                    FILTERS
-                ================================================= */}
+                {section === 'users' && (
+                  <AdminUsers
+                    users={users}
+                    filter={userFilter}
+                    onFilterChange={setUserFilter}
+                    selectedId={selectedUserId}
+                    onSelectUser={setSelectedUserId}
+                    onUnlock={handleUnlock}
+                    onLock={handleLock}
+                    onGrantFullAccess={handleGrantFullAccess}
+                    onRevokeFullAccess={handleRevokeFullAccess}
+                  />
+                )}
 
-                <div className="card-modern mb-4">
+                {section === 'usage' && <AdminUsage actividad={actividad} />}
 
-                  <div
-                    style={{
-                      display:
-                        'flex',
-                      gap: '12px',
-                      flexWrap:
-                        'wrap',
-                      alignItems:
-                        'center'
-                    }}
-                  >
+                {section === 'notifications' && (
+                  <AdminNotifications
+                    notifications={notifications}
+                    unreadCount={stats.unreadNotifs}
+                    onMarkRead={handleMarkRead}
+                    onDelete={handleDeleteNotif}
+                    onSendAnnouncement={handleSendAnnouncement}
+                  />
+                )}
 
-                    <select
-                      className="auth-input"
-                      style={{
-                        width:
-                          'auto',
-                        minWidth:
-                          '160px'
-                      }}
-                      value={
-                        filterUser
-                      }
-                      onChange={(e) =>
-                        setFilterUser(
-                          e.target.value
-                        )
-                      }
-                    >
-                      <option value="">
-                        Todos los usuarios
-                      </option>
-
-                      {users.map(
-                        (u) => (
-                          <option
-                            key={u.id}
-                            value={u.id}
-                          >
-                            {u.nombre ||
-                              u.email}
-                          </option>
-                        )
-                      )}
-                    </select>
-
-                    <select
-                      className="auth-input"
-                      style={{
-                        width:
-                          'auto',
-                        minWidth:
-                          '160px'
-                      }}
-                      value={
-                        filterAction
-                      }
-                      onChange={(e) =>
-                        setFilterAction(
-                          e.target.value
-                        )
-                      }
-                    >
-                      <option value="">
-                        Todas las acciones
-                      </option>
-
-                      <option value="login">
-                        Login
-                      </option>
-
-                      <option value="logout">
-                        Logout
-                      </option>
-
-                      <option value="desglose">
-                        Desglose
-                      </option>
-
-                      <option value="admin_action">
-                        Acción admin
-                      </option>
-                    </select>
-
-                    {(filterUser ||
-                      filterAction) && (
-                      <button
-                        className="btn-ghost-sm"
-                        onClick={() => {
-                          setFilterUser('')
-                          setFilterAction('')
-                        }}
-                      >
-                        <i
-                          className="bi bi-x-circle"
-                          style={{
-                            marginRight:
-                              '4px'
-                          }}
-                        ></i>
-
-                        Limpiar
-                      </button>
-                    )}
-
-                    <span
-                      style={{
-                        fontSize:
-                          '12px',
-                        color:
-                          'var(--gray-500)'
-                      }}
-                    >
-                      {
-                        actividadFiltrada.length
-                      }{' '}
-                      registros
-                    </span>
-
-                    <button
-                      className="btn-danger-sm"
-                      style={{
-                        marginLeft:
-                          'auto'
-                      }}
-                      onClick={
-                        handleDeleteAllActividad
-                      }
-                    >
-                      <i
-                        className="bi bi-trash"
-                        style={{
-                          marginRight:
-                            '4px'
-                        }}
-                      ></i>
-
-                      Borrar todo
-                    </button>
-
-                  </div>
-
-                </div>
-
-                {/* =================================================
-                    ACTIVITY LIST
-                ================================================= */}
-
-                <div
-                  className="card-modern"
-                  style={{
-                    padding: 0,
-                    overflow:
-                      'hidden'
-                  }}
-                >
-
-                  {actividadFiltrada.length === 0 ? (
-                    <p className="empty-state">
-                      No hay actividad registrada
-                    </p>
-                  ) : (
-                    <div className="table-responsive">
-
-                      <table className="admin-table">
-
-                        <thead>
-                          <tr>
-                            <th>Usuario</th>
-                            <th>Acción</th>
-                            <th>Detalle</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-
-                          {actividadFiltrada.map(
-                            (a) => {
-                              const {
-                                label,
-                                icon,
-                                color
-                              } =
-                                getActionLabel(
-                                  a.action
-                                )
-
-                              const fecha =
-                                new Date(
-                                  a.fecha
-                                )
-
-                              return (
-                                <tr
-                                  key={
-                                    a.id
-                                  }
-                                >
-
-                                  <td>
-
-                                    <div
-                                      style={{
-                                        fontSize:
-                                          '13px',
-                                        fontWeight:
-                                          600
-                                      }}
-                                    >
-                                      {a.nombre ||
-                                        '—'}
-                                    </div>
-
-                                    <div className="td-email">
-                                      {a.email}
-                                    </div>
-
-                                  </td>
-
-                                  <td>
-
-                                    <span
-                                      style={{
-                                        display:
-                                          'flex',
-                                        alignItems:
-                                          'center',
-                                        gap:
-                                          '5px',
-                                        color
-                                      }}
-                                    >
-
-                                      <i
-                                        className={`bi ${icon}`}
-                                      ></i>
-
-                                      <span
-                                        style={{
-                                          fontSize:
-                                            '12px',
-                                          fontWeight:
-                                            600
-                                        }}
-                                      >
-                                        {label}
-                                      </span>
-
-                                    </span>
-
-                                  </td>
-
-                                  <td
-                                    style={{
-                                      fontSize:
-                                        '12px',
-                                      color:
-                                        'var(--gray-600)'
-                                    }}
-                                  >
-                                    {a.detail ||
-                                      '—'}
-                                  </td>
-
-                                  <td className="td-date">
-                                    {fecha.toLocaleDateString(
-                                      'es-DO'
-                                    )}
-                                  </td>
-
-                                  <td className="td-date">
-                                    {fecha.toLocaleTimeString(
-                                      'es-DO',
-                                      {
-                                        hour:
-                                          '2-digit',
-                                        minute:
-                                          '2-digit'
-                                      }
-                                    )}
-                                  </td>
-
-                                  <td>
-
-                                    <button
-                                      className="btn-danger-sm"
-                                      onClick={() =>
-                                        handleDeleteActividad(
-                                          a.id
-                                        )
-                                      }
-                                      title="Eliminar"
-                                    >
-                                      <i className="bi bi-trash"></i>
-                                    </button>
-
-                                  </td>
-
-                                </tr>
-                              )
-                            }
-                          )}
-
-                        </tbody>
-
-                      </table>
-
-                    </div>
-                  )}
-
-                </div>
-
-              </div>
+                {section === 'activity' && (
+                  <AdminActivity
+                    actividad={actividad}
+                    users={users}
+                    onDelete={handleDeleteActividad}
+                    onDeleteAll={handleDeleteAllActividad}
+                  />
+                )}
+              </>
             )}
+          </main>
+        </div>
 
-          </>
+        {selectedUser && (
+          <AdminUserDetails
+            user={selectedUser}
+            actividad={actividad}
+            onClose={closeDetails}
+            onUnlock={handleUnlock}
+            onLock={handleLock}
+            onGrantFullAccess={handleGrantFullAccess}
+            onRevokeFullAccess={handleRevokeFullAccess}
+          />
         )}
 
+        {toast && (
+          <div
+            className={`adm-toast adm-toast--${toast.type}`}
+            role="status"
+            aria-live="polite"
+          >
+            <i
+              className={`bi ${
+                toast.type === 'error'
+                  ? 'bi-exclamation-circle'
+                  : 'bi-check-circle'
+              }`}
+              aria-hidden="true"
+            ></i>
+
+            {toast.text}
+          </div>
+        )}
       </div>
-    </Layout>
   )
 }

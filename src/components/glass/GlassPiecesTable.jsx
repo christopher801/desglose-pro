@@ -47,28 +47,7 @@ export default function GlassPiecesTable({
 
   return (
     <section className="glass-card">
-      <div className="glass-card-header">
-        <div className="glass-section-icon">
-          <i className="bi bi-list-check"></i>
-        </div>
-
-        <div>
-          <h2>Detalle de piezas</h2>
-          <p>
-            {totalPiezas} pieza{totalPiezas === 1 ? "" : "s"}{" "}
-            registradas.
-          </p>
-        </div>
-
-        {piezas.length > 0 && (
-          <div className="glass-card-header-stat">
-            <span>Área total</span>
-            <strong>
-              {areaTotal.toLocaleString("es-DO")}
-            </strong>
-          </div>
-        )}
-      </div>
+      
 
       <div className="glass-card-body glass-table-body">
         {piezas.length === 0 ? (

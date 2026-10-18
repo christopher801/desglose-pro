@@ -220,8 +220,7 @@ export default function CroquisBarrasPage() {
               <h1 className="page-title">Croquis de barras</h1>
 
               <p className="barras-subtitle">
-                Optimiza el corte de perfiles y reduce el desperdicio de
-                material.
+                Optimiza el corte de perfiles y reduce el desperdicio.
               </p>
             </div>
           </div>

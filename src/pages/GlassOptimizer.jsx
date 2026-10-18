@@ -8,7 +8,7 @@ import GlassSvgViewer from "../components/glass/GlassSvgViewer";
 import GlassSummary from "../components/glass/GlassSummary";
 import GeneratePDF from "../components/glass/GeneratePDF";
 
-import { optimizarCorte } from "../utils/glassPacking";
+import { optimizarCorte } from "../utils/glass/glassPacking";
 
 import {
   guardarProyecto,
@@ -71,8 +71,8 @@ export default function CroquisVidriosPage() {
               ...pieza,
               ...cambios,
             }
-          : pieza
-      )
+          : pieza,
+      ),
     );
 
     setResultado(null);
@@ -104,11 +104,9 @@ export default function CroquisVidriosPage() {
       const ancho = Number(pieza.ancho);
       const alto = Number(pieza.alto);
 
-      const cabeNormal =
-        ancho <= anchoPlancha && alto <= altoPlancha;
+      const cabeNormal = ancho <= anchoPlancha && alto <= altoPlancha;
 
-      const cabeRotada =
-        ancho <= altoPlancha && alto <= anchoPlancha;
+      const cabeRotada = ancho <= altoPlancha && alto <= anchoPlancha;
 
       return !cabeNormal && !cabeRotada;
     });
@@ -136,7 +134,7 @@ export default function CroquisVidriosPage() {
         anchoPlancha: proyecto.anchoPlancha,
         altoPlancha: proyecto.altoPlancha,
       },
-      piezas
+      piezas,
     );
 
     setResultado(resultadoCalculado);
@@ -205,9 +203,7 @@ export default function CroquisVidriosPage() {
 
       materiales: [],
 
-      notas:
-        proyecto.observaciones ||
-        "Optimización de corte de vidrio.",
+      notas: proyecto.observaciones || "Optimización de corte de vidrio.",
     });
 
     setMensajeGuardado("Proyecto guardado correctamente.");
@@ -220,7 +216,7 @@ export default function CroquisVidriosPage() {
 
   const handleCargarProyecto = (id) => {
     const encontrado = proyectosGuardados.find(
-      (proyectoGuardado) => proyectoGuardado.id === id
+      (proyectoGuardado) => proyectoGuardado.id === id,
     );
 
     if (!encontrado) return;
@@ -229,8 +225,7 @@ export default function CroquisVidriosPage() {
       id: encontrado.id,
       cliente: encontrado.cliente || "",
       proyecto: encontrado.proyecto || "",
-      tipoVidrio:
-        encontrado.tipoVidrio || "Vidrio Monolítico",
+      tipoVidrio: encontrado.tipoVidrio || "Vidrio Monolítico",
       espesor: encontrado.espesor || "",
       color: encontrado.color || "",
       unidad: encontrado.unidad || "in",
@@ -267,164 +262,104 @@ export default function CroquisVidriosPage() {
     setMensajeGuardado("");
   };
 
-  return (
+   return (
     <Layout>
-      <div className="page-content glass-optimizer-page">
+      <div className="page-content barras-page">
+        <div className="barras-header no-print">
+          <div className="barras-header-main">
+            <div>
+              <h1 className="page-title">Croquis de vidrios</h1>
 
-        {/* HEADER */}
-        <div className="glass-page-header">
-          <div>
-            <div className="glass-page-kicker">
-              OPTIMIZACIÓN DE CORTE
+              <p className="barras-subtitle">
+                Optimiza el corte de vidrios y reduce el desperdicio.
+              </p>
             </div>
-
-            <h1 className="page-title mb-1">
-              <i className="bi bi-grid-3x3-gap-fill me-2"></i>
-              Croquis de Vidrios
-            </h1>
-
-            <p className="glass-page-description">
-              Calcula, organiza y visualiza el corte de vidrio
-              aprovechando al máximo cada plancha.
-            </p>
-          </div>
-
-          <div className="glass-page-actions">
-
-            {proyectosGuardados.length > 0 && (
-              <select
-                className="glass-project-selector"
-                value={proyecto.id || ""}
-                onChange={(e) =>
-                  handleCargarProyecto(e.target.value)
-                }
-              >
-                <option value="">
-                  Cargar proyecto guardado...
-                </option>
-
-                {proyectosGuardados.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.cliente || "Sin cliente"} —{" "}
-                    {p.proyecto || "Sin nombre"}
-                  </option>
-                ))}
-              </select>
-            )}
-
-            {proyecto.id && (
-              <button
-                type="button"
-                className="btn-danger-sm"
-                onClick={() =>
-                  handleEliminarProyectoGuardado(proyecto.id)
-                }
-              >
-                <i className="bi bi-trash3 me-1"></i>
-                Eliminar
-              </button>
-            )}
-
-            <button
-              type="button"
-              className="btn-secondary-sm"
-              onClick={handleNuevoProyecto}
-            >
-              <i className="bi bi-file-earmark-plus me-1"></i>
-              Nuevo
-            </button>
-
-            <button
-              type="button"
-              className="btn-primary-sm"
-              onClick={handleGuardarProyecto}
-            >
-              <i className="bi bi-save2 me-1"></i>
-              Guardar
-            </button>
-
-            <GeneratePDF
-              proyecto={proyecto}
-              piezas={piezas}
-              resultado={resultado}
-            />
           </div>
         </div>
 
-        {/* SAVE MESSAGE */}
-        {mensajeGuardado && (
-          <div className="glass-alert glass-alert-success">
-            <i className="bi bi-check-circle-fill"></i>
-            <span>{mensajeGuardado}</span>
-          </div>
-        )}
-
-        {/* PROJECT */}
-        <GlassProjectForm
-          proyecto={proyecto}
-          onChange={setProyecto}
-        />
-
-        {/* PIECES */}
-        <GlassPiecesForm
-          anchoPlancha={proyecto.anchoPlancha}
-          altoPlancha={proyecto.altoPlancha}
-          onAdd={handleAgregarPieza}
-        />
-
-        <GlassPiecesTable
-          piezas={piezas}
-          onEdit={handleEditarPieza}
-          onDelete={handleEliminarPieza}
-        />
-
-        {/* ERROR */}
         {error && (
-          <div className="glass-alert glass-alert-danger">
-            <i className="bi bi-exclamation-circle-fill"></i>
-            <span>{error}</span>
+          <div className="auth-error no-print">
+            <i className="bi bi-exclamation-circle me-2" />
+            {error}
           </div>
         )}
 
-        {/* OPTIMIZE */}
-        <div className="glass-optimize-action">
+        {mensajeGuardado && (
+          <div className="alert-info no-print">
+            <i className="bi bi-check-circle me-2" />
+            {mensajeGuardado}
+          </div>
+        )}
+
+        {resultado && resultado.piezasNoUbicadas?.length > 0 && (
+          <div className="auth-error no-print">
+            <i className="bi bi-exclamation-triangle me-2" />
+            {resultado.piezasNoUbicadas.length} pieza(s) no pudieron ubicarse
+            en ninguna plancha.
+          </div>
+        )}
+
+        <div className="barras-section no-print">
+          <GlassProjectForm proyecto={proyecto} onChange={setProyecto} />
+        </div>
+
+        <div className="barras-section no-print">
+          <GlassPiecesForm
+            anchoPlancha={proyecto.anchoPlancha}
+            altoPlancha={proyecto.altoPlancha}
+            onAdd={handleAgregarPieza}
+          />
+        </div>
+
+        <div className="barras-table-wrapper">
+          <GlassPiecesTable
+            piezas={piezas}
+            onEdit={handleEditarPieza}
+            onDelete={handleEliminarPieza}
+          />
+        </div>
+
+        <div className="barras-actions no-print">
           <button
             type="button"
-            className="glass-optimize-button"
+            className="barras-optimize-btn"
             onClick={handleOptimizar}
             disabled={piezas.length === 0}
           >
-            <i className="bi bi-magic"></i>
-
-            <span>
-              <strong>Optimizar Corte</strong>
-              <small>
-                Generar distribución de las piezas
-              </small>
-            </span>
+            <i className="bi bi-magic me-2" />
+            Optimizar Corte
           </button>
+
+          <button
+            type="button"
+            className="btn-secondary-sm"
+            onClick={handleNuevoProyecto}
+          >
+            <i className="bi bi-trash me-2" />
+            Limpiar
+          </button>
+
+          <button
+            type="button"
+            className="btn-primary-sm barras-action-save"
+            onClick={handleGuardarProyecto}
+          >
+            <i className="bi bi-floppy2 me-2" />
+            Guardar
+          </button>
+
+          <GeneratePDF
+            proyecto={proyecto}
+            piezas={piezas}
+            resultado={resultado}
+          />
         </div>
 
-        {/* UNPLACED */}
-        {resultado &&
-          resultado.piezasNoUbicadas?.length > 0 && (
-            <div className="glass-alert glass-alert-warning">
-              <i className="bi bi-exclamation-triangle-fill"></i>
-
-              <span>
-                {resultado.piezasNoUbicadas.length} pieza(s)
-                no pudieron ubicarse en ninguna plancha.
-              </span>
-            </div>
-          )}
-
-        {/* SUMMARY */}
-        <GlassSummary resultado={resultado} />
-
-        {/* DRAWINGS */}
-        <GlassSvgViewer
-          sheets={resultado ? resultado.sheets : null}
-        />
+        {resultado && (
+          <div className="barras-results">
+            <GlassSvgViewer sheets={resultado.sheets} />
+          </div>
+        )}
       </div>
     </Layout>
   );

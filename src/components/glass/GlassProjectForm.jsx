@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import FractionUtils from "../../utils/fraction";
 
 const TIPOS_VIDRIO = [
   "Vidrio Monolítico",
@@ -29,28 +30,60 @@ const COLORES = [
 ];
 
 const UNIDADES = [
-  {
-    value: "in",
-    label: "Pulgadas (in)",
-  },
-  {
-    value: "mm",
-    label: "Milímetros (mm)",
-  },
-  {
-    value: "cm",
-    label: "Centímetros (cm)",
-  },
-  {
-    value: "m",
-    label: "Metros (m)",
-  },
+  { value: "in", label: "Pulgadas (in)" },
+  { value: "mm", label: "Milímetros (mm)" },
+  { value: "cm", label: "Centímetros (cm)" },
+  { value: "m", label: "Metros (m)" },
 ];
 
-export default function GlassProjectForm({
-  proyecto,
-  onChange,
-}) {
+export const DEFAULT_PLANCHA = {
+  anchoPlancha: 130,
+  altoPlancha: 84,
+  unidad: "in",
+};
+
+const isEmpty = (v) => v === "" || v === null || v === undefined;
+
+// FractionUtils.parseFraction devuelve 0 si es inválido; aquí 0 => null
+const parse = (text) => {
+  const clean = String(text ?? "")
+    .replace(/["”″]/g, "")
+    .replace(/,/g, ".")
+    .trim();
+
+  if (!clean) return null;
+
+  const n = FractionUtils.parseFraction(clean);
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
+
+const toNumberOrNull = (value) => {
+  if (isEmpty(value)) return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+};
+
+// Pulgadas => fracción (solo si es exacta a 1/16), otras unidades => número
+const formatValue = (value, unidad) => {
+  const n = toNumberOrNull(value);
+  if (n === null) return "";
+
+  if (unidad === "in") {
+    const exacto = Math.abs(Math.round(n * 16) / 16 - n) < 1e-9;
+    if (exacto) return FractionUtils.toSixteenths(n);
+  }
+
+  return String(n);
+};
+
+export default function GlassProjectForm({ proyecto, onChange }) {
+  const [anchoText, setAnchoText] = useState(
+    String(proyecto.anchoPlancha ?? DEFAULT_PLANCHA.anchoPlancha)
+  );
+  const [altoText, setAltoText] = useState(
+    String(proyecto.altoPlancha ?? DEFAULT_PLANCHA.altoPlancha)
+  );
+
   const handleChange = (field, value) => {
     onChange({
       ...proyecto,
@@ -58,197 +91,121 @@ export default function GlassProjectForm({
     });
   };
 
+  // Valores por defecto si el proyecto llega vacío
+  useEffect(() => {
+    if (
+      isEmpty(proyecto.anchoPlancha) ||
+      isEmpty(proyecto.altoPlancha) ||
+      isEmpty(proyecto.unidad)
+    ) {
+      onChange({
+        ...proyecto,
+        anchoPlancha: isEmpty(proyecto.anchoPlancha)
+          ? DEFAULT_PLANCHA.anchoPlancha
+          : proyecto.anchoPlancha,
+        altoPlancha: isEmpty(proyecto.altoPlancha)
+          ? DEFAULT_PLANCHA.altoPlancha
+          : proyecto.altoPlancha,
+        unidad: isEmpty(proyecto.unidad)
+          ? DEFAULT_PLANCHA.unidad
+          : proyecto.unidad,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Sincronizar el texto cuando el proyecto cambia desde afuera
+  // (cargar proyecto, limpiar, etc.)
+  useEffect(() => {
+    if (parse(anchoText) !== toNumberOrNull(proyecto.anchoPlancha)) {
+      setAnchoText(String(proyecto.anchoPlancha ?? ""));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [proyecto.anchoPlancha]);
+
+  useEffect(() => {
+    if (parse(altoText) !== toNumberOrNull(proyecto.altoPlancha)) {
+      setAltoText(String(proyecto.altoPlancha ?? ""));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [proyecto.altoPlancha]);
+
+  const handleAnchoChange = (e) => {
+    const text = e.target.value;
+    setAnchoText(text);
+    handleChange("anchoPlancha", parse(text) ?? "");
+  };
+
+  const handleAltoChange = (e) => {
+    const text = e.target.value;
+    setAltoText(text);
+    handleChange("altoPlancha", parse(text) ?? "");
+  };
+
+  // Al salir del campo: formatear si es válido, o volver al último valor válido
+  const handleAnchoBlur = () => {
+    const n = parse(anchoText);
+    setAnchoText(
+      n === null
+        ? formatValue(proyecto.anchoPlancha, proyecto.unidad)
+        : formatValue(n, proyecto.unidad)
+    );
+  };
+
+  const handleAltoBlur = () => {
+    const n = parse(altoText);
+    setAltoText(
+      n === null
+        ? formatValue(proyecto.altoPlancha, proyecto.unidad)
+        : formatValue(n, proyecto.unidad)
+    );
+  };
+
   return (
-    <section className="glass-card">
-      <div className="glass-card-header">
-        <div className="glass-section-icon">
-          <i className="bi bi-file-earmark-text"></i>
-        </div>
-
-        <div>
-          <h2>Información del proyecto</h2>
-          <p>
-            Datos generales y especificaciones del vidrio.
-          </p>
-        </div>
-      </div>
-
-      <div className="glass-card-body">
-
-        <div className="glass-form-grid glass-form-grid-2">
-          <div className="glass-field">
-            <label>Cliente</label>
-
-            <div className="glass-input-wrap">
-              <i className="bi bi-person"></i>
-
-              <input
-                type="text"
-                value={proyecto.cliente}
-                onChange={(e) =>
-                  handleChange("cliente", e.target.value)
-                }
-                placeholder="Nombre del cliente"
-              />
-            </div>
-          </div>
-
-          <div className="glass-field">
-            <label>Proyecto / Obra</label>
-
-            <div className="glass-input-wrap">
-              <i className="bi bi-building"></i>
-
-              <input
-                type="text"
-                value={proyecto.proyecto}
-                onChange={(e) =>
-                  handleChange("proyecto", e.target.value)
-                }
-                placeholder="Nombre del proyecto"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="glass-form-grid glass-form-grid-3">
-
-          <div className="glass-field">
-            <label>Tipo de vidrio</label>
-
-            <select
-              value={proyecto.tipoVidrio}
-              onChange={(e) =>
-                handleChange("tipoVidrio", e.target.value)
-              }
-            >
-              {TIPOS_VIDRIO.map((tipo) => (
-                <option key={tipo} value={tipo}>
-                  {tipo}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="glass-field">
-            <label>Espesor</label>
-
-            <select
-              value={proyecto.espesor}
-              onChange={(e) =>
-                handleChange("espesor", e.target.value)
-              }
-            >
-              <option value="">Seleccionar espesor</option>
-
-              {ESPESORES.map((espesor) => (
-                <option key={espesor} value={espesor}>
-                  {espesor}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="glass-field">
-            <label>Color</label>
-
-            <select
-              value={proyecto.color}
-              onChange={(e) =>
-                handleChange("color", e.target.value)
-              }
-            >
-              <option value="">Seleccionar color</option>
-
-              {COLORES.map((color) => (
-                <option key={color} value={color}>
-                  {color}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="glass-subsection-title">
-          <i className="bi bi-rulers"></i>
-          Dimensiones de la plancha
-        </div>
-
-        <div className="glass-form-grid glass-form-grid-3">
-
-          <div className="glass-field">
-            <label>Unidad</label>
-
-            <select
-              value={proyecto.unidad}
-              onChange={(e) =>
-                handleChange("unidad", e.target.value)
-              }
-            >
-              {UNIDADES.map((unidad) => (
-                <option
-                  key={unidad.value}
-                  value={unidad.value}
-                >
-                  {unidad.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="glass-field">
-            <label>Ancho de plancha</label>
-
-            <input
-              type="number"
-              min="0"
-              step="any"
-              value={proyecto.anchoPlancha}
-              onChange={(e) =>
-                handleChange(
-                  "anchoPlancha",
-                  e.target.value
-                )
-              }
-              placeholder="Ej. 130"
-            />
-          </div>
-
-          <div className="glass-field">
-            <label>Alto de plancha</label>
-
-            <input
-              type="number"
-              min="0"
-              step="any"
-              value={proyecto.altoPlancha}
-              onChange={(e) =>
-                handleChange(
-                  "altoPlancha",
-                  e.target.value
-                )
-              }
-              placeholder="Ej. 84"
-            />
-          </div>
-        </div>
-
-        <div className="glass-field">
-          <label>Observaciones</label>
-
-          <textarea
-            rows="3"
-            value={proyecto.observaciones}
-            onChange={(e) =>
-              handleChange(
-                "observaciones",
-                e.target.value
-              )
-            }
-            placeholder="Notas adicionales del proyecto..."
+    <div className="barras-config">
+      <div className="barras-config-grid">
+        <div className="barras-field">
+          <label htmlFor="plancha-ancho">ANCHO</label>
+          <input
+            id="plancha-ancho"
+            type="text"
+            inputMode="text"
+            value={anchoText}
+            onChange={handleAnchoChange}
+            onBlur={handleAnchoBlur}
+            placeholder="Ej. 130 o 52 1/2"
           />
         </div>
+
+        <div className="barras-field">
+          <label htmlFor="plancha-alto">ALTO</label>
+          <input
+            id="plancha-alto"
+            type="text"
+            inputMode="text"
+            value={altoText}
+            onChange={handleAltoChange}
+            onBlur={handleAltoBlur}
+            placeholder="Ej. 84 o 36 3/4"
+          />
+        </div>
+
+        <div className="barras-field">
+          <label htmlFor="plancha-unidad">UNIDAD</label>
+          <select
+            id="plancha-unidad"
+            className="form-select"
+            value={proyecto.unidad}
+            onChange={(e) => handleChange("unidad", e.target.value)}
+          >
+            {UNIDADES.map((unidad) => (
+              <option key={unidad.value} value={unidad.value}>
+                {unidad.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }

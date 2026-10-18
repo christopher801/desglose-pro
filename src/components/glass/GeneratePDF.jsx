@@ -737,9 +737,6 @@ const GeneratePDF = ({ proyecto, piezas = [], resultado }) => {
                 Software Profesional para talleres de aluminio
               </div>
 
-              <div class="document-title">
-                Croquis de Distribución de Vidrios
-              </div>
 
             </div>
 
@@ -753,67 +750,6 @@ const GeneratePDF = ({ proyecto, piezas = [], resultado }) => {
 
               <div class="project-box-title">
                 Resumen del Proyecto
-              </div>
-
-              <div class="project-row">
-                <span class="project-label">
-                  Cliente
-                </span>
-
-                <span class="project-value">
-                  ${escapeHtml(
-                    proyecto?.cliente || "Sin cliente"
-                  )}
-                </span>
-              </div>
-
-              <div class="project-row">
-                <span class="project-label">
-                  Proyecto
-                </span>
-
-                <span class="project-value">
-                  ${escapeHtml(
-                    proyecto?.proyecto || "Sin nombre"
-                  )}
-                </span>
-              </div>
-
-              <div class="project-row">
-                <span class="project-label">
-                  Tipo
-                </span>
-
-                <span class="project-value">
-                  ${escapeHtml(
-                    proyecto?.tipoVidrio ||
-                      "Vidrio Monolítico"
-                  )}
-                </span>
-              </div>
-
-              <div class="project-row">
-                <span class="project-label">
-                  Espesor
-                </span>
-
-                <span class="project-value">
-                  ${escapeHtml(
-                    proyecto?.espesor || "—"
-                  )}
-                </span>
-              </div>
-
-              <div class="project-row">
-                <span class="project-label">
-                  Color
-                </span>
-
-                <span class="project-value">
-                  ${escapeHtml(
-                    proyecto?.color || "—"
-                  )}
-                </span>
               </div>
 
               <div class="project-row">
@@ -861,18 +797,6 @@ const GeneratePDF = ({ proyecto, piezas = [], resultado }) => {
                     <th>
                       Unidad
                     </th>
-
-                    <th>
-                      Tipo de Vidrio
-                    </th>
-
-                    <th>
-                      Espesor
-                    </th>
-
-                    <th>
-                      Color
-                    </th>
                   </tr>
                 </thead>
 
@@ -899,24 +823,6 @@ const GeneratePDF = ({ proyecto, piezas = [], resultado }) => {
                     <td>
                       ${escapeHtml(
                         proyecto?.unidad || "—"
-                      )}
-                    </td>
-
-                    <td>
-                      ${escapeHtml(
-                        proyecto?.tipoVidrio || "—"
-                      )}
-                    </td>
-
-                    <td>
-                      ${escapeHtml(
-                        proyecto?.espesor || "—"
-                      )}
-                    </td>
-
-                    <td>
-                      ${escapeHtml(
-                        proyecto?.color || "—"
                       )}
                     </td>
 
