@@ -37,7 +37,7 @@ export default function WelcomePage() {
       tag: "popular",
     },
     {
-      name: "Ventana E-70",
+      name: "Ventana C-70",
       type: "Corredera 2, 3 o 4 hojas",
       precision: '1/16"',
       status: "Disponible",

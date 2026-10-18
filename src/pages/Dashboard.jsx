@@ -24,7 +24,7 @@ const systems = [
     locked: false,
   },
   {
-    name: "Ventanas E-70",
+    name: "Ventanas C-70",
     path: "/desglose/e70",
     icon: "bi-window",
     locked: true,
@@ -59,7 +59,7 @@ const SYSTEM_ICONS = {
   "Ventana P-92": "bi-window",
   "Ventana P-65": "bi-window",
   "Ventana Tradicional": "bi-window",
-  "Ventana E-70": "bi-window",
+  "Ventana C-70": "bi-window",
   "Ventana P-40 Proyectada": "bi-window",
   "Puerta Comercial": "bi-door-open",
   "Puerta P40": "bi-door-open",

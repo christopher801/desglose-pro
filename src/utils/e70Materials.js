@@ -61,10 +61,10 @@ export const calcularMaterialesVentanaE70 = ({
     cantidadJambas = 4;
 
     nombreMarco =
-      "Cabezal/Riel del marco E-70 2 vías";
+      "Cabezal/Riel del marco C-70 2 vías";
 
     nombreLateral =
-      "Lateral del marco E-70 2 vías";
+      "Lateral del marco C-70 2 vías";
   }
 
   // =========================
@@ -80,10 +80,10 @@ export const calcularMaterialesVentanaE70 = ({
     cantidadJambas = 6;
 
     nombreMarco =
-      "Cabezal/Riel del marco E-70 3 vías";
+      "Cabezal/Riel del marco C-70 3 vías";
 
     nombreLateral =
-      "Lateral del marco E-70 3 vías";
+      "Lateral del marco C-70 3 vías";
   }
 
   // =========================
@@ -99,23 +99,23 @@ export const calcularMaterialesVentanaE70 = ({
     cantidadJambas = 8;
 
     nombreMarco =
-      "Cabezal/Riel del marco E-70 2 vías";
+      "Cabezal/Riel del marco C-70 2 vías";
 
     nombreLateral =
-      "Lateral del marco E-70 2 vías";
+      "Lateral del marco C-70 2 vías";
   } else {
     return [];
   }
 
   return [
     {
-      material: "Cab-alf E-70",
+      material: "Cab-alf C-70",
       longitud: cabAlf,
       cantidad: cantidadCabAlf,
     },
 
     {
-      material: "Jambas E-70",
+      material: "Jambas C-70",
       longitud: jambas,
       cantidad: cantidadJambas,
     },

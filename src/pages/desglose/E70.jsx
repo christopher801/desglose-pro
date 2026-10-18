@@ -682,7 +682,7 @@ export default function E70() {
               Tipo:
             </strong>
 
-            Ventana E-70
+            Ventana C-70
           </p>
 
           <p>

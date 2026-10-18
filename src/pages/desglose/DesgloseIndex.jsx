@@ -25,7 +25,7 @@ const systems = [
     locked: false,
   },
   {
-    name: "Ventanas E-70",
+    name: "Ventanas C-70",
     path: "/desglose/e70",
     icon: "bi-window",
     locked: true,
