@@ -31,25 +31,11 @@ export default function BarraControls({
 
   return (
     <div className="barras-config">
-      <div className="barras-config-header">
-        <div>
-          <h2 className="barras-card-title">Configuración de barra</h2>
-
-          <p className="barras-card-subtitle">
-            Define la longitud disponible y la pérdida de material por corte.
-          </p>
-        </div>
-
-        <div className="barras-config-icon">
-          <i className="bi bi-sliders2" />
-        </div>
-      </div>
-
       <div className="barras-config-grid">
         <div className="barras-field">
           <label htmlFor="bar-length">LARGO DE BARRA</label>
 
-          <div className="barras-input-with-unit">
+          <div className="form-select">
             <input
               id="bar-length"
               type="number"
@@ -60,33 +46,16 @@ export default function BarraControls({
               placeholder="252"
             />
 
-            <span className="barras-unit-static">"</span>
           </div>
 
-          <div className="barras-presets">
-            {BAR_PRESETS.map((preset) => (
-              <button
-                key={preset.value}
-                type="button"
-                className={
-                  Number(barLength) === preset.value
-                    ? "barras-preset active"
-                    : "barras-preset"
-                }
-                onClick={() => setBarLength(preset.value)}
-              >
-                {preset.label}
-              </button>
-            ))}
-          </div>
+         
 
-          <small>Ejemplo: 252" = 21 pies.</small>
         </div>
 
         <div className="barras-field">
           <label htmlFor="saw-loss">SIERRA</label>
 
-          <div className="barras-input-with-unit">
+          <div className="form-select">
             <input
               id="saw-loss"
               type="number"
@@ -96,10 +65,8 @@ export default function BarraControls({
               onChange={(e) => setSaw(e.target.value)}
             />
 
-            <span className="barras-unit-static">"</span>
           </div>
 
-          <small>Pérdida de material por cada corte.</small>
         </div>
 
         <div className="barras-field">
@@ -116,7 +83,6 @@ export default function BarraControls({
             <option value="ft">Pies (ft)</option>
           </select>
 
-          <small>Esta unidad se utilizará para los cortes.</small>
         </div>
       </div>
     </div>

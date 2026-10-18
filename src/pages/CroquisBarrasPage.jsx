@@ -195,15 +195,7 @@ export default function CroquisBarrasPage() {
             </div>
           </div>
 
-          <button
-            type="button"
-            className="btn-secondary-sm"
-            onClick={handleClear}
-            disabled={!cuts.length}
-          >
-            <i className="bi bi-arrow-counterclockwise me-1" />
-            Reiniciar
-          </button>
+          
           
         </div>
 
@@ -234,23 +226,7 @@ export default function CroquisBarrasPage() {
 
         <div className="barras-section no-print">
           <div className="barras-panel">
-            <div className="barras-panel-header">
-              <div>
-                <div className="barras-panel-title">
-                  <i className="bi bi-scissors me-2" />
-                  CORTES DE PERFIL
-                </div>
-
-                <div className="barras-panel-subtitle">
-                  Agrega cada pieza que debe ser cortada.
-                </div>
-              </div>
-
-              <div className="barras-cut-counter">
-                {cuts.length} referencia
-                {cuts.length !== 1 ? "s" : ""}
-              </div>
-            </div>
+            
 
             <div className="barras-panel-body">
               <BarraForm

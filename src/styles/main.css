@@ -1,42 +1,69 @@
+/* ============================================================
+   MAIN.CSS - Fichye prensipal pou stil aplikasyon an
+   ============================================================
+   Fichye sa a gen tout stil aplikasyon an:
+   - Variab CSS (koulè, lonbraj, dimansyon)
+   - Layout jeneral (sidebar, topbar, bottom-nav)
+   - Konpozan (bouton, kat, tab, fòm, elatriye)
+   - Responsive design (mobile, tablet, desktop)
+   - Stil pou enprime (print)
+   ============================================================ */
+
+
+/* ============================================================
+   1. VARIAB CSS (ROOT)
+   ============================================================
+   Tout koulè ak valè prensipal yo defini isit.
+   Ou ka chanje yo yon sèl kote pou tout app la chanje.
+   ============================================================ */
 :root {
-  --primary: #1a56db;
-  --primary-dark: #1e40af;
-  --primary-light: #3b82f6;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
-  --gray-500: #64748b;
-  --gray-600: #475569;
-  --gray-700: #334155;
-  --gray-800: #1e293b;
-  --gray-900: #0f172a;
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  --radius: 12px;
-  --radius-lg: 16px;
-  --sidebar-width: 220px;
-  --topbar-height: 52px;
-  --bottom-nav-height: 60px;
+  --primary: #1a56db;          /* Koulè prensipal (ble) */
+  --primary-dark: #1e40af;     /* Vèsyon pi fonse nan ble a */
+  --primary-light: #3b82f6;    /* Vèsyon pi klè nan ble a */
+  --success: #10b981;          /* Koulè siksè (vèt) */
+  --warning: #f59e0b;          /* Koulè avètisman (jòn) */
+  --danger: #ef4444;           /* Koulè danje (wouj) */
+  --gray-50: #f8fafc;          /* Gri 50 - pi klè a */
+  --gray-100: #f1f5f9;         /* Gri 100 */
+  --gray-200: #e2e8f0;         /* Gri 200 - bordi */
+  --gray-300: #cbd5e1;         /* Gri 300 */
+  --gray-400: #94a3b8;         /* Gri 400 - tèks fèb */
+  --gray-500: #64748b;         /* Gri 500 - tèks segondè */
+  --gray-600: #475569;         /* Gri 600 */
+  --gray-700: #334155;         /* Gri 700 - tèks prensipal */
+  --gray-800: #1e293b;         /* Gri 800 - tèks fonse */
+  --gray-900: #0f172a;         /* Gri 900 - pi fonse a */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);        /* Ti lonbraj */
+  --shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); /* Lonbraj nòmal */
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);    /* Lonbraj mwayen */
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);  /* Gwo lonbraj */
+  --radius: 12px;              /* Reyon bordi nòmal */
+  --radius-lg: 16px;           /* Gwo reyon bordi */
+  --sidebar-width: 220px;      /* Lajè sidebar la */
+  --topbar-height: 52px;       /* Wotè topbar la */
+  --bottom-nav-height: 60px;   /* Wotè navigasyon anba a */
 }
 
+
+/* ============================================================
+   2. RESET JENERAL
+   ============================================================
+   Retire margin ak padding default tout eleman yo.
+   ============================================================ */
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Fè border ak padding antre nan lajè a */
 }
 
-/* ============================================================ */
-/* FONTS - DM Sans (cuerpo) + Manrope (títulos)                 */
-/* ============================================================ */
 
-/* Aplike font kò a body */
+/* ============================================================
+   3. FONTS
+   ============================================================
+   DM Sans pou kò tèks la, Manrope pou tit yo.
+   ============================================================ */
+
+/* Font pou kò a (body) */
 body {
   font-family:
     "DM Sans",
@@ -47,14 +74,14 @@ body {
     "Helvetica Neue",
     Arial,
     sans-serif;
-  background: var(--gray-50);
-  color: var(--gray-800);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background: var(--gray-50);      /* Background gri klè */
+  color: var(--gray-800);          /* Koulè tèks la */
+  line-height: 1.6;                /* Espas ant liy */
+  -webkit-font-smoothing: antialiased;   /* Tèks pi dous sou Mac */
+  -moz-osx-font-smoothing: grayscale;    /* Tèks pi dous sou Firefox */
 }
 
-/* Opsyonèl: Aplike a tout eleman yo */
+/* Asire tout eleman yo gen menm font lan */
 * {
   font-family:
     "DM Sans",
@@ -68,11 +95,7 @@ body {
   box-sizing: border-box;
 }
 
-/* ============================================================ */
-/* Tit ak encabezados (si w itilize Manrope)                    */
-/* ============================================================ */
-
-/* Aplike Manrope a tit yo (si ou vle) */
+/* Tit yo (h1-h6) ak klas espesyal yo */
 h1,
 h2,
 h3,
@@ -94,15 +117,11 @@ h6,
     "Helvetica Neue",
     Arial,
     sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 700;              /* Tit yo fonse */
+  letter-spacing: -0.02em;       /* Ti koreksyon espas lèt */
 }
 
-/* ============================================================ */
-/* Opsyonèl: Ajuste poids pou kèk eleman                       */
-/* ============================================================ */
-
-/* Bouton ak input yo */
+/* Bouton, input, select, textarea */
 button,
 input,
 select,
@@ -119,7 +138,7 @@ textarea {
   font-weight: 500;
 }
 
-/* Kò tèks */
+/* Kò tèks la */
 p,
 span,
 div,
@@ -137,12 +156,7 @@ li,
   font-weight: 400;
 }
 
-/* ============================================================ */
-/* Si ou vle sèlman DM Sans pou tout bagay (pa Manrope)        */
-/* ============================================================ */
-
-/* Dekomante liy sa yo si ou pa vle Manrope */
-
+/* Si ou pa vle Manrope, tit yo ap itilize DM Sans */
 h1,
 h2,
 h3,
@@ -166,40 +180,52 @@ h6,
     sans-serif;
 }
 
-/* ========= LAYOUT SHELL ========= */
+
+/* ============================================================
+   4. LAYOUT SHELL (Estrikti jeneral app la)
+   ============================================================
+   Sa a se kontenè prensipal la ki gen sidebar + main.
+   ============================================================ */
 .layout-shell {
   display: flex;
-  min-height: 100vh;
+  min-height: 100vh; /* Omwen tout wotè ekran an */
 }
 
+/* Pati prensipal la (akte sidebar la) */
 .layout-main {
-  flex: 1;
+  flex: 1;                    /* Pran tout espas ki rete */
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  margin-left: var(--sidebar-width);
+  min-width: 0;               /* Pèmèt flex timoun yo retresi */
+  margin-left: var(--sidebar-width); /* Kite espas pou sidebar fiks la */
 }
 
+/* Kontni anndan layout-main */
 .layout-content {
   flex: 1;
   padding-bottom: 0;
-  overflow-x: hidden;
+  overflow-x: hidden;         /* Pa gen scroll orizontal */
 }
 
+
+/* ============================================================
+   5. SIDEBAR (Meni bò gòch)
+   ============================================================ */
 .sidebar {
   width: var(--sidebar-width);
   background: white;
   border-right: 1px solid var(--gray-200);
-  position: fixed;
+  position: fixed;            /* Fiks sou bò gòch */
   top: 0;
   left: 0;
   bottom: 0;
   display: flex;
   flex-direction: column;
-  z-index: 200;
-  transition: transform 0.25s ease;
+  z-index: 200;               /* Anlè kontni an */
+  transition: transform 0.25s ease; /* Animasyon lè l ouvri/fèmen */
 }
 
+/* Logo nan sidebar */
 .sidebar-logo {
   display: flex;
   align-items: center;
@@ -208,6 +234,7 @@ h6,
   border-bottom: 1px solid var(--gray-100);
 }
 
+/* Ikòn logo a */
 .sidebar-logo-icon {
   width: 32px;
   height: 32px;
@@ -219,25 +246,30 @@ h6,
   justify-content: center;
   font-size: 13px;
   font-weight: 700;
-  flex-shrink: 0;
+  flex-shrink: 0;             /* Pa retresi */
 }
 
+/* Non app la nan sidebar */
 .sidebar-logo-name {
   font-size: 24px;
   font-weight: 800;
   color: var(--gray-900);
 }
+
+/* Vèsyon app la */
 .sidebar-logo-ver {
   font-size: 10px;
   color: var(--gray-400);
 }
 
+/* Navigasyon nan sidebar */
 .sidebar-nav {
   flex: 1;
   padding: 12px 8px;
-  overflow-y: auto;
+  overflow-y: auto;           /* Scroll si gen twòp atik */
 }
 
+/* Tit seksyon nan sidebar */
 .sidebar-section {
   font-size: 10px;
   font-weight: 600;
@@ -247,6 +279,7 @@ h6,
   padding: 8px 8px 4px;
 }
 
+/* Yon atik nan meni an */
 .sidebar-item {
   display: flex;
   align-items: center;
@@ -266,19 +299,26 @@ h6,
   background: var(--gray-50);
   color: var(--gray-900);
 }
+
+/* Atik ki aktif (kote nou ye kounye a) */
 .sidebar-item-active {
   background: #eff6ff;
   color: var(--primary);
 }
+
+/* Ikòn atik la */
 .sidebar-item-icon {
   font-size: 16px;
   width: 20px;
   text-align: center;
 }
+
+/* Etikèt atik la */
 .sidebar-item-label {
   flex: 1;
 }
 
+/* Badge (pa egzanp kantite notifikasyon) */
 .sidebar-badge {
   background: var(--danger);
   color: white;
@@ -288,6 +328,7 @@ h6,
   border-radius: 20px;
 }
 
+/* Pye sidebar la (enfòmasyon itilizatè) */
 .sidebar-footer {
   padding: 12px;
   border-top: 1px solid var(--gray-100);
@@ -296,6 +337,7 @@ h6,
   gap: 8px;
 }
 
+/* Avatar itilizatè a */
 .sidebar-avatar {
   width: 32px;
   height: 32px;
@@ -310,6 +352,7 @@ h6,
   flex-shrink: 0;
 }
 
+/* Blòk itilizatè a */
 .sidebar-user {
   display: flex;
   align-items: center;
@@ -317,22 +360,28 @@ h6,
   flex: 1;
   min-width: 0;
 }
+
 .sidebar-user-info {
   min-width: 0;
 }
+
+/* Non itilizatè a */
 .sidebar-user-name {
   font-size: 12px;
   font-weight: 600;
   color: var(--gray-800);
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis;    /* Met ... si non an twò long */
 }
+
+/* Wòl itilizatè a */
 .sidebar-user-role {
   font-size: 10px;
   color: var(--gray-400);
 }
 
+/* Bouton dekonekte */
 .sidebar-logout {
   width: 30px;
   height: 30px;
@@ -348,20 +397,26 @@ h6,
   transition: all 0.15s;
   flex-shrink: 0;
 }
+
 .sidebar-logout:hover {
   background: #fef2f2;
   color: var(--danger);
   border-color: #fecaca;
 }
 
+/* Overlay nwa lè sidebar ouvri sou mobil */
 .sidebar-overlay {
   display: none;
   position: fixed;
-  inset: 0;
+  inset: 0;                   /* Kouvri tout ekran */
   background: rgba(0, 0, 0, 0.4);
   z-index: 199;
 }
 
+
+/* ============================================================
+   6. TOPBAR (Bar anlè a)
+   ============================================================ */
 .topbar {
   height: var(--topbar-height);
   background: white;
@@ -369,17 +424,17 @@ h6,
   display: flex;
   align-items: center;
   padding: 0 16px;
-  position: sticky;
+  position: sticky;           /* Kole anlè lè w scroll */
   top: 0;
   z-index: 100;
   gap: 12px;
 }
 
+/* Bouton meni an (sou mobil) */
 .topbar-menu-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 36px;
   height: 36px;
   border: 1px solid var(--gray-200);
@@ -393,28 +448,34 @@ h6,
   flex-shrink: 0;
 }
 
+/* Tit nan topbar la */
 .topbar-title {
   font-size: 20px;
   font-weight: 600;
   color: var(--gray-900);
   flex: 1;
 }
+
+/* Sou desktop, kache tit mobil la */
 @media (min-width: 769px) {
-  .topbar-title { 
+  .topbar-title {
     display: none;
     font-size: 20px;
     font-weight: 700;
-   }
-  .topbar-right { margin-left: auto; }
+  }
+  .topbar-right {
+    margin-left: auto;        /* Pouse pati dwat la nan bò dwat */
+  }
 }
 
-
+/* Pati dwat topbar la */
 .topbar-right {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+/* Bouton notifikasyon */
 .topbar-notif-btn {
   position: relative;
   width: 36px;
@@ -429,10 +490,12 @@ h6,
   color: var(--shadow);
   transition: all 0.2 ease;
 }
+
 .topbar-notif-btn:hover {
   background: var(--gray-300);
 }
 
+/* Ti pwen wouj sou bouton notifikasyon */
 .topbar-notif-dot {
   position: absolute;
   top: -4px;
@@ -450,31 +513,50 @@ h6,
   padding: 0 3px;
 }
 
-.topbar-title-mobile  { display: block; }
-.topbar-title-desktop { display: none; }
-
-@media (min-width: 769px) {
-  .topbar-title-mobile  { display: none; }
-  .topbar-title-desktop { display: block; }
+/* Tit mobil ak desktop */
+.topbar-title-mobile {
+  display: block;
 }
 
-.bottom-nav {
+.topbar-title-desktop {
   display: none;
 }
 
+@media (min-width: 769px) {
+  .topbar-title-mobile {
+    display: none;
+  }
+  .topbar-title-desktop {
+    display: block;
+  }
+}
+
+
+/* ============================================================
+   7. BOTTOM NAV (Navigasyon anba - pou mobil)
+   ============================================================ */
+.bottom-nav {
+  display: none;              /* Kache sou desktop */
+}
+
+
+/* ============================================================
+   8. PAGE CONTENT (Kontni paj yo)
+   ============================================================ */
 .page-content {
   padding: 20px 24px;
   max-width: 1200px;
   width: 100%;
-  margin: 0 auto; /* ← santalize kontni an sou gwo ekran */
+  margin: 0 auto;             /* Santre kontni an sou gwo ekran */
 }
 
 @media (max-width: 768px) {
   .page-content {
-    padding: 14px 14px; /* ← mwens padding sou mobil */
+    padding: 14px 14px;       /* Mwens padding sou mobil */
   }
 }
 
+/* Tit paj la */
 .page-title {
   font-size: 1.4rem;
   font-weight: 700;
@@ -482,6 +564,7 @@ h6,
   margin-bottom: 1.25rem;
 }
 
+/* Tit seksyon */
 .section-title {
   font-size: 0.85rem;
   font-weight: 600;
@@ -491,22 +574,17 @@ h6,
   margin-bottom: 0.75rem;
 }
 
-.mb-4 {
-  margin-bottom: 1.25rem;
-}
-.mt-4 {
-  margin-top: 1.25rem;
-}
-.mb-3 {
-  margin-bottom: 0.75rem;
-}
-.text-center {
-  text-align: center;
-}
-.text-muted {
-  color: var(--gray-500);
-}
+/* Klas itilite pou margin ak tèks */
+.mb-4 { margin-bottom: 1.25rem; }
+.mt-4 { margin-top: 1.25rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.text-center { text-align: center; }
+.text-muted { color: var(--gray-500); }
 
+
+/* ============================================================
+   9. KAT MODÈN (Card Modern)
+   ============================================================ */
 .card-modern {
   background: white;
   border-radius: var(--radius-lg);
@@ -515,6 +593,10 @@ h6,
   padding: 1.25rem;
 }
 
+
+/* ============================================================
+   10. BADGE (Etikèt ti koulè)
+   ============================================================ */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -523,23 +605,18 @@ h6,
   font-weight: 600;
   border-radius: 20px;
 }
-.badge-active {
-  background: #dcfce7;
-  color: #166534;
-}
-.badge-inactive {
-  background: #fee2e2;
-  color: #991b1b;
-}
-.badge-admin {
-  background: #e0e7ff;
-  color: #3730a3;
-}
-.badge-user {
-  background: var(--gray-100);
-  color: var(--gray-600);
-}
 
+.badge-active { background: #dcfce7; color: #166534; }   /* Vèt - aktif */
+.badge-inactive { background: #fee2e2; color: #991b1b; } /* Wouj - inaktif */
+.badge-admin { background: #e0e7ff; color: #3730a3; }    /* Ble - admin */
+.badge-user { background: var(--gray-100); color: var(--gray-600); } /* Gri - itilizatè */
+
+
+/* ============================================================
+   11. ALÈT AK MESAJ
+   ============================================================ */
+
+/* Erè otantifikasyon */
 .auth-error {
   background: #fef2f2;
   border: 1px solid #fecaca;
@@ -550,6 +627,7 @@ h6,
   margin-bottom: 1rem;
 }
 
+/* Enfòmasyon */
 .alert-info {
   background: #eff6ff;
   border: 1px solid #bfdbfe;
@@ -560,6 +638,7 @@ h6,
   margin-bottom: 1rem;
 }
 
+/* Avètisman */
 .alert-warning {
   background: #fffbeb;
   border-left: 4px solid var(--warning);
@@ -569,6 +648,7 @@ h6,
   font-size: 13px;
 }
 
+/* Bann notifikasyon */
 .notif-strip {
   background: #fffbeb;
   border: 1px solid #fde68a;
@@ -582,6 +662,10 @@ h6,
   gap: 8px;
 }
 
+
+/* ============================================================
+   12. PAJ OTANTIFIKASYON (Login/Register)
+   ============================================================ */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -601,6 +685,7 @@ h6,
   max-width: 420px;
 }
 
+/* Logo nan paj otantifikasyon */
 .auth-logo-wrap {
   display: flex;
   align-items: center;
@@ -644,6 +729,7 @@ h6,
   margin-bottom: 1.25rem;
 }
 
+/* Fòm otantifikasyon */
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -675,10 +761,11 @@ h6,
   width: 100%;
   font-family: inherit;
 }
+
 .auth-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1); /* Ti halo ble */
 }
 
 .auth-btn {
@@ -694,9 +781,11 @@ h6,
   width: 100%;
   margin-top: 0.25rem;
 }
+
 .auth-btn:hover:not(:disabled) {
   background: var(--primary-dark);
 }
+
 .auth-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -714,10 +803,15 @@ h6,
   font-weight: 600;
   text-decoration: none;
 }
+
 .auth-link:hover {
   text-decoration: underline;
 }
 
+
+/* ============================================================
+   13. PAJ AKÈY (Welcome Page)
+   ============================================================ */
 .welcome-page {
   min-height: 100vh;
   display: flex;
@@ -791,6 +885,7 @@ h6,
   margin-bottom: 1rem;
 }
 
+/* Gwo bouton prensipal */
 .btn-primary-lg {
   display: block;
   padding: 12px;
@@ -803,10 +898,12 @@ h6,
   transition: all 0.15s;
   text-align: center;
 }
+
 .btn-primary-lg:hover {
   background: var(--primary-dark);
 }
 
+/* Gwo bouton kontou */
 .btn-outline-lg {
   display: block;
   padding: 12px;
@@ -822,6 +919,7 @@ h6,
   cursor: pointer;
   font-family: inherit;
 }
+
 .btn-outline-lg:hover {
   background: var(--gray-50);
 }
@@ -840,6 +938,10 @@ h6,
   color: var(--gray-700);
 }
 
+
+/* ============================================================
+   14. DASHBOARD (Tablo bò)
+   ============================================================ */
 .dashboard-welcome {
   display: flex;
   align-items: center;
@@ -853,11 +955,13 @@ h6,
   color: var(--gray-900);
   margin-bottom: 4px;
 }
+
 .dashboard-sub {
   font-size: 13px;
   color: var(--gray-500);
 }
 
+/* Statistik yo */
 .dashboard-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -887,6 +991,10 @@ h6,
   color: var(--gray-900);
 }
 
+
+/* ============================================================
+   15. PRODUCT GRID (Gri pwodwi)
+   ============================================================ */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -905,24 +1013,29 @@ h6,
   transition: all 0.2s;
   display: block;
 }
+
 .product-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-3px); /* Monte yon ti kras */
   box-shadow: var(--shadow-lg);
   border-color: var(--primary-light);
 }
+
 .product-icon {
   font-size: 2rem;
   margin-bottom: 0.75rem;
 }
+
 .product-title {
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 4px;
 }
+
 .product-desc {
   font-size: 11px;
   color: var(--gray-500);
 }
+
 .product-badge {
   position: absolute;
   top: 8px;
@@ -935,6 +1048,10 @@ h6,
   border-radius: 8px;
 }
 
+
+/* ============================================================
+   16. INFO CARD (Kat enfòmasyon)
+   ============================================================ */
 .info-card-title {
   font-size: 13px;
   font-weight: 600;
@@ -950,193 +1067,115 @@ h6,
   border-bottom: 1px solid var(--gray-100);
   font-size: 13px;
 }
+
 .info-row:last-child {
   border-bottom: none;
 }
+
 .info-label {
   color: var(--gray-500);
 }
+
 .info-value {
   color: var(--gray-800);
   font-weight: 500;
 }
 
-/* ========================================
-   SUMMARY GRID
-   ======================================== */
 
+/* ============================================================
+   17. SUMMARY GRID (Gri rezime)
+   ============================================================
+   Kat rezime ki montre chif enpòtan yo.
+   ============================================================ */
 .summary-grid {
   margin-top: 20px;
   display: grid;
-
-  /* 4 cards sou desktop */
-  grid-template-columns: repeat(4, 1fr);
-
-  /* Espas ant cards yo */
+  grid-template-columns: repeat(4, 1fr); /* 4 kat sou desktop */
   gap: 10px;
 }
 
-/* ========================================
-   SUMMARY CARD
-   ======================================== */
-
 .summary-card {
-  /* Espas andedan card la */
   padding: 12px 14px;
-  
-
-  /* Background */
   background: #ffffff;
-
-  /* Border */
   border: 1px solid var(--gray-200);
-
-  /* Bò card yo */
   border-radius: 10px;
-
-  /* Animation lè hover */
   transition: all 0.2s ease;
 }
 
-/* ========================================
-   SUMMARY CARD - HOVER
-   ======================================== */
-
 .summary-card:hover {
-  /* Border vin ble lè sourit pase sou li */
-  border-color: #bfdbfe;
-
-  /* Ti shadow */
+  border-color: #bfdbfe;       /* Bordi vin ble */
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
-/* ========================================
-   SUMMARY LABEL
-   Egzanp:
-   "Desgloses de Ventanas"
-   ======================================== */
-
+/* Etikèt rezime a */
 .summary-label {
-  /* Espas anba label */
   margin-bottom: 5px;
-
-  /* Koulè text */
   color: var(--gray-500);
-
-  /* Gwosè text */
   font-size: 10px;
-
-  /* Epè text */
   font-weight: 500;
-
-  /* Anpeche text la kole */
   line-height: 1.3;
 }
 
-/* ========================================
-   SUMMARY VALUE
-   Egzanp:
-   128
-   64
-   92
-   +18.5%
-   ======================================== */
-
+/* Valè rezime a (chif la) */
 .summary-value {
-  /* Koulè value */
   color: var(--gray-800);
-
-  /* Gwosè value */
   font-size: 21px;
-
-  /* Value la pi fonse */
   font-weight: 700;
-
-  /* Espas ant liy */
   line-height: 1.2;
 }
 
-/* ========================================
-   POSITIVE VALUE
-   Pou:
-   +18.5%
-   ======================================== */
-
+/* Valè pozitif (vèt) */
 .summary-value.positive {
   color: #16a34a;
 }
 
-/* ========================================
-   SUMMARY FOOTER
-   Egzanp:
-   "Total realizados"
-   ======================================== */
-
+/* Pye rezime a */
 .summary-footer {
-  /* Ti espas anlè */
   margin-top: 5px;
-
-  /* Koulè gri */
   color: var(--gray-400);
-
-  /* Text piti */
   font-size: 9px;
-
-  /* Line height */
   line-height: 1.3;
 }
 
-/* ========================================
-   📱 MOBILE / ANDROID
-   ======================================== */
-
+/* Sou mobil: 2 kat pa liy */
 @media (max-width: 576px) {
-  /* 2 cards pa liy sou Android */
   .summary-grid {
     grid-template-columns: repeat(2, 1fr);
-
-    /* Espas pi piti */
     gap: 8px;
   }
 
-  /* Card pi compact sou mobile */
   .summary-card {
     padding: 10px;
-
     border-radius: 8px;
   }
 
-  /* Label pi piti */
   .summary-label {
     font-size: 9px;
   }
 
-  /* Number/value pi piti */
   .summary-value {
     font-size: 18px;
   }
 
-  /* Footer pi piti */
   .summary-footer {
     font-size: 8px;
   }
 }
 
-/* ========================================
-   BOTTOM GRID
-   ======================================== */
 
+/* ============================================================
+   18. BOTTOM GRID (Gri anba)
+   ============================================================ */
 .bottom-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr;  /* Yon sèl kolòn */
   gap: 10px;
 }
 
 
-/* ========================================
-   PANEL
-   ======================================== */
-
+/* ============================================================
+   19. PANEL (Panno)
+   ============================================================ */
 .panel {
   background: #ffffff;
   border: 1px solid var(--gray-200);
@@ -1145,51 +1184,32 @@ h6,
   overflow: hidden;
 }
 
-
-/* ========================================
-   PANEL HEADER
-   ======================================== */
-
+/* Tèt panno a */
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 11px 14px;
-
   border-bottom: 1px solid var(--gray-100);
 }
 
-
-/* Panel title */
-
 .panel-title {
   color: var(--gray-800);
-
   font-size: 12px;
   font-weight: 650;
 }
 
-
-/* ========================================
-   PANEL LINK
-   ======================================== */
-
+/* Lyen nan panno a */
 .panel-link {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-
   padding: 0;
-
   border: 0;
   background: transparent;
-
   color: var(--primary);
-
   font-size: 10px;
   font-weight: 600;
-
   cursor: pointer;
 }
 
@@ -1201,28 +1221,20 @@ h6,
   font-size: 9px;
 }
 
-
-/* ========================================
-   PANEL BODY
-   ======================================== */
-
+/* Kò panno a */
 .panel-body {
   padding: 0 14px;
 }
 
 
-/* ========================================
-   RECENT ITEM
-   ======================================== */
-
+/* ============================================================
+   20. RECENT ITEM (Atik resan)
+   ============================================================ */
 .recent-item {
   display: flex;
   align-items: center;
-
   gap: 10px;
-
   padding: 10px 0;
-
   border-bottom: 1px solid var(--gray-100);
 }
 
@@ -1230,90 +1242,51 @@ h6,
   border-bottom: 0;
 }
 
-
-/* ========================================
-   RECENT ICON
-   ======================================== */
-
 .recent-icon {
   width: 32px;
   height: 32px;
-
   flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 8px;
-
   background: #eff6ff;
   color: var(--primary);
-
   font-size: 14px;
 }
-
-
-/* ========================================
-   RECENT INFO
-   ======================================== */
 
 .recent-info {
   min-width: 0;
   flex: 1;
 }
 
-
-/* Name */
-
 .recent-name {
   color: var(--gray-800);
-
   font-size: 11px;
   font-weight: 600;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-
-/* Meta */
-
 .recent-meta {
   margin-top: 2px;
-
   color: var(--gray-400);
-
   font-size: 9px;
 }
 
-
-/* ========================================
-   RECENT TYPE
-   ======================================== */
-
 .recent-type {
   flex-shrink: 0;
-
   padding: 4px 7px;
-
   border-radius: 5px;
-
   background: #f1f5f9;
   color: var(--gray-500);
-
   font-size: 8px;
   font-weight: 600;
 }
 
-
-/* ========================================
-   📱 MOBILE / ANDROID
-   ======================================== */
-
+/* Sou mobil */
 @media (max-width: 576px) {
-
   .panel-header {
     padding: 10px 12px;
   }
@@ -1330,9 +1303,7 @@ h6,
   .recent-icon {
     width: 30px;
     height: 30px;
-
     border-radius: 7px;
-
     font-size: 13px;
   }
 
@@ -1350,7 +1321,10 @@ h6,
   }
 }
 
-/* ========= ADMIN ========= */
+
+/* ============================================================
+   21. ADMIN (Patnè Admin)
+   ============================================================ */
 .admin-header {
   display: flex;
   align-items: center;
@@ -1358,6 +1332,7 @@ h6,
   margin-bottom: 1rem;
 }
 
+/* Tab admin yo */
 .admin-tabs {
   display: flex;
   gap: 4px;
@@ -1379,21 +1354,25 @@ h6,
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .admin-tab-active {
   background: white;
   color: var(--primary);
   box-shadow: var(--shadow-sm);
 }
 
+/* Tablo responsive */
 .table-responsive {
   overflow-x: auto;
 }
 
+/* Tablo admin */
 .admin-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
+
 .admin-table th {
   text-align: left;
   padding: 10px 12px;
@@ -1405,21 +1384,27 @@ h6,
   letter-spacing: 0.04em;
   border-bottom: 1px solid var(--gray-200);
 }
+
 .admin-table td {
   padding: 10px 12px;
   border-bottom: 1px solid var(--gray-100);
   color: var(--gray-800);
 }
+
 .admin-table tr:hover td {
   background: var(--gray-50);
 }
+
+/* Liy ki an atant (jòn) */
 .row-pending td {
   background: #fffbeb !important;
 }
+
 .td-email {
   color: var(--gray-500) !important;
   font-size: 12px !important;
 }
+
 .td-date {
   color: var(--gray-400) !important;
   font-size: 12px !important;
@@ -1432,10 +1417,15 @@ h6,
   border-top: 1px solid var(--gray-100);
 }
 
+
+/* ============================================================
+   22. NOTIFIKASYON (Lis notifikasyon)
+   ============================================================ */
 .notif-list {
   display: flex;
   flex-direction: column;
 }
+
 .notif-item {
   display: flex;
   align-items: flex-start;
@@ -1443,30 +1433,37 @@ h6,
   padding: 12px;
   border-bottom: 1px solid var(--gray-100);
 }
+
 .notif-item:last-child {
   border-bottom: none;
 }
+
 .notif-unread {
-  background: #eff6ff;
+  background: #eff6ff;         /* Notifikasyon ki pa li */
 }
+
 .notif-item-body {
   flex: 1;
 }
+
 .notif-item-title {
   font-size: 13px;
   font-weight: 600;
   color: var(--gray-800);
   margin-bottom: 2px;
 }
+
 .notif-item-msg {
   font-size: 12px;
   color: var(--gray-600);
 }
+
 .notif-item-date {
   font-size: 11px;
   color: var(--gray-400);
   margin-top: 4px;
 }
+
 .notif-item-actions {
   display: flex;
   flex-direction: column;
@@ -1474,6 +1471,10 @@ h6,
   flex-shrink: 0;
 }
 
+
+/* ============================================================
+   23. DESGLOSE (Detay)
+   ============================================================ */
 .desglose-header {
   display: flex;
   align-items: center;
@@ -1481,6 +1482,7 @@ h6,
   margin-bottom: 1.25rem;
 }
 
+/* Bouton tounen */
 .btn-back {
   padding: 6px 12px;
   border: 1px solid var(--gray-300);
@@ -1492,6 +1494,7 @@ h6,
   transition: all 0.15s;
   white-space: nowrap;
 }
+
 .btn-back:hover {
   background: var(--gray-50);
 }
@@ -1500,14 +1503,19 @@ h6,
   margin-left: auto;
 }
 
+
+/* ============================================================
+   24. FÒM (Gri fòm)
+   ============================================================ */
 .form-grid-3 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 kolòn */
   gap: 0.75rem;
 }
+
 .form-grid-4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr); /* 4 kolòn */
   gap: 0.75rem;
 }
 
@@ -1519,6 +1527,12 @@ h6,
   gap: 8px;
 }
 
+
+/* ============================================================
+   25. TABLO PWOFCYONÈL (Table Professional)
+   ============================================================
+   Tablo pou desglose vitrina yo.
+   ============================================================ */
 .table-container {
   background: white;
   border-radius: 20px;
@@ -1543,6 +1557,7 @@ h6,
   border: 1px solid var(--gray-300);
 }
 
+/* Tèt tablo a */
 .table-professional th {
   text-align: center;
   padding: 8px 6px;
@@ -1558,23 +1573,30 @@ h6,
   background: #2c3e50;
 }
 
+/* Selil tablo a */
 .table-professional td {
   padding: 6px 5px;
   border: 1px solid var(--gray-300);
-  font-family: "Courier New", monospace;
+  font-family: "Courier New", monospace; /* Font monospace pou chif */
   font-weight: 500;
   color: #0f1a24;
   text-align: center;
   background: white;
 }
 
+/* Liy altènè (zebre) */
 .table-professional tr:nth-child(even) td {
   background: var(--gray-50);
 }
+
 .table-professional tr:hover td {
   background: #f1f5f9;
 }
 
+
+/* ============================================================
+   26. PROFILE (Pwofil itilizatè)
+   ============================================================ */
 .profile-avatar-section {
   display: flex;
   align-items: center;
@@ -1601,12 +1623,19 @@ h6,
   font-weight: 700;
   color: var(--gray-900);
 }
+
 .profile-email {
   font-size: 13px;
   color: var(--gray-500);
   margin-bottom: 6px;
 }
 
+
+/* ============================================================
+   27. BOUTON YO (Btn)
+   ============================================================ */
+
+/* Bouton prensipal ti */
 .btn-primary-sm {
   padding: 7px 14px;
   background: var(--primary);
@@ -1618,10 +1647,12 @@ h6,
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .btn-primary-sm:hover {
   background: var(--primary-dark);
 }
 
+/* Bouton segondè */
 .btn-secondary-sm {
   padding: 7px 14px;
   background: white;
@@ -1632,10 +1663,12 @@ h6,
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .btn-secondary-sm:hover {
   background: var(--gray-50);
 }
 
+/* Bouton siksè (vèt) */
 .btn-success-sm {
   padding: 5px 12px;
   background: #dcfce7;
@@ -1647,10 +1680,12 @@ h6,
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .btn-success-sm:hover {
   background: #bbf7d0;
 }
 
+/* Bouton avètisman (jòn) */
 .btn-warning-sm {
   padding: 5px 12px;
   background: #fef3c7;
@@ -1662,10 +1697,12 @@ h6,
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .btn-warning-sm:hover {
   background: #fde68a;
 }
 
+/* Bouton danje (wouj) */
 .btn-danger-sm {
   padding: 5px 10px;
   background: #fee2e2;
@@ -1677,10 +1714,12 @@ h6,
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .btn-danger-sm:hover {
   background: #fecaca;
 }
 
+/* Bouton fantom */
 .btn-ghost-sm {
   padding: 5px 10px;
   background: transparent;
@@ -1691,10 +1730,12 @@ h6,
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .btn-ghost-sm:hover {
   background: var(--gray-50);
 }
 
+/* Bouton danje kontou */
 .btn-danger-outline {
   padding: 10px 20px;
   background: transparent;
@@ -1707,10 +1748,15 @@ h6,
   transition: all 0.15s;
   font-family: inherit;
 }
+
 .btn-danger-outline:hover {
   background: #fef2f2;
 }
 
+
+/* ============================================================
+   28. ETA LOADING AK EMPTY
+   ============================================================ */
 .loading-state {
   text-align: center;
   padding: 2rem;
@@ -1725,24 +1771,34 @@ h6,
   font-size: 14px;
 }
 
-/* ========= PRINT ========= */
+
+/* ============================================================
+   29. STIL POU ENPRIME (Print)
+   ============================================================
+   Sa a aplik lè w enprime yon paj.
+   ============================================================ */
 @media print {
   .no-print {
-    display: none !important;
+    display: none !important; /* Kache sa ki pa enprime */
   }
+
   .layout-shell,
   .layout-main {
     display: block;
     margin: 0;
   }
+
   .sidebar,
   .topbar,
   .bottom-nav {
-    display: none !important;
+    display: none !important; /* Kache navigasyon an */
   }
+
   body {
     background: white;
   }
+
+  /* Asire koulè tablo a parèt byen */
   .table-professional th {
     background: #1e2b3c !important;
     color: white !important;
@@ -1751,6 +1807,12 @@ h6,
   }
 }
 
+
+/* ============================================================
+   30. RESPONSIVE (Adaptasyon pou diferan gwosè ekran)
+   ============================================================ */
+
+/* Tablet */
 @media (max-width: 900px) {
   .form-grid-4 {
     grid-template-columns: repeat(2, 1fr);
@@ -1760,25 +1822,31 @@ h6,
   }
 }
 
+/* Mobil */
 @media (max-width: 768px) {
+  /* Sidebar kache pa default */
   .sidebar {
     transform: translateX(-100%);
   }
+
+  /* Lè sidebar ouvri */
   .sidebar-open {
     transform: translateX(0);
   }
+
   .sidebar-overlay {
     display: block;
   }
 
   .layout-main {
-    margin-left: 0;
+    margin-left: 0; /* Pa gen espas pou sidebar sou mobil */
   }
 
   .topbar-menu-btn {
     display: flex;
   }
 
+  /* Bottom nav parèt sou mobil */
   .bottom-nav {
     display: flex;
     position: fixed;
@@ -1788,44 +1856,44 @@ h6,
     background: white;
     border-top: 1px solid var(--gray-200);
     z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0); /* Pou iPhone X+ */
   }
 
   .bottom-nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 4px 8px;
+    text-decoration: none;
+    color: var(--gray-400);
+    font-size: 12px;
+    font-weight: 600;
+    gap: 5px;
+    position: relative;
+    transition: color 0.15s;
+  }
 
-  padding: 10px 4px 8px;
+  .bottom-nav-item i {
+    font-size: 21px;
+    line-height: 1;
+  }
 
-  text-decoration: none;
-  color: var(--gray-400);
-
-  font-size: 12px;
-  font-weight: 600;
-
-  gap: 5px;
-
-  position: relative;
-  transition: color 0.15s;
-}
-
-.bottom-nav-item i {
-  font-size: 21px;
-  line-height: 1;
-}
   .bottom-nav-item-active {
     color: var(--primary);
   }
+
   .bottom-nav-icon {
     font-size: 20px;
   }
+
   .bottom-nav-label {
     font-size: 10px;
     font-weight: 500;
   }
+
+  /* Ti pwen wouj sou bottom nav */
   .bottom-nav-dot {
     position: absolute;
     top: 6px;
@@ -1837,9 +1905,7 @@ h6,
   }
 
   .layout-content {
-    padding-bottom: calc(
-      var(--bottom-nav-height) + env(safe-area-inset-bottom, 0)
-    );
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0));
   }
 
   .page-content {
@@ -1855,13 +1921,16 @@ h6,
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
+
   .product-card {
     padding: 1rem;
   }
+
   .product-icon {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
   }
+
   .product-title {
     font-size: 12px;
   }
@@ -1869,6 +1938,7 @@ h6,
   .form-grid-4 {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .form-grid-3 {
     grid-template-columns: 1fr;
   }
@@ -1880,6 +1950,7 @@ h6,
   .welcome-card {
     padding: 1.75rem;
   }
+
   .welcome-title {
     font-size: 1.5rem;
   }
@@ -1892,6 +1963,7 @@ h6,
   .table-professional {
     font-size: 0.75rem;
   }
+
   .table-professional th,
   .table-professional td {
     padding: 5px 4px;
@@ -1903,6 +1975,10 @@ h6,
   }
 }
 
+
+/* ============================================================
+   31. ABOUT (Konsènan app la)
+   ============================================================ */
 .about-logo {
   width: 56px;
   height: 56px;
@@ -1966,11 +2042,13 @@ h6,
   color: var(--gray-800);
   margin-bottom: 2px;
 }
+
 .about-feat-desc {
   font-size: 11px;
   color: var(--gray-500);
 }
 
+/* Lis sistèm */
 .about-sys-row {
   display: flex;
   align-items: center;
@@ -1978,6 +2056,7 @@ h6,
   padding: 10px 16px;
   border-bottom: 1px solid var(--gray-100);
 }
+
 .about-sys-row:last-child {
   border-bottom: none;
 }
@@ -1996,6 +2075,7 @@ h6,
   flex: 1;
 }
 
+/* Devlopè a */
 .about-dev {
   display: flex;
   align-items: center;
@@ -2022,6 +2102,7 @@ h6,
   font-weight: 700;
   color: var(--gray-900);
 }
+
 .about-dev-role {
   font-size: 12px;
   color: var(--gray-500);
@@ -2043,6 +2124,7 @@ h6,
   border: 1px solid var(--gray-200);
 }
 
+/* Bouton WhatsApp */
 .about-whatsapp-btn {
   display: flex;
   align-items: center;
@@ -2058,20 +2140,29 @@ h6,
   text-decoration: none;
   transition: all 0.15s;
 }
+
 .about-whatsapp-btn:hover {
   background: #20bd5a;
   transform: translateY(-1px);
 }
 
+
+/* ============================================================
+   32. TI EKRAN (max 380px)
+   ============================================================ */
 @media (max-width: 380px) {
   .product-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* 1 sèl kolòn */
   }
   .dashboard-stats {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+
+/* ============================================================
+   33. BOUTON ENSTALE (Install PWA)
+   ============================================================ */
 .install-btn {
   position: fixed;
   bottom: 24px;
@@ -2092,11 +2183,13 @@ h6,
   transition: all 0.2s;
   font-family: inherit;
 }
+
 .install-btn:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
 }
 
+/* Enstriksyon pou iOS */
 .ios-hint-overlay {
   position: fixed;
   inset: 0;
@@ -2107,6 +2200,7 @@ h6,
   justify-content: center;
   padding: 1rem;
 }
+
 .ios-hint-card {
   background: white;
   border-radius: 16px;
@@ -2115,18 +2209,21 @@ h6,
   max-width: 400px;
   margin-bottom: env(safe-area-inset-bottom, 0);
 }
+
 .ios-hint-title {
   font-size: 15px;
   font-weight: 700;
   color: var(--gray-900);
   margin-bottom: 1rem;
 }
+
 .ios-hint-steps {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 1.25rem;
 }
+
 .ios-hint-step {
   display: flex;
   align-items: center;
@@ -2134,6 +2231,7 @@ h6,
   font-size: 13px;
   color: var(--gray-700);
 }
+
 .ios-hint-num {
   width: 24px;
   height: 24px;
@@ -2147,6 +2245,7 @@ h6,
   font-weight: 700;
   flex-shrink: 0;
 }
+
 .ios-hint-close {
   width: 100%;
   padding: 11px;
@@ -2160,6 +2259,10 @@ h6,
   font-family: inherit;
 }
 
+
+/* ============================================================
+   34. KONTNI LEGAL (Legal Content)
+   ============================================================ */
 .legal-content {
   color: var(--gray-700);
 }
@@ -2179,9 +2282,11 @@ h6,
 .legal-content strong {
   color: var(--gray-800);
 }
-/* =================================================
-   PROFILE PAGE FOOTER
-   ================================================== */
+
+
+/* ============================================================
+   35. PYE PAJ PWOFL (Profile Page Footer)
+   ============================================================ */
 .profile-footer {
   margin-top: 2.5rem;
   padding-top: 1.5rem;
@@ -2222,7 +2327,7 @@ h6,
   color: var(--gray-400);
 }
 
-/* Responsive */
+/* Sou mobil */
 @media (max-width: 480px) {
   .profile-footer-links {
     gap: 1rem;
@@ -2235,15 +2340,21 @@ h6,
   }
 }
 
-/* =========================================================
-   CROQUIS DE VIDRIOS
-   ========================================================= */
 
+/* ============================================================
+   36. CROQUIS DE VIDRIOS (Optimizasyon Vit)
+   ============================================================
+   Seksyon sa a se pou paj optimizasyon vit la.
+   Li gen fòm, tablo, rezime, ak desen SVG.
+   ============================================================ */
+
+/* Paj optimizasyon vit la */
 .glass-optimizer-page {
   max-width: 1500px;
   margin: 0 auto;
 }
 
+/* Tèt paj la */
 .glass-page-header {
   display: flex;
   align-items: flex-start;
@@ -2274,6 +2385,7 @@ h6,
   flex-wrap: wrap;
 }
 
+/* Seleksyon pwojè */
 .glass-project-selector {
   min-height: 38px;
   padding: 8px 34px 8px 12px;
@@ -2290,8 +2402,7 @@ h6,
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Cards */
-
+/* Kat vit yo */
 .glass-card {
   background: #fff;
   border: 1px solid #e2e8f0;
@@ -2339,8 +2450,7 @@ h6,
   padding: 18px;
 }
 
-/* Forms */
-
+/* Fòm vit yo */
 .glass-form-grid {
   display: grid;
   gap: 14px;
@@ -2398,6 +2508,7 @@ h6,
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+/* Input ak ikòn */
 .glass-input-wrap {
   position: relative;
 }
@@ -2431,8 +2542,7 @@ h6,
   color: #3b82f6;
 }
 
-/* Pieces form */
-
+/* Fòm moso vit */
 .glass-piece-form {
   display: grid;
   grid-template-columns: minmax(130px, 1fr) 18px minmax(130px, 1fr) 130px auto;
@@ -2498,8 +2608,7 @@ h6,
   font-size: 12px;
 }
 
-/* Table */
-
+/* Tablo moso vit yo */
 .glass-table-body {
   padding: 0;
 }
@@ -2640,8 +2749,7 @@ h6,
   font-size: 18px;
 }
 
-/* Alerts */
-
+/* Alèt vit yo */
 .glass-alert {
   display: flex;
   align-items: center;
@@ -2670,8 +2778,7 @@ h6,
   border: 1px solid #fde68a;
 }
 
-/* Optimize */
-
+/* Bouton optimize */
 .glass-optimize-action {
   display: flex;
   justify-content: flex-end;
@@ -2720,8 +2827,7 @@ h6,
   font-size: 10px;
 }
 
-/* Summary */
-
+/* Rezime vit yo */
 .glass-summary {
   margin-bottom: 18px;
   padding: 18px;
@@ -2849,8 +2955,7 @@ h6,
   font-size: 11px;
 }
 
-/* Drawings */
-
+/* Desen vit yo */
 .glass-drawings-section {
   margin-bottom: 30px;
 }
@@ -2930,6 +3035,7 @@ h6,
   max-height: 460px;
 }
 
+/* Desen SVG vit yo */
 .glass-svg-sheet {
   fill: #fff;
   stroke: #334155;
@@ -2970,8 +3076,7 @@ h6,
   gap: 5px;
 }
 
-/* Responsive */
-
+/* Responsive pou seksyon vit la */
 @media (max-width: 1100px) {
   .glass-page-header {
     flex-direction: column;
@@ -3039,3 +3144,7 @@ h6,
     width: 100%;
   }
 }
+
+/* ============================================================
+   FIN MAIN.CSS
+   ============================================================ */

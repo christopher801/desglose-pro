@@ -60,19 +60,7 @@ export default function BarraForm({
       className="barras-form"
       onSubmit={handleSubmit}
     >
-      <div className="barras-form-header">
-        <div>
-          <h3>
-            {editingCut
-              ? "Editar corte"
-              : "Agregar corte"}
-          </h3>
-
-          <p>
-            Registra las piezas que necesitas cortar.
-          </p>
-        </div>
-      </div>
+    
 
       <div className="barras-form-grid">
         <div className="barras-field">
@@ -139,7 +127,7 @@ export default function BarraForm({
             type="text"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            placeholder="Ej. Jamba 1"
+            placeholder="Ej. Corte 1"
           />
         </div>
       </div>
