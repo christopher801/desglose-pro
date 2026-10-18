@@ -132,7 +132,8 @@
   border: 1px solid var(--gray-200);
   border-radius: 8px;
   outline: none;
-  background: white;
+  /* background-color (pa shorthand) pou kenbe flèch Bootstrap la sou <select> */
+  background-color: white;
   color: var(--gray-900);
   font-size: 13px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -246,9 +247,9 @@
 .barras-form {
   padding: 16px;
   margin-bottom: 20px;
-  border: 1px solid var(--gray-100);
+  border: 1px solid var(--gray-200);
   border-radius: 10px;
-  background: var(--gray-50);
+  background: white;
 }
 
 .barras-form-header {
@@ -295,11 +296,13 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
+  background-color: white;
 }
 
 .barras-table th {
   padding: 10px 12px;
   border-bottom: 1px solid var(--gray-200);
+  background-color: white;
   color: var(--gray-500);
   text-align: left;
   font-size: 10px;
@@ -312,12 +315,14 @@
 .barras-table td {
   padding: 12px;
   border-bottom: 1px solid var(--gray-100);
+  background-color: white;
   color: var(--gray-700);
   vertical-align: middle;
 }
 
+/* Dwe rete apre .barras-table td, sinon white a ap efase hover la */
 .barras-table tbody tr:hover td {
-  background: var(--gray-50);
+  background-color: var(--gray-50);
 }
 
 .barras-table tbody tr:last-child td {
@@ -401,15 +406,12 @@
   padding: 16px 0 24px;
 }
 
+/* CAMBIO: retire min-height: 44px, padding: 0 28px, border-radius ak font-size.
+   Kounye a gwosè a sòti nan ".barras-actions button" pi ba a, pou 4 bouton yo menm gwosè. */
 .barras-optimize-btn {
-  min-height: 44px;
-  padding: 0 28px;
   border: none;
-  border-radius: 8px;
   background: var(--primary);
   color: white;
-  font-size: 13px;
-  font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease;
 }
@@ -760,15 +762,38 @@
 
 /* ---------- Actions ---------- */
 
+/* CAMBIO: flex-wrap + align-items, gap pi piti */
 .barras-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
   margin-top: 20px;
 }
 
-.barras-action-save { min-width: 110px; }
-.barras-action-pdf  { min-width: 130px; }
+/* CAMBIO: tout 4 bouton menm wotè, menm font, san min-width.
+   Ranplase ansyen .barras-action-save { min-width: 110px }
+   ak .barras-action-pdf { min-width: 130px } */
+.barras-actions button {
+  height: 34px;
+  min-height: 34px;
+  min-width: 0;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 8px;
+}
+
+.barras-actions button i {
+  font-size: 13px;
+  margin-right: 6px !important; /* ranplase me-2 Bootstrap (8px) */
+}
 
 /* ============================================================
    PRINT
@@ -825,14 +850,14 @@
     font-size: 16px;
   }
 
- .barras-config {
-  padding: 16px;
-}
+  .barras-config {
+    padding: 16px;
+  }
 
-.barras-config-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
+  .barras-config-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
 
   .barras-panel-body { padding: 16px; }
   .barras-form { padding: 14px; }
@@ -890,8 +915,11 @@
   .barras-summary-card strong { font-size: 15px; }
   .barras-summary-card small  { font-size: 9px; }
 
-  .barras-actions { flex-direction: column; }
-  .barras-actions button { width: 100%; }
+  /* CAMBIO: sou mobil, bouton yo fè 2 pa ranje (2x2) olye de
+     4 gwo bouton plen lajè youn sou lòt. Te: flex-direction: column + width: 100% */
+  .barras-actions button {
+    flex: 1 1 calc(50% - 8px);
+  }
 
   .barras-bar,
   .barras-cut,

@@ -1,4 +1,61 @@
 import React, { useState } from "react";
+import FractionUtils from "../../utils/fraction";
+
+// ---------- Helpers lokal ----------
+
+// Netwaye tèks la anvan n li l:
+// '48-1/2"' -> '48 1/2' | '1,5' -> '1.5' | '  5/8 ' -> '5/8'
+function normalizeMeasure(text) {
+  return String(text)
+    .trim()
+    .replace(/["”″]/g, "")          // retire mak pous (")
+    .replace(/,/g, ".")             // vigil -> pwen
+    .replace(/(\d)\s*-\s*(\d+\/)/, "$1 $2") // 48-1/2 -> 48 1/2
+    .replace(/\s+/g, " ");
+}
+
+// Valid: "120", "0.125", "1/16", "5/8", "48 1/2"
+function isValidMeasure(text) {
+  const t = normalizeMeasure(text);
+  if (!t) return false;
+
+  const mixed = t.match(/^(\d+) (\d+)\/(\d+)$/);
+  if (mixed) return Number(mixed[3]) > 0;
+
+  const frac = t.match(/^(\d+)\/(\d+)$/);
+  if (frac) return Number(frac[2]) > 0;
+
+  return /^\d*\.?\d+$/.test(t);
+}
+
+// Tèks -> nonb (itilize parseFraction ou a)
+function measureToNumber(text) {
+  return FractionUtils.parseFraction(normalizeMeasure(text));
+}
+
+// Nonb -> tèks: 0.0625 -> "1/16" | 48.5 -> "48 1/2" | 0.07 -> "0.07"
+function numberToMeasure(value, maxDenominator = 64) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "";
+  if (Number.isInteger(n)) return String(n);
+
+  const whole = Math.floor(n);
+  const decimal = n - whole;
+
+  for (let den = 2; den <= maxDenominator; den *= 2) {
+    const num = Math.round(decimal * den);
+    if (Math.abs(decimal - num / den) < 1e-9) {
+      if (num === 0) return String(whole);
+      const g = FractionUtils.gcd(num, den);
+      const frac = `${num / g}/${den / g}`;
+      return whole > 0 ? `${whole} ${frac}` : frac;
+    }
+  }
+
+  return String(n);
+}
+
+// ---------- Konpozan ----------
 
 export default function BarraForm({
   unit,
@@ -6,7 +63,10 @@ export default function BarraForm({
   onCancel,
   editingCut = null,
 }) {
-  const [length, setLength] = useState(editingCut?.length ?? "");
+  // Tèks ki afiche (ka gen "1/16", "3/4", "5/8", "48 1/2"...)
+  const [lengthText, setLengthText] = useState(
+    editingCut?.length != null ? numberToMeasure(editingCut.length) : ""
+  );
 
   const [quantity, setQuantity] = useState(editingCut?.quantity ?? 1);
 
@@ -14,10 +74,17 @@ export default function BarraForm({
 
   const [label, setLabel] = useState(editingCut?.label ?? "");
 
+  const lengthIsInvalid =
+    lengthText.trim() !== "" && !isValidMeasure(lengthText);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const parsedLength = Number(length);
+    if (!isValidMeasure(lengthText)) {
+      return;
+    }
+
+    const parsedLength = measureToNumber(lengthText);
     const parsedQuantity = Number(quantity);
 
     if (!Number.isFinite(parsedLength) || parsedLength <= 0) {
@@ -30,17 +97,24 @@ export default function BarraForm({
 
     onAdd({
       id: editingCut?.id,
-      length: parsedLength,
+      length: parsedLength, // toujou yon NONB pou rès app la
       quantity: parsedQuantity,
       material: material.trim() || "Perfil",
       label: label.trim() || "Sin etiqueta",
     });
 
     if (!editingCut) {
-      setLength("");
+      setLengthText("");
       setQuantity(1);
       setMaterial("");
       setLabel("");
+    }
+  };
+
+  // Lè l kite chan an, fòmate l pwòp ("0.0625" -> "1/16", "48.5" -> "48 1/2")
+  const handleLengthBlur = () => {
+    if (isValidMeasure(lengthText)) {
+      setLengthText(numberToMeasure(measureToNumber(lengthText)));
     }
   };
 
@@ -51,16 +125,27 @@ export default function BarraForm({
           <label htmlFor="cut-length">LARGO ({unit})</label>
           <input
             id="cut-length"
-            type="number"
-            min="0.001"
-            step="0.001"
-            value={length}
-            onChange={(e) => setLength(e.target.value)}
+            type="text"
+            inputMode="text"
+            autoComplete="off"
+            value={lengthText}
+            onChange={(e) => setLengthText(e.target.value)}
+            onBlur={handleLengthBlur}
             placeholder={
-              unit === "cm" ? "Ej. 120" : unit === "m" ? "Ej. 1.20" : "Ej. 4"
+              unit === "cm"
+                ? "Ej. 120"
+                : unit === "m"
+                ? "Ej. 1.20"
+                : "Ej. 48 1/2, 5/8, 3/4"
             }
+            aria-invalid={lengthIsInvalid}
             required
           />
+          {lengthIsInvalid && (
+            <small style={{ color: "#dc2626" }}>
+              Formato inválido. Usa 48 1/2, 5/8, 3/4 o 0.125
+            </small>
+          )}
         </div>
 
         <div className="barras-field">

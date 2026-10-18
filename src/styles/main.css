@@ -56,107 +56,45 @@
   box-sizing: border-box; /* Fè border ak padding antre nan lajè a */
 }
 
-
 /* ============================================================
    3. FONTS
    ============================================================
-   DM Sans pou kò tèks la, Manrope pou tit yo.
+   DM Sans pou kò tèks la ak Manrope pou tit yo.
+   Chanje --font-body / --font-heading pou chanje font nan tout app la.
    ============================================================ */
 
-/* Font pou kò a (body) */
+:root {
+  --font-body:
+    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-heading:
+    "Manrope", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 body {
-  font-family:
-    "DM Sans",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-  background: var(--gray-50);      /* Background gri klè */
-  color: var(--gray-800);          /* Koulè tèks la */
-  line-height: 1.6;                /* Espas ant liy */
-  -webkit-font-smoothing: antialiased;   /* Tèks pi dous sou Mac */
-  -moz-osx-font-smoothing: grayscale;    /* Tèks pi dous sou Firefox */
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  background: var(--gray-50);
+  color: var(--gray-800);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* Asire tout eleman yo gen menm font lan */
-* {
-  font-family:
-    "DM Sans",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-  box-sizing: border-box;
-}
-
-/* Tit yo (h1-h6) ak klas espesyal yo */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.sidebar-logo-name,
-.topbar-title,
-.profile-page-title,
-.page-title,
-.card-title,
-.modal-title {
-  font-family:
-    "Manrope",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-  font-weight: 700;              /* Tit yo fonse */
-  letter-spacing: -0.02em;       /* Ti koreksyon espas lèt */
-}
-
-/* Bouton, input, select, textarea */
+/* Fòm yo pa eritye font la otomatikman, kidonk nou fòse l ak "inherit" */
 button,
 input,
 select,
 textarea {
-  font-family:
-    "DM Sans",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-  font-weight: 500;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
 }
 
-/* Kò tèks la */
-p,
-span,
-div,
-li,
-.text-body {
-  font-family:
-    "DM Sans",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-  font-weight: 400;
-}
-
-/* Si ou pa vle Manrope, tit yo ap itilize DM Sans */
+/* Tit yo */
 h1,
 h2,
 h3,
@@ -169,15 +107,15 @@ h6,
 .page-title,
 .card-title,
 .modal-title {
-  font-family:
-    "DM Sans",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+strong,
+b {
+  font-weight: 600;
 }
 
 

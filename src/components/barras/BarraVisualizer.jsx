@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  formatInches,
+  formatFractionalInches,
 } from "../../utils/barras/barraUnits";
 
 function getCutPercentage(length, barLength) {
@@ -68,14 +68,14 @@ export default function BarraVisualizer({
                 </div>
 
                 <div className="barras-bar-stats">
-                  Usado: {formatInches(bar.usedLength)}
+                  Usado: {formatFractionalInches(bar.usedLength)}
                   {" · "}
-                  Desperdicio: {formatInches(bar.waste)}
+                  Desperdicio: {formatFractionalInches(bar.waste)}
                 </div>
               </div>
 
               <div className="barras-bar">
-                {bar.cuts.map((cut, cutIndex) => {
+                {bar.cuts.map((cut) => {
                   const width = getCutPercentage(
                     cut.lengthWithSaw,
                     bar.barLength
@@ -88,7 +88,7 @@ export default function BarraVisualizer({
                       style={{
                         width: `${width}%`,
                       }}
-                      title={`${cut.label} — ${formatInches(
+                      title={`${cut.label} — ${formatFractionalInches(
                         cut.length
                       )}`}
                     >
@@ -97,7 +97,7 @@ export default function BarraVisualizer({
                       </span>
 
                       <span className="barras-cut-length">
-                        {formatInches(cut.length)}
+                        {formatFractionalInches(cut.length)}
                       </span>
                     </div>
                   );
@@ -114,7 +114,7 @@ export default function BarraVisualizer({
                     }}
                   >
                     <span>
-                      {formatInches(bar.waste)}
+                      {formatFractionalInches(bar.waste)}
                     </span>
                   </div>
                 )}
@@ -127,7 +127,7 @@ export default function BarraVisualizer({
                 </span>
 
                 <span>
-                  Barra: {formatInches(bar.barLength)}
+                  Barra: {formatFractionalInches(bar.barLength)}
                 </span>
               </div>
             </div>

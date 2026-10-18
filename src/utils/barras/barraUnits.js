@@ -57,12 +57,14 @@ export function convertFromInches(value, unit) {
 
 /**
  * Formatea una medida según la unidad seleccionada.
+ * En pulgadas se muestran fracciones (40.5 -> 40 1/2").
  */
 export function formatMeasurement(value, unit) {
   const converted = convertFromInches(value, unit);
 
   if (unit === "in") {
-    return `${converted.toFixed(3)}"`;
+    // CAMBIO: antes era converted.toFixed(3) + '"'
+    return formatFractionalInches(converted);
   }
 
   if (unit === "m") {

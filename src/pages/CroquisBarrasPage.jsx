@@ -8,6 +8,7 @@ import OptimizationSummary from "../components/barras/OptimizationSummary";
 
 import { optimizeBars } from "../utils/barras/barraOptimizer";
 import { exportBarsToPdf } from "../utils/barras/barraPdf";
+import { saveCroquisToHistorial } from "../services/croquisHistorialService"; // CAMBIO: nouvo
 import Layout from "../components/Layout";
 
 import "../styles/barras.css";
@@ -39,6 +40,10 @@ export default function CroquisBarrasPage() {
 
   const [saved, setSaved] = useState(false);
 
+  // CAMBIO: id antre a nan istwa. Si w sove 2 fwa menm rezilta a, li mete l ajou
+  // olye de kreye doub. Li reset lè w optimize ankò oswa lè w efase tout.
+  const [historyId, setHistoryId] = useState(null);
+
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -67,6 +72,11 @@ export default function CroquisBarrasPage() {
 
       if (data.result) {
         setResult(data.result);
+      }
+
+      // CAMBIO: restore id istwa a
+      if (data.historyId) {
+        setHistoryId(data.historyId);
       }
     } catch (storageError) {
       console.error("No se pudo cargar Croquis de barras:", storageError);
@@ -101,6 +111,7 @@ export default function CroquisBarrasPage() {
     }
 
     setResult(null);
+    setHistoryId(null); // CAMBIO
   };
 
   const handleRemoveCut = (id) => {
@@ -108,6 +119,7 @@ export default function CroquisBarrasPage() {
 
     setResult(null);
     setSaved(false);
+    setHistoryId(null); // CAMBIO
   };
 
   const handleEditCut = (cut) => {
@@ -131,6 +143,7 @@ export default function CroquisBarrasPage() {
       });
 
       setResult(optimized);
+      setHistoryId(null); // CAMBIO: nouvo rezilta = nouvo antre nan istwa
     } catch (optimizationError) {
       setError(
         optimizationError.message || "No fue posible optimizar los cortes.",
@@ -145,6 +158,11 @@ export default function CroquisBarrasPage() {
     }
 
     try {
+      // CAMBIO: itilize id ki deja egziste, sinon kreye yon nouvo
+      const entryId = historyId || createId();
+      const savedAt = new Date().toISOString();
+
+      // Travay kounye a (restore lè w louvri paj la ankò)
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
@@ -153,10 +171,23 @@ export default function CroquisBarrasPage() {
           unit,
           cuts,
           result,
-          savedAt: new Date().toISOString(),
+          historyId: entryId, // CAMBIO
+          savedAt,
         }),
       );
 
+      // CAMBIO: ajoute nan istwa (sa k parèt nan HistorialPage)
+      saveCroquisToHistorial({
+        id: entryId,
+        fecha: savedAt,
+        barLength,
+        saw,
+        unit,
+        cuts,
+        result,
+      });
+
+      setHistoryId(entryId);
       setSaved(true);
       setError("");
     } catch (storageError) {
@@ -172,7 +203,9 @@ export default function CroquisBarrasPage() {
     setEditingCut(null);
     setError("");
     setSaved(false);
+    setHistoryId(null); // CAMBIO
 
+    // Sa efase sèlman travay kounye a, PA istwa a
     localStorage.removeItem(STORAGE_KEY);
   };
 
@@ -181,9 +214,7 @@ export default function CroquisBarrasPage() {
       <div className="page-content barras-page">
         <div className="barras-header no-print">
           <div className="barras-header-main">
-            <div className="barras-title-icon">
-              <i className="bi bi-scissors" />
-            </div>
+            
 
             <div>
               <h1 className="page-title">Croquis de barras</h1>
@@ -206,7 +237,7 @@ export default function CroquisBarrasPage() {
         {saved && (
           <div className="alert-info no-print">
             <i className="bi bi-check-circle me-2" />
-            Optimización guardada correctamente.
+            Optimización guardada correctamente. Puedes verla en el Historial.
           </div>
         )}
 
@@ -222,21 +253,22 @@ export default function CroquisBarrasPage() {
         </div>
 
         <div className="barras-section no-print">
-              <BarraForm
-                unit={unit}
-                onAdd={handleAddCut}
-                onCancel={() => setEditingCut(null)}
-                editingCut={editingCut}
-              />
+          <BarraForm
+            unit={unit}
+            onAdd={handleAddCut}
+            onCancel={() => setEditingCut(null)}
+            editingCut={editingCut}
+          />
         </div>
-            <div className="barras-table-wrapper">
-              <BarraTable
-                cuts={cuts}
-                unit={unit}
-                onRemove={handleRemoveCut}
-                onEdit={handleEditCut}
-              />
-            </div>
+
+        <div className="barras-table-wrapper">
+          <BarraTable
+            cuts={cuts}
+            unit={unit}
+            onRemove={handleRemoveCut}
+            onEdit={handleEditCut}
+          />
+        </div>
 
         <div className="barras-actions no-print">
           <button
@@ -247,6 +279,10 @@ export default function CroquisBarrasPage() {
           >
             <i className="bi bi-magic me-2" />
             Optimizar Corte
+          </button>
+          <button onClick={handleClear} className="btn-secondary-sm">
+            <i className="bi bi-trash me-2" />
+            Limpiar
           </button>
 
           <button
@@ -277,21 +313,6 @@ export default function CroquisBarrasPage() {
 
         {result && (
           <div className="barras-results">
-            <div className="barras-results-header no-print">
-              <div>
-                <h2>Resultado de optimización</h2>
-
-                <p>Distribución calculada para minimizar el desperdicio.</p>
-              </div>
-
-              <span className="barras-result-status">
-                <i className="bi bi-check-circle-fill me-1" />
-                Optimizado
-              </span>
-            </div>
-
-            <OptimizationSummary result={result} />
-
             <BarraVisualizer result={result} />
           </div>
         )}
