@@ -6,21 +6,13 @@ export default function BarraForm({
   onCancel,
   editingCut = null,
 }) {
-  const [length, setLength] = useState(
-    editingCut?.length ?? ""
-  );
+  const [length, setLength] = useState(editingCut?.length ?? "");
 
-  const [quantity, setQuantity] = useState(
-    editingCut?.quantity ?? 1
-  );
+  const [quantity, setQuantity] = useState(editingCut?.quantity ?? 1);
 
-  const [material, setMaterial] = useState(
-    editingCut?.material ?? ""
-  );
+  const [material, setMaterial] = useState(editingCut?.material ?? "");
 
-  const [label, setLabel] = useState(
-    editingCut?.label ?? ""
-  );
+  const [label, setLabel] = useState(editingCut?.label ?? "");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,10 +24,7 @@ export default function BarraForm({
       return;
     }
 
-    if (
-      !Number.isInteger(parsedQuantity) ||
-      parsedQuantity <= 0
-    ) {
+    if (!Number.isInteger(parsedQuantity) || parsedQuantity <= 0) {
       return;
     }
 
@@ -56,18 +45,10 @@ export default function BarraForm({
   };
 
   return (
-    <form
-      className="barras-form"
-      onSubmit={handleSubmit}
-    >
-    
-
+    <form className="barras-form" onSubmit={handleSubmit}>
       <div className="barras-form-grid">
         <div className="barras-field">
-          <label htmlFor="cut-length">
-            LARGO ({unit})
-          </label>
-
+          <label htmlFor="cut-length">LARGO ({unit})</label>
           <input
             id="cut-length"
             type="number"
@@ -76,20 +57,14 @@ export default function BarraForm({
             value={length}
             onChange={(e) => setLength(e.target.value)}
             placeholder={
-              unit === "cm"
-                ? "Ej. 120"
-                : unit === "m"
-                ? "Ej. 1.20"
-                : "Ej. 4"
+              unit === "cm" ? "Ej. 120" : unit === "m" ? "Ej. 1.20" : "Ej. 4"
             }
             required
           />
         </div>
 
         <div className="barras-field">
-          <label htmlFor="cut-quantity">
-            CANTIDAD
-          </label>
+          <label htmlFor="cut-quantity">CANTIDAD</label>
 
           <input
             id="cut-quantity"
@@ -103,9 +78,7 @@ export default function BarraForm({
         </div>
 
         <div className="barras-field">
-          <label htmlFor="cut-material">
-            MATERIAL
-          </label>
+          <label htmlFor="cut-material">MATERIAL</label>
 
           <input
             id="cut-material"
@@ -118,37 +91,26 @@ export default function BarraForm({
         </div>
 
         <div className="barras-field">
-          <label htmlFor="cut-label">
-            ETIQUETA
-          </label>
+          <label htmlFor="cut-label">ETIQUETA</label>
 
           <input
             id="cut-label"
             type="text"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            placeholder="Ej. Corte 1"
+            placeholder="Ej. Jamba 1"
           />
         </div>
       </div>
 
       <div className="barras-form-actions">
-        <button
-          type="submit"
-          className="btn-primary-sm"
-        >
+        <button type="submit" className="btn-primary-sm">
           <i className="bi bi-plus-lg me-1" />
-          {editingCut
-            ? "Actualizar corte"
-            : "Agregar corte"}
+          {editingCut ? "Actualizar corte" : "Agregar corte"}
         </button>
 
         {editingCut && (
-          <button
-            type="button"
-            className="btn-secondary-sm"
-            onClick={onCancel}
-          >
+          <button type="button" className="btn-secondary-sm" onClick={onCancel}>
             Cancelar
           </button>
         )}

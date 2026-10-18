@@ -194,9 +194,6 @@ export default function CroquisBarrasPage() {
               </p>
             </div>
           </div>
-
-          
-          
         </div>
 
         {error && (
@@ -225,28 +222,21 @@ export default function CroquisBarrasPage() {
         </div>
 
         <div className="barras-section no-print">
-          <div className="barras-panel">
-            
-
-            <div className="barras-panel-body">
               <BarraForm
                 unit={unit}
                 onAdd={handleAddCut}
                 onCancel={() => setEditingCut(null)}
                 editingCut={editingCut}
               />
-
-              <div className="barras-table-wrapper">
-                <BarraTable
-                  cuts={cuts}
-                  unit={unit}
-                  onRemove={handleRemoveCut}
-                  onEdit={handleEditCut}
-                />
-              </div>
-            </div>
-          </div>
         </div>
+            <div className="barras-table-wrapper">
+              <BarraTable
+                cuts={cuts}
+                unit={unit}
+                onRemove={handleRemoveCut}
+                onEdit={handleEditCut}
+              />
+            </div>
 
         <div className="barras-actions no-print">
           <button
@@ -259,32 +249,31 @@ export default function CroquisBarrasPage() {
             Optimizar Corte
           </button>
 
-        
-              <button
-                type="button"
-                className="btn-primary-sm barras-action-save"
-                onClick={handleSave}
-              >
-                <i className="bi bi-floppy2 me-2" />
-                Guardar
-              </button>
+          <button
+            type="button"
+            className="btn-primary-sm barras-action-save"
+            onClick={handleSave}
+          >
+            <i className="bi bi-floppy2 me-2" />
+            Guardar
+          </button>
 
-              <button
-                type="button"
-                className="btn-secondary-sm barras-action-pdf"
-                onClick={() =>
-                  exportBarsToPdf({
-                    result,
-                    barLength,
-                    saw,
-                    unit,
-                  })
-                }
-              >
-                <i className="bi bi-file-earmark-pdf me-2" />
-                Exportar PDF
-              </button>
-            </div>
+          <button
+            type="button"
+            className="btn-secondary-sm barras-action-pdf"
+            onClick={() =>
+              exportBarsToPdf({
+                result,
+                barLength,
+                saw,
+                unit,
+              })
+            }
+          >
+            <i className="bi bi-file-earmark-pdf me-2" />
+            Exportar PDF
+          </button>
+        </div>
 
         {result && (
           <div className="barras-results">
@@ -304,8 +293,6 @@ export default function CroquisBarrasPage() {
             <OptimizationSummary result={result} />
 
             <BarraVisualizer result={result} />
-
-            
           </div>
         )}
       </div>

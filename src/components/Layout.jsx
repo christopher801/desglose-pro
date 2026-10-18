@@ -10,9 +10,8 @@ import ShowNotificacionModal from "./ShowNotificacionModal";
 
 const navItems = [
   { path: "/dashboard", icon: "bi-grid", label: "Inicio" },
-  { path: "/desglose", icon: "bi-layers", label: "Desglose" },
-  { path: "/glass-optimizer", icon: "bi-square-half", label: "Croquis" },
-  { path: "/croquis-barras", icon: "bi bi-scissors", label: "Barras" },
+  { path: "/glass-optimizer", icon: "bi-square-half", label: "Vidrios" },
+  { path: "/croquis-barras", icon: "bi bi-scissors", label: "Aluminio" },
   { path: "/historial", icon: "bi-clock", label: "Historial" },
 ];
 
@@ -21,9 +20,9 @@ const NAV_CALCULO = [
   {
     path: "/glass-optimizer",
     icon: "bi-square-half",
-    label: "Croquis",
+    label: "Croquis de vidrios",
   },
-  { path: "/croquis-barras", icon: "bi bi-scissors", label: "Barras" },
+  { path: "/croquis-barras", icon: "bi bi-scissors", label: "Croquis de aluminio" },
 ];
 
 const NAV_GESTION = [
