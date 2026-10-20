@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
 import {
   getHistorial,
-  deleteDesglose,
-  deleteAllDesgloses
+  deleteDesglose
 } from '../services/historialService'
+import CroquisVidriosHistorial from '../components/historial/CroquisVidriosHistorial'
 // CAMBIO: istwa croquis de barras
 import {
   getCroquisHistorial,
@@ -47,10 +47,14 @@ function getCroquisSummary(entry) {
   return { totalBars, totalCuts, totalWaste, efficiency, materials }
 }
 
+// Antre ki sòti nan Croquis de vidrios (GlassOptimizer)
+const isVidrio = (entry) => entry?.tipo === 'croquis-vidrios'
+
 export default function HistorialPage() {
   const navigate = useNavigate()
 
-  const [historial, setHistorial] = useState([])
+  const [historial, setHistorial] = useState([]) // desgloses (san vidrios)
+  const [vidrios, setVidrios] = useState([]) // croquis de vidrios
   const [selected, setSelected] = useState(null)
   const [showDeleteAll, setShowDeleteAll] = useState(false)
   const [search, setSearch] = useState('')
@@ -60,9 +64,15 @@ export default function HistorialPage() {
   const [croquisHistorial, setCroquisHistorial] = useState([])
   const [selectedCroquis, setSelectedCroquis] = useState(null)
 
+  const refreshHistorial = () => {
+    const all = getHistorial()
+    setHistorial(all.filter((e) => !isVidrio(e)))
+    setVidrios(all.filter(isVidrio))
+  }
+
   useEffect(() => {
-    setHistorial(getHistorial())
-    setCroquisHistorial(getCroquisHistorial()) // CAMBIO
+    refreshHistorial()
+    setCroquisHistorial(getCroquisHistorial())
   }, [])
 
   const handleTabChange = (nextTab) => {
@@ -73,11 +83,16 @@ export default function HistorialPage() {
 
   const handleDelete = (id) => {
     deleteDesglose(id)
-    setHistorial(getHistorial())
+    refreshHistorial()
 
     if (selected?.id === id) {
       setSelected(null)
     }
+  }
+
+  const handleDeleteVidrio = (id) => {
+    deleteDesglose(id)
+    refreshHistorial()
   }
 
   // CAMBIO
@@ -96,9 +111,12 @@ export default function HistorialPage() {
       deleteAllCroquis()
       setCroquisHistorial([])
       setSelectedCroquis(null)
+    } else if (tab === 'vidrios') {
+      vidrios.forEach((e) => deleteDesglose(e.id))
+      refreshHistorial()
     } else {
-      deleteAllDesgloses()
-      setHistorial([])
+      historial.forEach((e) => deleteDesglose(e.id))
+      refreshHistorial()
       setSelected(null)
     }
 
@@ -237,7 +255,11 @@ export default function HistorialPage() {
 
   // CAMBIO: valè pou ensèsyon sou onglet aktif la
   const currentCount =
-    tab === 'croquis' ? croquisHistorial.length : historial.length
+    tab === 'croquis'
+      ? croquisHistorial.length
+      : tab === 'vidrios'
+      ? vidrios.length
+      : historial.length
 
   return (
     <Layout>
@@ -252,7 +274,11 @@ export default function HistorialPage() {
               className="bi bi-clock-history"
               style={{ marginRight: '8px' }}
             ></i>
-            {tab === 'croquis' ? 'Historial de croquis' : 'Historial de desgloses'}
+            {tab === 'croquis'
+              ? 'Historial de croquis'
+              : tab === 'vidrios'
+              ? 'Historial de vidrios'
+              : 'Historial de desgloses'}
           </h1>
 
           {currentCount > 0 && (
@@ -292,6 +318,16 @@ export default function HistorialPage() {
             Croquis de barras
             <span className="historial-tab-count">{croquisHistorial.length}</span>
           </button>
+
+          <button
+            type="button"
+            className={`historial-tab ${tab === 'vidrios' ? 'active' : ''}`}
+            onClick={() => handleTabChange('vidrios')}
+          >
+            <i className="bi bi-grid-3x3-gap" style={{ marginRight: '6px' }}></i>
+            Croquis de vidrios
+            <span className="historial-tab-count">{vidrios.length}</span>
+          </button>
         </div>
 
         {/* =========================
@@ -324,6 +360,8 @@ export default function HistorialPage() {
               placeholder={
                 tab === 'croquis'
                   ? 'Buscar por material, etiqueta o fecha...'
+                  : tab === 'vidrios'
+                  ? 'Buscar por cliente, obra o tipo de vidrio...'
                   : 'Buscar por cliente, obra o sistema...'
               }
               value={search}
@@ -1742,6 +1780,14 @@ export default function HistorialPage() {
             )}
           </>
         )}
+
+        {tab === 'vidrios' && (
+          <CroquisVidriosHistorial
+            entries={vidrios}
+            search={search}
+            onDelete={handleDeleteVidrio}
+          />
+        )}
       </div>
 
       {/* =========================
@@ -1805,6 +1851,8 @@ export default function HistorialPage() {
             >
               {tab === 'croquis'
                 ? '¿Borrar todos los croquis?'
+                : tab === 'vidrios'
+                ? '¿Borrar todos los croquis de vidrios?'
                 : '¿Borrar todo el historial?'}
             </h3>
 
@@ -1818,7 +1866,7 @@ export default function HistorialPage() {
             >
               Se eliminarán los{' '}
               {currentCount}{' '}
-              {tab === 'croquis' ? 'croquis' : 'desgloses'}{' '}
+              {tab === 'croquis' ? 'croquis' : tab === 'vidrios' ? 'croquis de vidrios' : 'desgloses'}{' '}
               guardados. Esta acción no se puede
               deshacer.
             </p>

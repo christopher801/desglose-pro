@@ -35,3 +35,17 @@ export const deleteAllDesgloses = () => {
 export const getDesgloseById = (id) => {
   return load().find(d => d.id === id) || null
 }
+
+export const updateDesglose = (id, data) => {
+  const list = load()
+  if (!list.some(d => d.id === id)) return null
+
+  const next = list.map(d =>
+    d.id === id
+      ? { ...d, ...data, id, fecha: new Date().toISOString() }
+      : d
+  )
+
+  save(next)
+  return next.find(d => d.id === id)
+}

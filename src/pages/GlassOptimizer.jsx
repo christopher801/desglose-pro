@@ -17,7 +17,11 @@ import {
   obtenerProyectos,
 } from "../services/glassOptimizer";
 
-import { saveDesglose } from "../services/historialService";
+import {
+  saveDesglose,
+  updateDesglose,
+  getHistorial,
+} from "../services/historialService";
 
 const PROYECTO_VACIO = {
   id: null,
@@ -176,10 +180,14 @@ export default function CroquisVidriosPage() {
      * desglosepro_glass_projects
      *
      * Y además queda registrado en:
-     * dp_historial_desgloses
+     * dp_historial_desgloses (tipo "croquis-vidrios").
+     * Si el proyecto ya estaba en el historial, se actualiza (sin duplicar).
      */
-    saveDesglose({
+    const projectId = proyecto.id || guardado?.id;
+
+    const entradaHistorial = {
       tipo: "croquis-vidrios",
+      projectId,
 
       proyecto: {
         cliente: proyecto.cliente || "Sin cliente",
@@ -198,13 +206,24 @@ export default function CroquisVidriosPage() {
       },
 
       piezas,
-      result: resultado,
       resultado,
 
       materiales: [],
 
       notas: proyecto.observaciones || "Optimización de corte de vidrio.",
-    });
+    };
+
+    const existente = projectId
+      ? getHistorial().find(
+          (e) => e.tipo === "croquis-vidrios" && e.projectId === projectId,
+        )
+      : null;
+
+    if (existente) {
+      updateDesglose(existente.id, entradaHistorial);
+    } else {
+      saveDesglose(entradaHistorial);
+    }
 
     setMensajeGuardado("Proyecto guardado correctamente.");
     setError("");
