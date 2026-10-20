@@ -1,2147 +1,1945 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+// ============================================================
+// DATA
+// ============================================================
+
+const WHATSAPP_URL = "https://wa.me/18494850059";
+
+const systems = [
+  {
+    name: "Ventana P-92",
+    type: "Corredera 2, 3 o 4 hojas",
+    group: "ventanas",
+    icon: "bi-window-sidebar",
+    precision: '1/16"',
+    status: "Disponible",
+  },
+  {
+    name: "Ventana P-65",
+    type: "Corredera 2, 3 o 4 hojas",
+    group: "ventanas",
+    icon: "bi-window-stack",
+    precision: '1/16"',
+    status: "Disponible",
+  },
+  {
+    name: "Ventana Tradicional",
+    type: "Corredera 2, 3 o 4 hojas",
+    group: "ventanas",
+    icon: "bi-window",
+    precision: '1/16"',
+    status: "Disponible",
+  },
+  {
+    name: "Ventana C-70",
+    type: "Corredera 2, 3 o 4 hojas",
+    group: "ventanas",
+    icon: "bi-window",
+    precision: '1/16"',
+    status: "Disponible",
+  },
+   {
+    name: "Ventana M-100",
+    type: "Corredera 2, 3 o 4 hojas",
+    group: "ventanas",
+    icon: "bi-window",
+    precision: '1/16"',
+    status: "Disponible",
+  },
+  {
+    name: "P-40 Proyectada",
+    type: "Sistema proyectado",
+    group: "ventanas",
+    icon: "bi-box-arrow-up-right",
+    precision: '1/16"',
+    status: "Disponible",
+  },
+  {
+    name: "Puerta Comercial",
+    type: "Puertas de aluminio",
+    group: "puertas",
+    icon: "bi-door-open",
+    precision: '1/16"',
+    status: "Disponible",
+  },
+  {
+    name: "Puerta Abisagrada P40",
+    type: "Puertas de aluminio",
+    group: "puertas",
+    icon: "bi-door-closed",
+    precision: '1/16"',
+    status: "Disponible",
+  },
+  {
+    name: "Croquis de Vidrio",
+    type: "Optimizador de corte",
+    group: "herramientas",
+    icon: "bi-aspect-ratio",
+    precision: "mm / in",
+    status: "Herramienta",
+  },
+  {
+    name: "Croquis de Barras",
+    type: "Optimizador de corte",
+    group: "herramientas",
+    icon: "bi-aspect-ratio",
+    precision: "mm / in",
+    status: "Herramienta",
+  },
+];
+
+const filters = [
+  { id: "all", label: "Todos" },
+  { id: "ventanas", label: "Ventanas" },
+  { id: "puertas", label: "Puertas" },
+  { id: "herramientas", label: "Herramientas" },
+];
+
+const steps = [
+  {
+    icon: "bi-rulers",
+    title: "Mide el hueco",
+    text: "Escribe ancho y alto en pulgadas, fracciones o centímetros. Tú trabajas como siempre.",
+  },
+  {
+    icon: "bi-cpu",
+    title: "Calcula al instante",
+    text: "Obtén el despiece completo de perfiles, vidrios y materiales, sin errores de mano.",
+  },
+  {
+    icon: "bi-file-earmark-pdf",
+    title: "Exporta y fabrica",
+    text: "Un PDF claro y listo para el corte. Guárdalo en tu historial y vuelve a él cuando quieras.",
+  },
+];
+
+const features = [
+  {
+    icon: "bi-rulers",
+    title: "Cálculos precisos para fabricación",
+    text: "Transforma tus medidas en despieces exactos y listos para producción, reduciendo errores y desperdicio de material.",
+    variant: "dark",
+    wide: true,
+  },
+  {
+    icon: "bi-file-earmark-pdf-fill",
+    title: "PDF profesional",
+    text: "Documentos claros para corte y fabricación.",
+  },
+  {
+    icon: "bi-phone-vibrate",
+    title: "App móvil, también offline",
+    text: "Instálala en tu iPhone o Android. Funciona en obra, incluso sin señal.",
+  },
+  {
+    icon: "bi-shield-lock-fill",
+    title: "Acceso y roles de usuario",
+    text: "Controla qué puede hacer cada usuario y mantén tu cuenta organizada y segura.",
+    variant: "accent",
+    wide: true,
+  },
+];
+
+const stats = [
+  { value: "7+", label: "Sistemas de ventana y puerta" },
+  { value: '1/16"', label: "Precisión en cada corte" },
+  { value: "PDF", label: "Listo para fabricar" },
+  { value: "Offline", label: "Funciona sin internet" },
+];
+
+const heroCuts = [
+  { label: "Cabezal / alfeizar", value: '15 15/16"' },
+  { label: "Jambas", value: '30 9/16"' },
+  { label: "Cabezal / riel", value: '31 3/8"' },
+  { label: "Lateral del marco", value: '32 7/8"' },
+  { label: "Vidrio", value: '12 11/16" × 26 9/16"' },
+];
+
+// ============================================================
+// PAGE
+// ============================================================
+
 export default function WelcomePage() {
   const { user, isActive } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [filter, setFilter] = useState("all");
 
-  // If user is already authenticated, redirect based on active status
+  // Animación de entrada al hacer scroll
+  useEffect(() => {
+    const items = document.querySelectorAll(".wl-reveal");
+
+    if (!("IntersectionObserver" in window)) {
+      items.forEach((el) => el.classList.add("is-in"));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    items.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // Si el usuario ya inició sesión, redirigir según su estado
   if (user) {
     return <Navigate to={isActive ? "/dashboard" : "/pending"} replace />;
   }
 
-  const systemsList = [
-    {
-      name: "Ventana P-92",
-      type: "Corredera 2, 3 o 4 hojas",
-      precision: '1/16"',
-      status: "Disponible",
-      icon: "bi-window-sidebar",
-      tag: "Popular",
-    },
-    {
-      name: "Ventana P-65",
-      type: "Corredera 2, 3 o 4 hojas",
-      precision: '1/16"',
-      status: "Disponible",
-      icon: "bi-window-stack",
-      tag: "popular",
-    },
-    {
-      name: "Ventana Tradicional",
-      type: "Corredera 2, 3 o 4 hojas",
-      precision: '1/16"',
-      status: "Disponible",
-      icon: "bi-window",
-      tag: "popular",
-    },
-    {
-      name: "Ventana C-70",
-      type: "Corredera 2, 3 o 4 hojas",
-      precision: '1/16"',
-      status: "Disponible",
-      icon: "bi-window",
-      tag: "popular",
-    },
-    {
-      name: "P-40 Proyectada",
-      type: "Sistema proyectado",
-      precision: '1/16"',
-      status: "Disponible",
-      icon: "bi-box-arrow-up-right",
-      tag: "popular",
-    },
-    {
-      name: "Puerta Comercial",
-      type: "Puertas de aluminio",
-      precision: '1/16"',
-      status: "Disponible",
-      icon: "bi-door-open",
-      tag: "popular",
-    },
-    {
-      name: "Puerta Abisagrada P40",
-      type: "Puertas de aluminio",
-      precision: '1/16"',
-      status: "Disponible",
-      icon: "bi-door-closed",
-      tag: "popular",
-    },
-    {
-      name: "Croquis de Vidrio",
-      type: "Optimizador",
-      precision: "Millimetros / In",
-      status: "Herramienta",
-      icon: "bi-aspect-ratio",
-      tag: "Corte Vidrio",
-    },
-  ];
+  const goTo = (event, id) => {
+    event.preventDefault();
+    setMenuOpen(false);
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const visibleSystems =
+    filter === "all" ? systems : systems.filter((s) => s.group === filter);
+
+  const marquee = [...systems, ...systems];
 
   return (
-    <div className="welcome-container">
-      {/* Dynamic CSS Styles */}
+    <div className="wl-page">
       <style>{`
-  :root {
-    --primary-dark: #0d1e3d;
-    --primary-navy: #132a52;
-    --accent-blue: #1e3a8a;
-    --highlight: #3b82f6;
-    --highlight-light: #60a5fa;
-    --cyan-accent: #06b6d4;
-    --bg-light: #f8fafc;
-    --text-dark: #0f172a;
-    --text-muted: #64748b;
-    --border-color: #e2e8f0;
-    --card-shadow: 0 10px 30px -5px rgba(13, 30, 61, 0.08);
-    --glow-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
-  }
-
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  html {
-    width: 100%;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-  }
-
-  body {
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  .welcome-container {
-    width: 100%;
-    min-height: 100vh;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont,
-      'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: var(--text-dark);
-    background-color: var(--bg-light);
-    overflow-x: hidden;
-  }
-
-  img,
-  svg {
-    max-width: 100%;
-  }
-
-  button,
-  a {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* =====================================================
-     BACKGROUND GRID
-  ===================================================== */
-
-  .bg-grid-pattern {
-    background-size: 30px 30px;
-    background-image:
-      linear-gradient(
-        to right,
-        rgba(13, 30, 61, 0.04) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        to bottom,
-        rgba(13, 30, 61, 0.04) 1px,
-        transparent 1px
-      );
-  }
-
-  .bg-dark-grid {
-    background-size: 30px 30px;
-    background-image:
-      linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0.05) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.05) 1px,
-        transparent 1px
-      );
-  }
-
-  /* =====================================================
-     NAVBAR
-  ===================================================== */
-
-  .navbar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-
-    width: 100%;
-
-    background: rgba(13, 30, 61, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-    padding: 0.85rem clamp(1rem, 3vw, 1.5rem);
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    text-decoration: none;
-    min-width: 0;
-  }
-
-  .brand-logo-box {
-    flex: 0 0 auto;
-    color: #ffffff;
-    font-weight: 900;
-    font-size: 1.1rem;
-
-    width: 38px;
-    height: 38px;
-
-    border-radius: 8px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-
-    letter-spacing: -0.5px;
-  }
-
-  .brand-name {
-    color: #ffffff;
-    font-weight: 800;
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    letter-spacing: -0.5px;
-
-    white-space: nowrap;
-  }
-
-  .brand-tag {
-    background: rgba(59, 130, 246, 0.2);
-    color: var(--highlight-light);
-
-    font-size: 0.65rem;
-    font-weight: 700;
-
-    padding: 2px 6px;
-
-    border-radius: 4px;
-
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-
-    border: 1px solid rgba(59, 130, 246, 0.3);
-
-    white-space: nowrap;
-  }
-
-  .nav-menu {
-    display: flex;
-    align-items: center;
-    gap: clamp(1rem, 2.5vw, 2rem);
-
-    list-style: none;
-  }
-
-  .nav-link {
-    color: #cbd5e1;
-    text-decoration: none;
-
-    font-size: 0.925rem;
-    font-weight: 500;
-
-    transition: color 0.2s ease;
-  }
-
-  .nav-link:hover {
-    color: #ffffff;
-  }
-
-  .btn-login {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
-
-    border: 1px solid rgba(255, 255, 255, 0.2);
-
-    padding: 0.5rem 1.25rem;
-
-    border-radius: 8px;
-
-    font-weight: 600;
-    font-size: 0.9rem;
-
-    text-decoration: none;
-
-    transition: all 0.2s ease;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 0.5rem;
-
-    white-space: nowrap;
-  }
-
-  .btn-login:hover {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.4);
-  }
-
-  .mobile-toggle {
-    display: none;
-
-    background: transparent;
-    border: none;
-
-    color: #ffffff;
-
-    font-size: 1.5rem;
-
-    cursor: pointer;
-
-    width: 42px;
-    height: 42px;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 8px;
-  }
-
-  .mobile-toggle:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  /* =====================================================
-     BUTTONS
-  ===================================================== */
-
-  .btn-primary-action,
-  .btn-secondary-action {
-    min-height: 46px;
-
-    padding: 0.75rem 1.5rem;
-
-    border-radius: 10px;
-
-    font-weight: 700;
-    font-size: 0.95rem;
-
-    text-decoration: none;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 0.6rem;
-
-    cursor: pointer;
-
-    transition: all 0.25s ease;
-
-    text-align: center;
-  }
-
-  .btn-primary-action {
-    background: linear-gradient(
-      135deg,
-      var(--highlight),
-      var(--accent-blue)
-    );
-
-    color: #ffffff;
-
-    border: none;
-
-    box-shadow:
-      0 4px 14px rgba(59, 130, 246, 0.35);
-  }
-
-  .btn-primary-action:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-      0 6px 20px rgba(59, 130, 246, 0.5);
-  }
-
-  .btn-secondary-action {
-    background: #ffffff;
-    color: var(--primary-dark);
-
-    border: 1px solid var(--border-color);
-
-    box-shadow:
-      0 2px 5px rgba(0, 0, 0, 0.04);
-  }
-
-  .btn-secondary-action:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-  }
-
-  /* =====================================================
-     HERO
-  ===================================================== */
-
-  .hero {
-    width: 100%;
-
-    background:
-      linear-gradient(
-        180deg,
-        var(--primary-dark) 0%,
-        var(--primary-navy) 100%
-      );
-
-    color: #ffffff;
-
-    padding:
-      clamp(3rem, 7vw, 5rem)
-      clamp(1rem, 4vw, 1.5rem)
-      clamp(4rem, 8vw, 6rem);
-
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-
-    position: absolute;
-
-    top: -20%;
-    right: -10%;
-
-    width: min(600px, 80vw);
-    height: min(600px, 80vw);
-
-    background:
-      radial-gradient(
-        circle,
-        rgba(59, 130, 246, 0.15) 0%,
-        transparent 70%
-      );
-
-    pointer-events: none;
-  }
-
-  .hero-container {
-    width: 100%;
-    max-width: 1200px;
-
-    margin: 0 auto;
-
-    display: grid;
-
-    grid-template-columns:
-      minmax(0, 1.1fr)
-      minmax(0, 0.9fr);
-
-    gap: clamp(2rem, 5vw, 3.5rem);
-
-    align-items: center;
-
-    position: relative;
-    z-index: 10;
-  }
-
-  .hero-content {
-    min-width: 0;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-
-    gap: 0.5rem;
-
-    background: rgba(59, 130, 246, 0.15);
-
-    border: 1px solid rgba(59, 130, 246, 0.3);
-
-    color: var(--highlight-light);
-
-    padding: 0.4rem 1rem;
-
-    border-radius: 50px;
-
-    font-size: 0.85rem;
-    font-weight: 600;
-
-    margin-bottom: 1.5rem;
-
-    max-width: 100%;
-  }
-
-  .hero-title {
-    font-size: clamp(2.2rem, 5vw, 3.25rem);
-
-    font-weight: 900;
-
-    line-height: 1.15;
-
-    letter-spacing: -1px;
-
-    margin-bottom: 1.25rem;
-
-    overflow-wrap: break-word;
-  }
-
-  .hero-title span {
-    background:
-      linear-gradient(
-        135deg,
-        #60a5fa,
-        #38bdf8
-      );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    background-clip: text;
-  }
-
-  .hero-subtitle {
-    font-size: clamp(1rem, 2vw, 1.15rem);
-
-    color: #94a3b8;
-
-    line-height: 1.6;
-
-    margin-bottom: 2.25rem;
-
-    max-width: 580px;
-  }
-
-  .hero-actions {
-    display: flex;
-
-    gap: 1rem;
-
-    flex-wrap: wrap;
-
-    margin-bottom: 3rem;
-  }
-
-  .trust-badges {
-    display: flex;
-    align-items: center;
-
-    gap: clamp(1rem, 3vw, 2rem);
-
-    padding-top: 1.5rem;
-
-    border-top:
-      1px solid rgba(255, 255, 255, 0.1);
-
-    flex-wrap: wrap;
-  }
-
-  .trust-item {
-    display: flex;
-    align-items: center;
-
-    gap: 0.6rem;
-
-    min-width: 0;
-  }
-
-  .trust-icon {
-    color: var(--highlight-light);
-    font-size: 1.2rem;
-    flex: 0 0 auto;
-  }
-
-  .trust-text {
-    font-size: 0.85rem;
-
-    color: #cbd5e1;
-
-    font-weight: 600;
-  }
-
-  /* =====================================================
-     MOCKUP
-  ===================================================== */
-
-  .hero-mockup-wrapper {
-    position: relative;
-    width: 100%;
-    min-width: 0;
-  }
-
-  .hero-mockup-card {
-    width: 100%;
-
-    background: #0f172a;
-
-    border:
-      1px solid rgba(255, 255, 255, 0.15);
-
-    border-radius: 16px;
-
-    padding: clamp(0.75rem, 2vw, 1.25rem);
-
-    box-shadow:
-      0 25px 50px -12px rgba(0, 0, 0, 0.5);
-
-    position: relative;
-
-    overflow: hidden;
-  }
-
-  .mockup-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding-bottom: 0.75rem;
-    margin-bottom: 0.75rem;
-
-    border-bottom:
-      1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .mockup-dots {
-    display: flex;
-    gap: 6px;
-  }
-
-  .dot {
-    width: 10px;
-    height: 10px;
-
-    border-radius: 50%;
-
-    flex: 0 0 auto;
-  }
-
-  .dot-red {
-    background: #ef4444;
-  }
-
-  .dot-yellow {
-    background: #f59e0b;
-  }
-
-  .dot-green {
-    background: #10b981;
-  }
-
-  .mockup-preview-box {
-    width: 100%;
-
-    background: #1e293b;
-
-    border-radius: 10px;
-
-    padding: clamp(0.65rem, 2vw, 1rem);
-
-    border:
-      1px solid rgba(255, 255, 255, 0.05);
-
-    max-height: 480px;
-
-    overflow-x: auto;
-    overflow-y: auto;
-
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .mockup-preview-box::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  .mockup-preview-box::-webkit-scrollbar-track {
-    background: #0f172a;
-  }
-
-  .mockup-preview-box::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 3px;
-  }
-
-  .seccion {
-    margin-bottom: 1.25rem;
-  }
-
-  .seccion:last-child {
-    margin-bottom: 0;
-  }
-
-  .seccion h3 {
-    color: #38bdf8;
-
-    font-size: 0.95rem;
-    font-weight: 700;
-
-    margin-bottom: 0.6rem;
-
-    display: flex;
-    align-items: center;
-
-    gap: 0.4rem;
-
-    white-space: nowrap;
-  }
-
-  .tabla-ventanas {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .mockup-preview-box table {
-    width: 100%;
-
-    min-width: 420px;
-
-    border-collapse: collapse;
-
-    font-size: 0.75rem;
-
-    text-align: center;
-
-    color: #cbd5e1;
-  }
-
-  .mockup-preview-box th,
-  .mockup-preview-box td {
-    padding: 0.4rem 0.5rem;
-
-    border:
-      1px solid rgba(255, 255, 255, 0.1);
-
-    white-space: nowrap;
-  }
-
-  .mockup-preview-box th {
-    background: #0f172a;
-    color: #f8fafc;
-    font-weight: 600;
-  }
-
-  .mockup-preview-box td {
-    background: rgba(15, 23, 42, 0.5);
-  }
-
-  .mockup-preview-box tr:hover td {
-    background:
-      rgba(59, 130, 246, 0.1);
-  }
-
-  /* =====================================================
-     GENERAL SECTIONS
-  ===================================================== */
-
-  .section-padding {
-    width: 100%;
-    max-width: 1200px;
-
-    margin: 0 auto;
-
-    padding:
-      clamp(3.5rem, 7vw, 5rem)
-      clamp(1rem, 4vw, 1.5rem);
-  }
-
-  .section-header {
-    text-align: center;
-
-    width: 100%;
-    max-width: 700px;
-
-    margin:
-      0 auto
-      clamp(2.5rem, 5vw, 3.5rem);
-  }
-
-  .section-tag {
-    color: var(--highlight);
-
-    font-weight: 800;
-
-    font-size: 0.85rem;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1.5px;
-
-    margin-bottom: 0.5rem;
-
-    display: block;
-  }
-
-  .section-title {
-    font-size: clamp(1.8rem, 4vw, 2.25rem);
-
-    font-weight: 800;
-
-    color: var(--primary-dark);
-
-    letter-spacing: -0.5px;
-
-    margin-bottom: 1rem;
-  }
-
-  .section-desc {
-    color: var(--text-muted);
-
-    font-size: clamp(0.95rem, 2vw, 1.05rem);
-
-    line-height: 1.6;
-  }
-
-  /* =====================================================
-     BENTO
-  ===================================================== */
-
-  .bento-grid {
-    display: grid;
-
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
-
-    gap: clamp(1rem, 2vw, 1.5rem);
-  }
-
-  .bento-card {
-    min-width: 0;
-
-    background: #ffffff;
-
-    border:
-      1px solid var(--border-color);
-
-    border-radius: 16px;
-
-    padding: clamp(1.25rem, 3vw, 2rem);
-
-    box-shadow: var(--card-shadow);
-
-    transition:
-      transform 0.25s ease,
-      box-shadow 0.25s ease;
-
-    position: relative;
-
-    overflow: hidden;
-  }
-
-  .bento-card:hover {
-    transform: translateY(-4px);
-
-    box-shadow:
-      0 20px 35px -10px
-      rgba(13, 30, 61, 0.12);
-  }
-
-  .bento-card.span-2 {
-    grid-column: span 2;
-  }
-
-  .bento-icon-wrapper {
-    width: 52px;
-    height: 52px;
-
-    border-radius: 12px;
-
-    background:
-      rgba(59, 130, 246, 0.08);
-
-    color: var(--highlight);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 1.5rem;
-
-    margin-bottom: 1.25rem;
-  }
-
-  .bento-title {
-    font-size: 1.25rem;
-
-    font-weight: 700;
-
-    color: var(--primary-dark);
-
-    margin-bottom: 0.75rem;
-  }
-
-  .bento-desc {
-    color: var(--text-muted);
-
-    font-size: 0.95rem;
-
-    line-height: 1.6;
-  }
-
-  /* =====================================================
-     SYSTEMS
-  ===================================================== */
-
-  .systems-grid {
-    display: grid;
-
-    grid-template-columns:
-      repeat(
-        auto-fit,
-        minmax(
-          min(100%, 280px),
-          1fr
-        )
-      );
-
-    gap: 1.25rem;
-  }
-
-  .system-card {
-    min-width: 0;
-
-    background: #ffffff;
-
-    border:
-      1px solid var(--border-color);
-
-    border-radius: 14px;
-
-    padding: 1.5rem;
-
-    display: flex;
-    flex-direction: column;
-
-    justify-content: space-between;
-
-    transition: all 0.2s ease;
-  }
-
-  .system-card:hover {
-    border-color: var(--highlight);
-
-    transform: translateY(-2px);
-
-    box-shadow: var(--card-shadow);
-  }
-
-  .system-top {
-    display: flex;
-
-    align-items: flex-start;
-
-    justify-content: space-between;
-
-    gap: 1rem;
-
-    margin-bottom: 1rem;
-  }
-
-  .system-icon {
-    width: 44px;
-    height: 44px;
-
-    flex: 0 0 auto;
-
-    border-radius: 10px;
-
-    background: var(--primary-dark);
-
-    color: #ffffff;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 1.25rem;
-  }
-
-  .system-badge {
-    background: #f1f5f9;
-
-    color: var(--primary-dark);
-
-    font-size: 0.7rem;
-    font-weight: 700;
-
-    padding: 3px 8px;
-
-    border-radius: 20px;
-
-    text-transform: uppercase;
-
-    white-space: nowrap;
-  }
-
-  .system-name {
-    font-weight: 800;
-
-    font-size: 1.1rem;
-
-    color: var(--primary-dark);
-
-    margin-bottom: 0.25rem;
-
-    overflow-wrap: break-word;
-  }
-
-  .system-type {
-    font-size: 0.85rem;
-
-    color: var(--text-muted);
-
-    margin-bottom: 1rem;
-  }
-
-  .system-footer {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 1rem;
-
-    padding-top: 0.75rem;
-
-    border-top:
-      1px solid #f1f5f9;
-
-    font-size: 0.8rem;
-
-    font-weight: 600;
-
-    color: var(--highlight);
-  }
-
-  /* =====================================================
-     CTA
-  ===================================================== */
-
-  .cta-section {
-    width: 100%;
-
-    background:
-      linear-gradient(
-        135deg,
-        var(--primary-dark),
-        var(--accent-blue)
-      );
-
-    color: #ffffff;
-
-    padding:
-      clamp(3.5rem, 7vw, 5rem)
-      clamp(1rem, 4vw, 1.5rem);
-
-    text-align: center;
-
-    position: relative;
-
-    overflow: hidden;
-  }
-
-  .cta-content {
-    width: 100%;
-    max-width: 750px;
-
-    margin: 0 auto;
-
-    position: relative;
-    z-index: 10;
-  }
-
-  .cta-title {
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
-
-    font-weight: 900;
-
-    margin-bottom: 1.25rem;
-
-    letter-spacing: -0.5px;
-  }
-
-  .cta-desc {
-    font-size: clamp(1rem, 2.5vw, 1.15rem);
-
-    color: #cbd5e1;
-
-    margin-bottom: 2.25rem;
-
-    line-height: 1.6;
-  }
-
-  /* =====================================================
-     FOOTER
-  ===================================================== */
-
-  .footer {
-    width: 100%;
-
-    background: #081226;
-
-    color: #94a3b8;
-
-    padding:
-      clamp(3rem, 6vw, 4rem)
-      clamp(1rem, 4vw, 1.5rem)
-      2rem;
-
-    border-top:
-      1px solid rgba(255, 255, 255, 0.05);
-
-    font-size: 0.9rem;
-  }
-
-  .footer-container {
-    width: 100%;
-    max-width: 1200px;
-
-    margin: 0 auto 3rem;
-
-    display: grid;
-
-    grid-template-columns:
-      2fr 1fr 1fr 1fr;
-
-    gap: clamp(2rem, 4vw, 3rem);
-  }
-
-  .footer-brand-desc {
-    margin-top: 1rem;
-
-    color: #64748b;
-
-    line-height: 1.6;
-
-    max-width: 320px;
-  }
-
-  .footer-heading {
-    color: #ffffff;
-
-    font-weight: 700;
-
-    margin-bottom: 1.25rem;
-
-    font-size: 0.95rem;
-  }
-
-  .footer-links {
-    list-style: none;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 0.75rem;
-  }
-
-  .footer-links a {
-    color: #94a3b8;
-
-    text-decoration: none;
-
-    transition: color 0.2s;
-  }
-
-  .footer-links a:hover {
-    color: #ffffff;
-  }
-
-  .footer-bottom {
-    width: 100%;
-    max-width: 1200px;
-
-    margin: 0 auto;
-
-    padding-top: 2rem;
-
-    border-top:
-      1px solid rgba(255, 255, 255, 0.08);
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    flex-wrap: wrap;
-
-    gap: 1rem;
-
-    font-size: 0.85rem;
-  }
-
-  /* =====================================================
-     LARGE TABLET / SMALL LAPTOP
-     993px - 1199px
-  ===================================================== */
-
-  @media (max-width: 1199px) {
-
-    .hero-container {
-      gap: 2.5rem;
-    }
-
-    .hero-title {
-      font-size: 2.8rem;
-    }
-
-    .bento-grid {
-      gap: 1rem;
-    }
-
-    .footer-container {
-      grid-template-columns:
-        1.5fr 1fr 1fr 1fr;
-
-      gap: 2rem;
-    }
-  }
-
-  /* =====================================================
-     TABLET
-     769px - 992px
-  ===================================================== */
-
-  @media (max-width: 992px) {
-
-    .hero {
-      padding-top: 4rem;
-    }
-
-    .hero-container {
-      grid-template-columns: 1fr;
-
-      text-align: center;
-
-      max-width: 850px;
-    }
-
-    .hero-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .hero-subtitle {
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .hero-actions {
-      justify-content: center;
-    }
-
-    .trust-badges {
-      justify-content: center;
-      width: 100%;
-    }
-
-    .hero-mockup-wrapper {
-      width: min(100%, 720px);
-
-      margin: 0 auto;
-    }
-
-    .bento-grid {
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-    }
-
-    .bento-card.span-2 {
-      grid-column: span 2;
-    }
-
-    .footer-container {
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  /* =====================================================
-     MOBILE NAV + MOBILE
-     <= 768px
-  ===================================================== */
-
-  @media (max-width: 768px) {
-
-    .navbar {
-      padding: 0.7rem 1rem;
-    }
-
-    .brand-tag {
-      display: none;
-    }
-
-    .mobile-toggle {
-      display: flex;
-    }
-
-    .nav-menu {
-      display: ${mobileMenuOpen ? "flex" : "none"};
-
-      position: absolute;
-
-      top: 100%;
-      left: 0;
-      right: 0;
-
-      width: 100%;
-
-      background: var(--primary-dark);
-
-      flex-direction: column;
-
-      align-items: stretch;
-
-      padding: 1rem;
-
-      gap: 0.5rem;
-
-      border-bottom:
-        1px solid rgba(255, 255, 255, 0.1);
-
-      box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    .nav-menu li {
-      width: 100%;
-    }
-
-    .nav-link {
-      display: block;
-
-      width: 100%;
-
-      padding: 0.75rem;
-
-      border-radius: 8px;
-    }
-
-    .nav-link:hover {
-      background:
-        rgba(255, 255, 255, 0.06);
-    }
-
-    .btn-login {
-      width: 100%;
-      margin-top: 0.25rem;
-    }
-
-    .hero {
-      padding:
-        3rem
-        1rem
-        4rem;
-    }
-
-    .hero-title {
-      font-size:
-        clamp(
-          2rem,
-          9vw,
-          2.5rem
-        );
-
-      letter-spacing: -0.7px;
-    }
-
-    .hero-subtitle {
-      font-size: 1rem;
-    }
-
-    .hero-actions {
-      width: 100%;
-
-      flex-direction: column;
-
-      align-items: stretch;
-
-      gap: 0.75rem;
-
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-actions a,
-    .hero-actions button {
-      width: 100%;
-    }
-
-    .trust-badges {
-      flex-direction: column;
-
-      align-items: center;
-
-      gap: 0.9rem;
-    }
-
-    .hero-mockup-card {
-      border-radius: 12px;
-    }
-
-    .mockup-preview-box {
-      max-height: 420px;
-    }
-
-    .bento-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .bento-card.span-2 {
-      grid-column: span 1;
-    }
-
-    .bento-card {
-      padding: 1.5rem;
-    }
-
-    .systems-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .cta-title {
-      font-size: 1.9rem;
-    }
-
-    .cta-desc {
-      font-size: 1rem;
-    }
-
-    .cta-section .btn-primary-action,
-    .cta-section .btn-secondary-action {
-      width: 100%;
-      max-width: 360px;
-    }
-
-    .footer-container {
-      grid-template-columns: 1fr;
-
-      text-align: center;
-    }
-
-    .footer-brand-desc {
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .footer-links {
-      align-items: center;
-    }
-
-    .footer-bottom {
-      justify-content: center;
-
-      text-align: center;
-
-      flex-direction: column;
-    }
-  }
-
-  /* =====================================================
-     SMALL ANDROID PHONES
-     <= 480px
-  ===================================================== */
-
-  @media (max-width: 480px) {
-
-    .navbar {
-      padding:
-        0.65rem
-        0.75rem;
-    }
-
-    .nav-brand {
-      gap: 0.5rem;
-    }
-
-    .brand-logo-box {
-      width: 34px;
-      height: 34px;
-
-      font-size: 1rem;
-    }
-
-    .brand-name {
-      font-size: 1rem;
-    }
-
-    .mobile-toggle {
-      width: 38px;
-      height: 38px;
-    }
-
-    .hero {
-      padding:
-        2.5rem
-        0.85rem
-        3.5rem;
-    }
-
-    .hero-badge {
-      font-size: 0.75rem;
-
-      padding:
-        0.35rem
-        0.75rem;
-    }
-
-    .hero-title {
-      font-size: 2rem;
-
-      line-height: 1.12;
-    }
-
-    .hero-subtitle {
-      font-size: 0.95rem;
-
-      line-height: 1.55;
-    }
-
-    .hero-actions {
-      margin-bottom: 2rem;
-    }
-
-    .btn-primary-action,
-    .btn-secondary-action {
-      width: 100%;
-
-      min-height: 48px;
-
-      padding:
-        0.7rem
-        1rem;
-
-      font-size: 0.9rem;
-    }
-
-    .trust-text {
-      font-size: 0.78rem;
-    }
-
-    .hero-mockup-card {
-      padding: 0.65rem;
-
-      border-radius: 10px;
-    }
-
-    .mockup-preview-box {
-      padding: 0.6rem;
-
-      max-height: 350px;
-    }
-
-    .mockup-preview-box table {
-      min-width: 400px;
-
-      font-size: 0.7rem;
-    }
-
-    .mockup-preview-box th,
-    .mockup-preview-box td {
-      padding:
-        0.35rem
-        0.4rem;
-    }
-
-    .section-padding {
-      padding:
-        3rem
-        0.85rem;
-    }
-
-    .section-header {
-      margin-bottom: 2.25rem;
-    }
-
-    .section-title {
-      font-size: 1.75rem;
-    }
-
-    .section-desc {
-      font-size: 0.95rem;
-    }
-
-    .bento-card {
-      padding: 1.25rem;
-    }
-
-    .bento-title {
-      font-size: 1.1rem;
-    }
-
-    .bento-desc {
-      font-size: 0.9rem;
-    }
-
-    .system-card {
-      padding: 1.25rem;
-    }
-
-    .cta-section {
-      padding:
-        3rem
-        0.85rem;
-    }
-
-    .cta-title {
-      font-size: 1.7rem;
-    }
-
-    .cta-desc {
-      font-size: 0.95rem;
-    }
-
-    .footer {
-      padding:
-        3rem
-        0.85rem
-        1.5rem;
-    }
-  }
-
-  /* =====================================================
-     VERY SMALL PHONES
-     <= 360px
-  ===================================================== */
-
-  @media (max-width: 360px) {
-
-    .brand-name {
-      font-size: 0.9rem;
-    }
-
-    .hero-title {
-      font-size: 1.75rem;
-    }
-
-    .hero-subtitle {
-      font-size: 0.9rem;
-    }
-
-    .hero-badge {
-      font-size: 0.7rem;
-    }
-
-    .section-title {
-      font-size: 1.6rem;
-    }
-
-    .mockup-preview-box {
-      max-height: 300px;
-    }
-  }
-
-  /* =====================================================
-     LANDSCAPE AND SHORT SCREENS
-  ===================================================== */
-
-  @media (max-height: 600px) and (orientation: landscape) {
-
-    .hero {
-      padding-top: 2rem;
-      padding-bottom: 3rem;
-    }
-
-    .hero-container {
-      gap: 2rem;
-    }
-
-    .hero-title {
-      font-size: 2rem;
-    }
-
-    .hero-subtitle {
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-actions {
-      margin-bottom: 1.5rem;
-    }
-
-    .mockup-preview-box {
-      max-height: 300px;
-    }
-  }
-
-  /* =====================================================
-     TOUCH DEVICES
-  ===================================================== */
-
-  @media (hover: none) {
-
-    .bento-card:hover,
-    .system-card:hover,
-    .btn-primary-action:hover {
-      transform: none;
-    }
-
-    .nav-link,
-    .btn-login,
-    .btn-primary-action,
-    .btn-secondary-action {
-      touch-action: manipulation;
-    }
-  }
-`}</style>
-
-      {/* 1. STICKY NAVBAR */}
-      <nav className="navbar">
-        <Link to="/" className="nav-brand">
-          <img
-            className="brand-logo-box"
-            src="/og-image.png"
-            alt="Desglose Pro Logo"
-          />
-          <span className="brand-name">Desglose Pro</span>
-        </Link>
-
-        <button
-          className="mobile-toggle"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle Navigation Menu"
-        >
-          <i className={`bi bi-${mobileMenuOpen ? "x-lg" : "list"}`}></i>
-        </button>
-
-        <ul className="nav-menu">
-          <li>
-            <a href="#caracteristicas" className="nav-link">
+        .wl-page {
+          --wl-ink: #0b1730;
+          --wl-night: #060d1c;
+          --wl-blue: #3b82f6;
+          --wl-cyan: #22d3ee;
+          --wl-muted: #64748b;
+          --wl-line: #e2e8f0;
+
+          width: 100%;
+          min-height: 100vh;
+          overflow-x: clip;
+          background: #ffffff;
+          color: var(--wl-ink);
+          font-family: inherit;
+        }
+
+        .wl-page *,
+        .wl-page *::before,
+        .wl-page *::after {
+          box-sizing: border-box;
+        }
+
+        .wl-page a {
+          text-decoration: none;
+        }
+
+        .wl-container {
+          width: min(1160px, calc(100% - 40px));
+          margin: 0 auto;
+        }
+
+        .wl-grad {
+          background: linear-gradient(100deg, #60a5fa 0%, #22d3ee 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
+        }
+
+        /* ---------- Reveal ---------- */
+
+        .wl-reveal {
+          opacity: 0;
+          transform: translateY(22px);
+          transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .wl-reveal.is-in {
+          opacity: 1;
+          transform: none;
+        }
+
+        /* ---------- Buttons ---------- */
+
+        .wl-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          height: 50px;
+          padding: 0 24px;
+          border-radius: 14px;
+          border: 1px solid transparent;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease,
+            background 0.2s ease;
+        }
+
+        .wl-btn:hover {
+          transform: translateY(-2px);
+        }
+
+        .wl-btn-primary {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          color: #ffffff;
+          box-shadow: 0 12px 30px -10px rgba(59, 130, 246, 0.7);
+        }
+
+        .wl-btn-primary:hover {
+          color: #ffffff;
+          box-shadow: 0 16px 36px -10px rgba(59, 130, 246, 0.85);
+        }
+
+        .wl-btn-ghost {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(255, 255, 255, 0.16);
+          color: #e2e8f0;
+        }
+
+        .wl-btn-ghost:hover {
+          background: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+
+        /* ---------- Navbar ---------- */
+
+        .wl-nav {
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          background: rgba(6, 13, 28, 0.78);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .wl-nav-inner {
+          height: 70px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+        }
+
+        .wl-brand {
+          display: flex;
+          align-items: center;
+          gap: 11px;
+          color: #ffffff;
+        }
+
+        .wl-brand img {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          object-fit: cover;
+        }
+
+        .wl-brand span {
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+        }
+
+        .wl-nav-links {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .wl-nav-link {
+          padding: 9px 14px;
+          border-radius: 10px;
+          color: #94a3b8;
+          font-size: 14px;
+          font-weight: 500;
+          transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .wl-nav-link:hover {
+          color: #ffffff;
+          background: rgba(255, 255, 255, 0.07);
+        }
+
+        .wl-nav-login {
+          margin-left: 8px;
+          padding: 9px 16px;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          border-radius: 10px;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 600;
+          transition: background 0.2s ease;
+        }
+
+        .wl-nav-login:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
+        }
+
+        .wl-burger {
+          display: none;
+          width: 42px;
+          height: 42px;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 10px;
+          background: transparent;
+          color: #ffffff;
+          font-size: 20px;
+          cursor: pointer;
+        }
+
+        /* ---------- Hero ---------- */
+
+        .wl-hero {
+          position: relative;
+          overflow: hidden;
+          padding: 88px 0 96px;
+          background: var(--wl-night);
+          color: #ffffff;
+        }
+
+        .wl-hero::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(rgba(96, 165, 250, 0.07) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(96, 165, 250, 0.07) 1px, transparent 1px);
+          background-size: 44px 44px;
+          mask-image: radial-gradient(
+            ellipse 80% 70% at 50% 30%,
+            #000 30%,
+            transparent 100%
+          );
+          -webkit-mask-image: radial-gradient(
+            ellipse 80% 70% at 50% 30%,
+            #000 30%,
+            transparent 100%
+          );
+        }
+
+        .wl-glow {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(90px);
+          pointer-events: none;
+        }
+
+        .wl-glow-a {
+          width: 520px;
+          height: 520px;
+          top: -220px;
+          right: -120px;
+          background: rgba(59, 130, 246, 0.35);
+          animation: wl-drift 14s ease-in-out infinite alternate;
+        }
+
+        .wl-glow-b {
+          width: 380px;
+          height: 380px;
+          bottom: -200px;
+          left: -100px;
+          background: rgba(34, 211, 238, 0.18);
+          animation: wl-drift 18s ease-in-out infinite alternate-reverse;
+        }
+
+        .wl-hero-grid {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+          gap: 56px;
+          align-items: center;
+        }
+
+        .wl-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 7px 14px;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.05);
+          color: #bfdbfe;
+          font-size: 13px;
+          font-weight: 500;
+        }
+
+        .wl-pill-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #34d399;
+          box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2);
+        }
+
+        .wl-hero h1 {
+          margin: 24px 0 20px;
+          font-family: var(--font-heading, inherit);
+          font-size: clamp(38px, 5.4vw, 66px);
+          font-weight: 800;
+          line-height: 1.04;
+          letter-spacing: -0.045em;
+        }
+
+        .wl-hero-sub {
+          max-width: 520px;
+          color: #94a3b8;
+          font-size: 17px;
+          line-height: 1.7;
+        }
+
+        .wl-hero-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 34px;
+        }
+
+        .wl-hero-note {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px 22px;
+          margin-top: 28px;
+          color: #94a3b8;
+          font-size: 13px;
+        }
+
+        .wl-hero-note span {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+        }
+
+        .wl-hero-note i {
+          color: #34d399;
+        }
+
+        /* Visual */
+
+        .wl-visual {
+          position: relative;
+          padding: 28px 0 28px 20px;
+        }
+
+        .wl-visual::before {
+          content: "";
+          position: absolute;
+          inset: 8% 4%;
+          border-radius: 32px;
+          background: radial-gradient(
+            circle,
+            rgba(59, 130, 246, 0.35),
+            transparent 70%
+          );
+          filter: blur(30px);
+        }
+
+        .wl-card {
+          position: relative;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 24px;
+          background: linear-gradient(
+            160deg,
+            rgba(255, 255, 255, 0.09),
+            rgba(255, 255, 255, 0.03)
+          );
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.7);
+          overflow: hidden;
+        }
+
+        .wl-card-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 14px 18px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          font-size: 12px;
+          color: #94a3b8;
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        .wl-dots {
+          display: flex;
+          gap: 6px;
+        }
+
+        .wl-dots i {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.18);
+        }
+
+        .wl-blueprint {
+          padding: 10px 18px 0;
+        }
+
+        .wl-blueprint svg {
+          display: block;
+          width: 100%;
+          height: auto;
+        }
+
+        .wl-draw {
+          stroke-dasharray: 1;
+          stroke-dashoffset: 1;
+          animation: wl-draw 1.8s ease forwards;
+        }
+
+        .wl-draw-2 {
+          animation-delay: 0.5s;
+        }
+
+        .wl-draw-3 {
+          animation-delay: 1s;
+        }
+
+        .wl-svg-text {
+          fill: #93c5fd;
+          font-size: 11px;
+          font-weight: 600;
+          opacity: 0;
+          animation: wl-fade 0.6s ease 1.6s forwards;
+        }
+
+        .wl-cuts {
+          display: grid;
+          gap: 2px;
+          padding: 8px 18px 20px;
+        }
+
+        .wl-cut {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 9px 0;
+          border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+          font-size: 13px;
+        }
+
+        .wl-cut:last-child {
+          border-bottom: 0;
+        }
+
+        .wl-cut span {
+          color: #94a3b8;
+        }
+
+        .wl-cut b {
+          color: #ffffff;
+          font-weight: 600;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .wl-chip {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 14px;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 14px;
+          background: rgba(11, 23, 48, 0.85);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.6);
+          font-size: 13px;
+          font-weight: 600;
+          color: #ffffff;
+        }
+
+        .wl-chip i {
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 9px;
+          font-size: 15px;
+        }
+
+        .wl-chip small {
+          display: block;
+          color: #94a3b8;
+          font-size: 11px;
+          font-weight: 500;
+        }
+
+        .wl-chip-pdf {
+          top: 0;
+          right: -6px;
+          animation: wl-float 6s ease-in-out infinite;
+        }
+
+        .wl-chip-pdf i {
+          background: rgba(239, 68, 68, 0.18);
+          color: #fca5a5;
+        }
+
+        .wl-chip-offline {
+          bottom: 0;
+          left: -4px;
+          animation: wl-float 7s ease-in-out infinite reverse;
+        }
+
+        .wl-chip-offline i {
+          background: rgba(52, 211, 153, 0.18);
+          color: #6ee7b7;
+        }
+
+        /* ---------- Stats ---------- */
+
+        .wl-stats {
+          position: relative;
+          z-index: 2;
+          margin-top: -44px;
+        }
+
+        .wl-stats-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          border: 1px solid var(--wl-line);
+          border-radius: 22px;
+          background: #ffffff;
+          box-shadow: 0 30px 60px -30px rgba(11, 23, 48, 0.25);
+        }
+
+        .wl-stat {
+          padding: 26px 24px;
+          border-right: 1px solid var(--wl-line);
+        }
+
+        .wl-stat:last-child {
+          border-right: 0;
+        }
+
+        .wl-stat b {
+          display: block;
+          font-family: var(--font-heading, inherit);
+          font-size: 30px;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          color: var(--wl-ink);
+        }
+
+        .wl-stat span {
+          display: block;
+          margin-top: 4px;
+          color: var(--wl-muted);
+          font-size: 13px;
+          line-height: 1.4;
+        }
+
+        /* ---------- Marquee ---------- */
+
+        .wl-marquee {
+          margin-top: 56px;
+          overflow: hidden;
+          mask-image: linear-gradient(
+            90deg,
+            transparent,
+            #000 12%,
+            #000 88%,
+            transparent
+          );
+          -webkit-mask-image: linear-gradient(
+            90deg,
+            transparent,
+            #000 12%,
+            #000 88%,
+            transparent
+          );
+        }
+
+        .wl-marquee-track {
+          display: flex;
+          gap: 12px;
+          width: max-content;
+          animation: wl-scroll 40s linear infinite;
+        }
+
+        .wl-marquee:hover .wl-marquee-track {
+          animation-play-state: paused;
+        }
+
+        .wl-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          padding: 10px 18px;
+          border: 1px solid var(--wl-line);
+          border-radius: 999px;
+          background: #f8fafc;
+          color: #334155;
+          font-size: 14px;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        .wl-tag i {
+          color: #2563eb;
+        }
+
+        /* ---------- Sections ---------- */
+
+        .wl-section {
+          padding: 104px 0;
+        }
+
+        .wl-heading {
+          max-width: 640px;
+          margin: 0 auto 56px;
+          text-align: center;
+        }
+
+        .wl-eyebrow {
+          display: inline-block;
+          margin-bottom: 14px;
+          color: #2563eb;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .wl-heading h2 {
+          font-family: var(--font-heading, inherit);
+          font-size: clamp(30px, 4vw, 44px);
+          font-weight: 800;
+          line-height: 1.1;
+          letter-spacing: -0.035em;
+        }
+
+        .wl-heading p {
+          margin-top: 16px;
+          color: var(--wl-muted);
+          font-size: 17px;
+          line-height: 1.65;
+        }
+
+        /* ---------- Steps ---------- */
+
+        .wl-steps {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+
+        .wl-step {
+          position: relative;
+          padding: 32px 28px;
+          border: 1px solid var(--wl-line);
+          border-radius: 24px;
+          background: #ffffff;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .wl-step:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 30px 50px -28px rgba(11, 23, 48, 0.3);
+        }
+
+        .wl-step-num {
+          position: absolute;
+          top: 22px;
+          right: 26px;
+          font-family: var(--font-heading, inherit);
+          font-size: 56px;
+          font-weight: 800;
+          line-height: 1;
+          color: transparent;
+          -webkit-text-stroke: 1.5px #dbe4f0;
+        }
+
+        .wl-step-icon {
+          width: 52px;
+          height: 52px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 15px;
+          background: linear-gradient(135deg, #eff6ff, #dbeafe);
+          color: #1d4ed8;
+          font-size: 22px;
+        }
+
+        .wl-step h3 {
+          margin: 28px 0 10px;
+          font-size: 19px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+        }
+
+        .wl-step p {
+          color: var(--wl-muted);
+          font-size: 15px;
+          line-height: 1.65;
+        }
+
+        /* ---------- Features ---------- */
+
+        .wl-features {
+          background: #f8fafc;
+          border-top: 1px solid var(--wl-line);
+          border-bottom: 1px solid var(--wl-line);
+        }
+
+        .wl-bento {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+
+        .wl-bento-card {
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          min-height: 250px;
+          padding: 32px;
+          border: 1px solid var(--wl-line);
+          border-radius: 26px;
+          background: #ffffff;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .wl-bento-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 30px 50px -28px rgba(11, 23, 48, 0.3);
+        }
+
+        .wl-bento-wide {
+          grid-column: span 2;
+        }
+
+        .wl-bento-icon {
+          position: absolute;
+          top: 28px;
+          left: 32px;
+          width: 50px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 15px;
+          background: #eff6ff;
+          color: #1d4ed8;
+          font-size: 22px;
+        }
+
+        .wl-bento-card h3 {
+          font-size: 21px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+        }
+
+        .wl-bento-card p {
+          margin-top: 10px;
+          max-width: 440px;
+          color: var(--wl-muted);
+          font-size: 15px;
+          line-height: 1.65;
+        }
+
+        .wl-bento-dark {
+          border-color: transparent;
+          background:
+            radial-gradient(
+              90% 90% at 100% 0%,
+              rgba(59, 130, 246, 0.45),
+              transparent 60%
+            ),
+            linear-gradient(160deg, #10224a, #070f1f);
+          color: #ffffff;
+        }
+
+        .wl-bento-dark p {
+          color: #94a3b8;
+        }
+
+        .wl-bento-dark .wl-bento-icon {
+          background: rgba(255, 255, 255, 0.1);
+          color: #bfdbfe;
+        }
+
+        .wl-bento-accent {
+          border-color: transparent;
+          background: linear-gradient(135deg, #2563eb, #0891b2);
+          color: #ffffff;
+        }
+
+        .wl-bento-accent p {
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .wl-bento-accent .wl-bento-icon {
+          background: rgba(255, 255, 255, 0.18);
+          color: #ffffff;
+        }
+
+        /* ---------- Systems ---------- */
+
+        .wl-filters {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 36px;
+        }
+
+        .wl-filter {
+          padding: 10px 20px;
+          border: 1px solid var(--wl-line);
+          border-radius: 999px;
+          background: #ffffff;
+          color: #475569;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .wl-filter:hover {
+          border-color: #bfdbfe;
+          color: #1d4ed8;
+        }
+
+        .wl-filter.is-active {
+          border-color: var(--wl-ink);
+          background: var(--wl-ink);
+          color: #ffffff;
+        }
+
+        .wl-systems {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 16px;
+        }
+
+        .wl-system {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 24px;
+          padding: 24px;
+          border: 1px solid var(--wl-line);
+          border-radius: 20px;
+          background: #ffffff;
+          animation: wl-pop 0.45s ease both;
+          transition: transform 0.25s ease, border-color 0.25s ease,
+            box-shadow 0.25s ease;
+        }
+
+        .wl-system:hover {
+          transform: translateY(-4px);
+          border-color: #bfdbfe;
+          box-shadow: 0 24px 40px -24px rgba(37, 99, 235, 0.35);
+        }
+
+        .wl-system-icon {
+          width: 46px;
+          height: 46px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 13px;
+          background: #eff6ff;
+          color: #1d4ed8;
+          font-size: 20px;
+        }
+
+        .wl-system h3 {
+          margin: 18px 0 4px;
+          font-size: 17px;
+          font-weight: 700;
+          letter-spacing: -0.015em;
+        }
+
+        .wl-system p {
+          color: var(--wl-muted);
+          font-size: 14px;
+        }
+
+        .wl-system-foot {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-top: 16px;
+          border-top: 1px dashed var(--wl-line);
+          color: var(--wl-muted);
+          font-size: 12px;
+        }
+
+        .wl-system-foot b {
+          color: var(--wl-ink);
+          font-weight: 700;
+        }
+
+        .wl-status {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: #059669;
+          font-weight: 600;
+        }
+
+        .wl-status::before {
+          content: "";
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #10b981;
+        }
+
+        /* ---------- CTA ---------- */
+
+        .wl-cta {
+          position: relative;
+          overflow: hidden;
+          padding: 112px 0;
+          background: var(--wl-night);
+          color: #ffffff;
+          text-align: center;
+        }
+
+        .wl-cta::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(rgba(96, 165, 250, 0.07) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(96, 165, 250, 0.07) 1px, transparent 1px);
+          background-size: 44px 44px;
+          mask-image: radial-gradient(
+            ellipse 70% 80% at 50% 50%,
+            #000 20%,
+            transparent 100%
+          );
+          -webkit-mask-image: radial-gradient(
+            ellipse 70% 80% at 50% 50%,
+            #000 20%,
+            transparent 100%
+          );
+        }
+
+        .wl-cta-glow {
+          position: absolute;
+          width: 640px;
+          height: 640px;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+          background: rgba(59, 130, 246, 0.3);
+          filter: blur(110px);
+        }
+
+        .wl-cta-inner {
+          position: relative;
+          z-index: 1;
+          max-width: 680px;
+          margin: 0 auto;
+        }
+
+        .wl-cta h2 {
+          font-family: var(--font-heading, inherit);
+          font-size: clamp(32px, 4.6vw, 52px);
+          font-weight: 800;
+          line-height: 1.08;
+          letter-spacing: -0.04em;
+        }
+
+        .wl-cta p {
+          margin: 18px 0 36px;
+          color: #94a3b8;
+          font-size: 17px;
+          line-height: 1.65;
+        }
+
+        .wl-cta .wl-btn {
+          height: 56px;
+          padding: 0 34px;
+          font-size: 16px;
+        }
+
+        /* ---------- Footer ---------- */
+
+        .wl-footer {
+          padding: 56px 0 28px;
+          background: #ffffff;
+          border-top: 1px solid var(--wl-line);
+        }
+
+        .wl-footer-grid {
+          display: grid;
+          grid-template-columns: 1.6fr 1fr 1fr 1fr;
+          gap: 40px;
+        }
+
+        .wl-footer .wl-brand {
+          color: var(--wl-ink);
+        }
+
+        .wl-footer-desc {
+          max-width: 300px;
+          margin-top: 14px;
+          color: var(--wl-muted);
+          font-size: 14px;
+          line-height: 1.6;
+        }
+
+        .wl-footer h4 {
+          margin-bottom: 14px;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--wl-ink);
+        }
+
+        .wl-footer ul {
+          display: grid;
+          gap: 10px;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .wl-footer li a,
+        .wl-footer li span {
+          color: var(--wl-muted);
+          font-size: 14px;
+          transition: color 0.2s ease;
+        }
+
+        .wl-footer li a:hover {
+          color: #1d4ed8;
+        }
+
+        .wl-footer-bottom {
+          display: flex;
+          justify-content: space-between;
+          gap: 16px;
+          margin-top: 44px;
+          padding-top: 22px;
+          border-top: 1px solid var(--wl-line);
+          color: #94a3b8;
+          font-size: 13px;
+        }
+
+        /* ---------- Keyframes ---------- */
+
+        @keyframes wl-draw {
+          to {
+            stroke-dashoffset: 0;
+          }
+        }
+
+        @keyframes wl-fade {
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes wl-float {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes wl-drift {
+          to {
+            transform: translate(-40px, 30px);
+          }
+        }
+
+        @keyframes wl-scroll {
+          to {
+            transform: translateX(-50%);
+          }
+        }
+
+        @keyframes wl-pop {
+          from {
+            opacity: 0;
+            transform: translateY(14px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: none;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .wl-page *,
+          .wl-page *::before,
+          .wl-page *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+
+          .wl-reveal {
+            opacity: 1;
+            transform: none;
+          }
+        }
+
+        /* ---------- Responsive ---------- */
+
+        @media (max-width: 960px) {
+          .wl-hero {
+            padding: 64px 0 88px;
+          }
+
+          .wl-hero-grid {
+            grid-template-columns: 1fr;
+            gap: 48px;
+          }
+
+          .wl-visual {
+            max-width: 520px;
+            margin: 0 auto;
+            padding-left: 0;
+          }
+
+          .wl-stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .wl-stat:nth-child(2) {
+            border-right: 0;
+          }
+
+          .wl-stat:nth-child(-n + 2) {
+            border-bottom: 1px solid var(--wl-line);
+          }
+
+          .wl-steps {
+            grid-template-columns: 1fr;
+          }
+
+          .wl-bento {
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .wl-footer-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+
+        @media (max-width: 720px) {
+          .wl-burger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .wl-nav-links {
+            position: absolute;
+            top: 70px;
+            left: 0;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 4px;
+            padding: 14px 20px 20px;
+            background: rgba(6, 13, 28, 0.97);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          }
+
+          .wl-nav-links.is-open {
+            display: flex;
+          }
+
+          .wl-nav-link,
+          .wl-nav-login {
+            margin: 0;
+            padding: 13px 14px;
+            text-align: center;
+          }
+
+          .wl-section {
+            padding: 72px 0;
+          }
+
+          .wl-heading {
+            margin-bottom: 40px;
+          }
+
+          .wl-bento {
+            grid-template-columns: 1fr;
+          }
+
+          .wl-bento-wide {
+            grid-column: auto;
+          }
+
+          .wl-bento-card {
+            min-height: 230px;
+            padding: 26px;
+          }
+
+          .wl-bento-icon {
+            left: 26px;
+          }
+
+          .wl-hero-actions .wl-btn {
+            width: 100%;
+          }
+
+          .wl-chip-pdf {
+            right: 0;
+          }
+
+          .wl-chip-offline {
+            left: 0;
+          }
+
+          .wl-footer-bottom {
+            flex-direction: column;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .wl-stat {
+            padding: 20px 16px;
+          }
+
+          .wl-stat b {
+            font-size: 24px;
+          }
+
+          .wl-footer-grid {
+            grid-template-columns: 1fr;
+            gap: 28px;
+          }
+        }
+      `}</style>
+
+      {/* =====================================================
+          NAVBAR
+      ====================================================== */}
+      <nav className="wl-nav">
+        <div className="wl-container wl-nav-inner">
+          <Link to="/" className="wl-brand">
+            <img src="/og-image.png" alt="Desglose Pro" />
+            <span>Desglose Pro</span>
+          </Link>
+
+          <button
+            type="button"
+            className="wl-burger"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label="Abrir menú"
+            aria-expanded={menuOpen}
+          >
+            <i className={`bi bi-${menuOpen ? "x-lg" : "list"}`}></i>
+          </button>
+
+          <div className={`wl-nav-links ${menuOpen ? "is-open" : ""}`}>
+            <a
+              href="#como-funciona"
+              className="wl-nav-link"
+              onClick={(e) => goTo(e, "como-funciona")}
+            >
+              Cómo funciona
+            </a>
+            <a
+              href="#caracteristicas"
+              className="wl-nav-link"
+              onClick={(e) => goTo(e, "caracteristicas")}
+            >
               Características
             </a>
-          </li>
-          <li>
-            <a href="#sistemas" className="nav-link">
+            <a
+              href="#sistemas"
+              className="wl-nav-link"
+              onClick={(e) => goTo(e, "sistemas")}
+            >
               Sistemas
             </a>
-          </li>
-
-          <li>
-            <Link to="/login" className="btn-login">
-              <i className="bi bi-box-arrow-in-right"></i> Entrar
+            <Link to="/login" className="wl-nav-login">
+              Entrar
             </Link>
-          </li>
-        </ul>
+          </div>
+        </div>
       </nav>
 
-      {/* 2. HERO SECTION */}
-      <header className="hero bg-dark-grid">
-        <div className="hero-container">
-          <div>
-            <div className="hero-badge">
-              <i className="bi bi-patch-check-fill"></i> Software Profesional
-              para talleres de aluminio.
-            </div>
-            <h1 className="hero-title">
-              Calcula ventanas de aluminio con <span>precisión exacta</span>
-            </h1>
-            <p className="hero-subtitle">
-              Genera despieces exactos para ventanas, puertas y optimización de
-              cristal. Exporta en PDF y compatible con cualquier dispositivo.
-            </p>
+      <main>
+        {/* ===================================================
+            HERO
+        ==================================================== */}
+        <header className="wl-hero">
+          <span className="wl-glow wl-glow-a"></span>
+          <span className="wl-glow wl-glow-b"></span>
 
-            <div className="hero-actions">
-              <Link to="/signup" className="btn-primary-action">
-                Comenzar gratis <i className="bi bi-arrow-right-short"></i>
-              </Link>
-              <a href="#sistemas" className="btn-secondary-action">
-                Ver Sistemas <i className="bi bi-layers"></i>
-              </a>
-            </div>
-
-            <div className="trust-badges">
-              <div className="trust-item">
-                <i className="bi bi-cpu trust-icon"></i>
-                <span className="trust-text">
-                  7+ Sistemas de ventana y puerta
-                </span>
-              </div>
-              <div className="trust-item">
-                <i className="bi bi-whatsapp trust-icon"></i>
-                <span className="trust-text">Sorporte por WhatsAPP</span>
-              </div>
-              <div className="trust-item">
-                <i className="bi bi-currency-dollar trust-icon"></i>
-                <span className="trust-text">100% Gratis</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Interactive Technical Mockup Visual */}
-          <div className="hero-mockup-wrapper">
-            <div className="hero-mockup-card">
-              <div className="mockup-header">
-                <div className="mockup-dots">
-                  <span className="dot dot-red"></span>
-                  <span className="dot dot-yellow"></span>
-                  <span className="dot dot-green"></span>
-                </div>
-                <span
-                  style={{
-                    fontSize: "0.75rem",
-                    color: "#64748b",
-                    fontFamily: "monospace",
-                  }}
-                >
-                  DESGLOSE_P92.PDF
-                </span>
-              </div>
-
-              <div className="mockup-preview-box">
-                {/* ============ DETALLE DE VENTANAS ============ */}
-                <div className="seccion">
-                  <h3>
-                    <i className="bi bi-window-sidebar"></i> Ventanas P-92
-                  </h3>
-                  <div className="tabla-ventanas">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th rowSpan="2">Hueco</th>
-                          <th rowSpan="2">Ancho</th>
-                          <th rowSpan="2">Alto</th>
-                          <th rowSpan="2">Hojas</th>
-                          <th colSpan="2">De la hoja</th>
-                          <th colSpan="2">Del marco</th>
-                          <th colSpan="2">Vidrio</th>
-                        </tr>
-                        <tr>
-                          <th>Cab-alf</th>
-                          <th>Jambas</th>
-                          <th>Cab-riel</th>
-                          <th>Lat-marco</th>
-                          <th>Ancho</th>
-                          <th>Alto</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>33"</td>
-                          <td>33"</td>
-                          <td>2</td>
-                          <td>15 15/16"</td>
-                          <td>30 9/16"</td>
-                          <td>31 3/8"</td>
-                          <td>32 7/8"</td>
-                          <td>12 11/16"</td>
-                          <td>26 9/16"</td>
-                        </tr>
-                        <tr>
-                          <td>1</td>
-                          <td>33"</td>
-                          <td>33"</td>
-                          <td>2</td>
-                          <td>15 15/16"</td>
-                          <td>30 9/16"</td>
-                          <td>31 3/8"</td>
-                          <td>32 7/8"</td>
-                          <td>12 11/16"</td>
-                          <td>26 9/16"</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                {/* ============ MATERIALES ============ */}
-                <div className="seccion">
-                  <h3>
-                    <i className="bi bi-box-seam"></i> Materiales
-                  </h3>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th style={{ textAlign: "left" }}>Material</th>
-                        <th>Barras</th>
-                        <th>Pies</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td style={{ textAlign: "left" }}>
-                          Cabeza del Marco 2 Vías P-92
-                        </td>
-                        <td>6 pies</td>
-                        <td>5.23</td>
-                      </tr>
-                      <tr>
-                        <td style={{ textAlign: "left" }}>
-                          Riel del Marco 2 Vías P-92
-                        </td>
-                        <td>6 pies</td>
-                        <td>5.23</td>
-                      </tr>
-                      <tr>
-                        <td style={{ textAlign: "left" }}>
-                          Lateral 2 Vías P-92
-                        </td>
-                        <td>11 pies</td>
-                        <td>10.96</td>
-                      </tr>
-                      <tr>
-                        <td style={{ textAlign: "left" }}>Jamba Llavín P-92</td>
-                        <td>11 pies</td>
-                        <td>10.38</td>
-                      </tr>
-                      <tr>
-                        <td style={{ textAlign: "left" }}>
-                          Jamba Enganche P-92
-                        </td>
-                        <td>11 pies</td>
-                        <td>10.38</td>
-                      </tr>
-                      <tr>
-                        <td style={{ textAlign: "left" }}>cab-alf P-92</td>
-                        <td>11 pies</td>
-                        <td>10.63</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* 3. FEATURES BENTO GRID */}
-      <section id="caracteristicas" className="section-padding bg-grid-pattern">
-        <div className="section-header">
-          <span className="section-tag">
-            Todo lo que necesitas para tu taller
-          </span>
-          <h2 className="section-title">
-            Herramientas de alta precisión para tu taller
-          </h2>
-          <p className="section-desc">
-            Olvídate de los errores manuales y el desperdicio de perfiles.
-            Desglose Pro automatiza tus operaciones diarias.
-          </p>
-        </div>
-
-        <div className="bento-grid">
-          {/* Bento Item 1 */}
-          <div className="bento-card span-2">
-            <div className="bento-icon-wrapper">
-              <i className="bi bi-rulers"></i>
-            </div>
-            <h3 className="bento-title">Cálculos Precisos para Fabricación</h3>
-            <p className="bento-desc">
-              Transforma tus medidas en despieces exactos y listos para
-              producción, reduciendo errores y optimizando el proceso de corte.
-            </p>
-          </div>
-
-          {/* Bento Item 2 */}
-          <div className="bento-card">
-            <div className="bento-icon-wrapper">
-              <i className="bi bi-file-earmark-pdf-fill"></i>
-            </div>
-            <h3 className="bento-title">Exporta tus Desgloses en PDF</h3>
-            <p className="bento-desc">
-              Genera PDFs claros y profesionales para corte, fabricación.
-            </p>
-          </div>
-
-          {/* Bento Item 3 */}
-          <div className="bento-card">
-            <div className="bento-icon-wrapper">
-              <i className="bi bi-phone-vibrate"></i>
-            </div>
-            <h3 className="bento-title">PWA Móvil 100% Offline</h3>
-            <p className="bento-desc">
-              Instálalo en tu iPhone o Android como una App nativa. Funciona
-              perfectamente en obras o construcciones sin señal de internet.
-            </p>
-          </div>
-
-          {/* Bento Item 4 */}
-          <div className="bento-card span-2">
-            <div className="bento-icon-wrapper">
-              <i className="bi bi-shield-lock-fill"></i>
-            </div>
-            <h3 className="bento-title">
-              Gestión de Acceso y Roles de Usuario
-            </h3>
-            <p className="bento-desc">
-              Controla de forma sencilla qué puede hacer cada usuario y mantén
-              tu cuenta organizada y segura.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. SYSTEMS CATALOG SECTION */}
-      <section
-        id="sistemas"
-        className="section-padding"
-        style={{
-          background: "#ffffff",
-          borderTop: "1px solid var(--border-color)",
-          borderBottom: "1px solid var(--border-color)",
-        }}
-      >
-        <div className="section-header">
-          <span className="section-tag">Sistemas y Perfiles de Aluminio</span>
-          <h2 className="section-title">Compatibles e Incluidos</h2>
-          <p className="section-desc">
-            Soporte nativo para las líneas de carpintería de aluminio más
-            utilizadas en la República Dominicana.
-          </p>
-        </div>
-
-        <div className="systems-grid">
-          {systemsList.map((sys, idx) => (
-            <div className="system-card" key={idx}>
-              <div>
-                <div className="system-top">
-                  <div className="system-icon">
-                    <i className={`bi ${sys.icon}`}></i>
-                  </div>
-                  <span className="system-badge">{sys.tag}</span>
-                </div>
-                <h3 className="system-name">{sys.name}</h3>
-                <p className="system-type">{sys.type}</p>
-              </div>
-
-              <div className="system-footer">
-                <span>Precisión: {sys.precision}</span>
-                <span
-                  style={{
-                    color: "#10b981",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                  }}
-                >
-                  <i className="bi bi-check-circle-fill"></i> {sys.status}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. FINAL CTA SECTION */}
-      <section className="cta-section bg-dark-grid">
-        <div className="cta-content">
-          <h2 className="cta-title">
-            ¿Listo para modernizar el cálculo en tu taller?
-          </h2>
-          <p className="cta-desc">
-            Comienza a usar Desglose Pro hoy mismo y mejora la precisión de tus
-            cálculos.
-          </p>
-          <Link
-            to="/signup"
-            className="btn-primary-action"
-            style={{ padding: "0.9rem 2.25rem", fontSize: "1.05rem" }}
-          >
-            Crear cuenta gratis ahora <i className="bi bi-arrow-right"></i>
-          </Link>
-        </div>
-      </section>
-
-      {/* 6. FOOTER */}
-      <footer className="footer">
-        <div className="footer-container">
-          <div>
-            <div className="nav-brand" style={{ marginBottom: "0.5rem" }}>
-              <img
-                className="brand-logo-box"
-                src="/og-image.png"
-                alt="Desglose Pro Logo"
-              />
-              <span className="brand-name" style={{ fontSize: "1.1rem" }}>
-                Desglose Pro
+          <div className="wl-container wl-hero-grid">
+            <div>
+              <span className="wl-pill">
+                <span className="wl-pill-dot"></span>
+                Software para talleres de aluminio y vidrio
               </span>
-            </div>
-            <p className="footer-brand-desc">
-              La Plataforma Profesional para Talleres de Aluminio y Vidrio
-            </p>
-          </div>
 
-          <div>
-            <h4 className="footer-heading">Navegación</h4>
-            <ul className="footer-links">
-              <li>
-                <a href="#caracteristicas">Características</a>
-              </li>
-              <li>
-                <a href="#sistemas">Sistemas de Perfiles</a>
-              </li>
-              <li>
-                <Link to="/signup">Registro</Link>
-              </li>
-            </ul>
-          </div>
+              <h1>
+                De la medida al corte,{" "}
+                <span className="wl-grad">sin errores.</span>
+              </h1>
 
-          <div>
-            <h4 className="footer-heading">Legal</h4>
-            <ul className="footer-links">
-              <li>
+              <p className="wl-hero-sub">
+                Genera despieces exactos para ventanas, puertas y vidrio.
+                Exporta en PDF y trabaja desde cualquier dispositivo, incluso
+                sin internet.
+              </p>
+
+              <div className="wl-hero-actions">
+                <Link to="/signup" className="wl-btn wl-btn-primary">
+                  Comenzar gratis
+                  <i className="bi bi-arrow-right"></i>
+                </Link>
+
                 <a
-                  href="/legal/PrivacyPolicy.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#sistemas"
+                  className="wl-btn wl-btn-ghost"
+                  onClick={(e) => goTo(e, "sistemas")}
                 >
-                  Política de Privacidad
+                  Ver sistemas
+                  <i className="bi bi-layers"></i>
                 </a>
-              </li>
-              <li>
-                <a
-                  href="/legal/TermsOfService.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Términos de Servicio
-                </a>
-              </li>
-            </ul>
-          </div>
+              </div>
 
-          <div>
-            <h4 className="footer-heading">Soporte Taller</h4>
-            <ul className="footer-links">
-              <li>
-                <a href="#">
-                  <i className="bi bi-envelope"></i> Contactar Soporte
-                </a>
-              </li>
-              <li>
-                <span style={{ fontSize: "0.85rem", color: "#64748b" }}>
-                  Versión: 5.4.0
+              <div className="wl-hero-note">
+                <span>
+                  <i className="bi bi-check-circle-fill"></i>
+                  Sin tarjeta para empezar
                 </span>
-              </li>
-            </ul>
-          </div>
-        </div>
+                <span>
+                  <i className="bi bi-check-circle-fill"></i>
+                  Soporte por WhatsApp
+                </span>
+              </div>
+            </div>
 
-        <div className="footer-bottom">
-          <div>
-            © 2026 <strong>Desglose Pro</strong>. Todos los derechos reservados.
+            {/* Visual */}
+            <div className="wl-visual">
+              <div className="wl-card">
+                <div className="wl-card-top">
+                  <span className="wl-dots">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                  </span>
+                  <span>DESGLOSE_P92.PDF</span>
+                </div>
+
+                <div className="wl-blueprint">
+                  <svg
+                    viewBox="0 0 300 200"
+                    fill="none"
+                    stroke="#60a5fa"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    role="img"
+                    aria-label="Plano de ventana de 33 por 33 pulgadas"
+                  >
+                    {/* Marco */}
+                    <rect
+                      className="wl-draw"
+                      pathLength="1"
+                      x="44"
+                      y="22"
+                      width="212"
+                      height="128"
+                      rx="3"
+                    />
+                    {/* Hojas */}
+                    <rect
+                      className="wl-draw wl-draw-2"
+                      pathLength="1"
+                      x="52"
+                      y="30"
+                      width="100"
+                      height="112"
+                      rx="2"
+                      stroke="#22d3ee"
+                    />
+                    <rect
+                      className="wl-draw wl-draw-2"
+                      pathLength="1"
+                      x="148"
+                      y="30"
+                      width="100"
+                      height="112"
+                      rx="2"
+                      stroke="#22d3ee"
+                    />
+                    {/* Vidrios */}
+                    <rect
+                      className="wl-draw wl-draw-3"
+                      pathLength="1"
+                      x="62"
+                      y="40"
+                      width="80"
+                      height="92"
+                      strokeOpacity="0.55"
+                    />
+                    <rect
+                      className="wl-draw wl-draw-3"
+                      pathLength="1"
+                      x="158"
+                      y="40"
+                      width="80"
+                      height="92"
+                      strokeOpacity="0.55"
+                    />
+
+                    {/* Cota inferior */}
+                    <path
+                      className="wl-draw wl-draw-3"
+                      pathLength="1"
+                      d="M44 172 H256 M44 166 V178 M256 166 V178"
+                      stroke="#93c5fd"
+                    />
+                    <text
+                      className="wl-svg-text"
+                      x="150"
+                      y="193"
+                      textAnchor="middle"
+                      stroke="none"
+                    >
+                      33"
+                    </text>
+
+                    {/* Cota lateral */}
+                    <path
+                      className="wl-draw wl-draw-3"
+                      pathLength="1"
+                      d="M22 22 V150 M16 22 H28 M16 150 H28"
+                      stroke="#93c5fd"
+                    />
+                    <text
+                      className="wl-svg-text"
+                      x="14"
+                      y="90"
+                      textAnchor="middle"
+                      transform="rotate(-90 14 90)"
+                      stroke="none"
+                    >
+                      33"
+                    </text>
+                  </svg>
+                </div>
+
+                <div className="wl-cuts">
+                  {heroCuts.map((cut) => (
+                    <div className="wl-cut" key={cut.label}>
+                      <span>{cut.label}</span>
+                      <b>{cut.value}</b>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="wl-chip wl-chip-pdf">
+                <i className="bi bi-file-earmark-pdf-fill"></i>
+                <div>
+                  PDF listo
+                  <small>Para corte y fabricación</small>
+                </div>
+              </div>
+
+              <div className="wl-chip wl-chip-offline">
+                <i className="bi bi-wifi-off"></i>
+                <div>
+                  Funciona offline
+                  <small>Ideal para obra</small>
+                </div>
+              </div>
+            </div>
           </div>
-          <div style={{ color: "#64748b" }}>
-            Calcula. Organiza. Fabrica. Todo en un solo lugar.
+        </header>
+
+        {/* ===================================================
+            STATS
+        ==================================================== */}
+        <section className="wl-stats">
+          <div className="wl-container">
+            <div className="wl-stats-grid wl-reveal">
+              {stats.map((item) => (
+                <div className="wl-stat" key={item.label}>
+                  <b>{item.value}</b>
+                  <span>{item.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="wl-marquee" aria-hidden="true">
+              <div className="wl-marquee-track">
+                {marquee.map((sys, index) => (
+                  <span className="wl-tag" key={`${sys.name}-${index}`}>
+                    <i className={`bi ${sys.icon}`}></i>
+                    {sys.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================
+            CÓMO FUNCIONA
+        ==================================================== */}
+        <section id="como-funciona" className="wl-section">
+          <div className="wl-container">
+            <div className="wl-heading wl-reveal">
+              <span className="wl-eyebrow">Cómo funciona</span>
+              <h2>Tres pasos. Cero cálculos a mano.</h2>
+              <p>
+                Olvídate de las libretas, las calculadoras y los errores de
+                medida. Desglose Pro hace el trabajo pesado.
+              </p>
+            </div>
+
+            <div className="wl-steps">
+              {steps.map((step, index) => (
+                <div
+                  className="wl-step wl-reveal"
+                  key={step.title}
+                  style={{ transitionDelay: `${index * 90}ms` }}
+                >
+                  <span className="wl-step-num">0{index + 1}</span>
+                  <div className="wl-step-icon">
+                    <i className={`bi ${step.icon}`}></i>
+                  </div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================
+            CARACTERÍSTICAS
+        ==================================================== */}
+        <section id="caracteristicas" className="wl-section wl-features">
+          <div className="wl-container">
+            <div className="wl-heading wl-reveal">
+              <span className="wl-eyebrow">Características</span>
+              <h2>Todo lo que tu taller necesita.</h2>
+              <p>
+                Herramientas de alta precisión para automatizar tus operaciones
+                diarias y reducir el desperdicio de perfiles.
+              </p>
+            </div>
+
+            <div className="wl-bento">
+              {features.map((item, index) => (
+                <div
+                  key={item.title}
+                  className={[
+                    "wl-bento-card",
+                    "wl-reveal",
+                    item.wide ? "wl-bento-wide" : "",
+                    item.variant ? `wl-bento-${item.variant}` : "",
+                  ].join(" ")}
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                >
+                  <div className="wl-bento-icon">
+                    <i className={`bi ${item.icon}`}></i>
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================
+            SISTEMAS
+        ==================================================== */}
+        <section id="sistemas" className="wl-section">
+          <div className="wl-container">
+            <div className="wl-heading wl-reveal">
+              <span className="wl-eyebrow">Sistemas y perfiles</span>
+              <h2>Compatibles e incluidos.</h2>
+              <p>
+                Soporte nativo para las líneas de carpintería de aluminio más
+                utilizadas en la República Dominicana.
+              </p>
+            </div>
+
+            <div className="wl-filters">
+              {filters.map((item) => (
+                <button
+                  type="button"
+                  key={item.id}
+                  className={`wl-filter ${
+                    filter === item.id ? "is-active" : ""
+                  }`}
+                  onClick={() => setFilter(item.id)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="wl-systems">
+              {visibleSystems.map((sys, index) => (
+                <div
+                  className="wl-system"
+                  key={`${filter}-${sys.name}`}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div>
+                    <div className="wl-system-icon">
+                      <i className={`bi ${sys.icon}`}></i>
+                    </div>
+                    <h3>{sys.name}</h3>
+                    <p>{sys.type}</p>
+                  </div>
+
+                  <div className="wl-system-foot">
+                    <span>
+                      Precisión <b>{sys.precision}</b>
+                    </span>
+                    <span className="wl-status">{sys.status}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================================================
+            CTA FINAL
+        ==================================================== */}
+        <section className="wl-cta">
+          <span className="wl-cta-glow"></span>
+
+          <div className="wl-container wl-cta-inner wl-reveal">
+            <h2>
+              Moderniza el cálculo{" "}
+              <span className="wl-grad">en tu taller.</span>
+            </h2>
+            <p>
+              Crea tu cuenta y empieza a trabajar con despieces precisos hoy
+              mismo.
+            </p>
+
+            <Link to="/signup" className="wl-btn wl-btn-primary">
+              Crear cuenta gratis
+              <i className="bi bi-arrow-right"></i>
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      {/* =====================================================
+          FOOTER
+      ====================================================== */}
+      <footer className="wl-footer">
+        <div className="wl-container">
+          <div className="wl-footer-grid">
+            <div>
+              <Link to="/" className="wl-brand">
+                <img src="/og-image.png" alt="Desglose Pro" />
+                <span>Desglose Pro</span>
+              </Link>
+              <p className="wl-footer-desc">
+                La plataforma profesional para talleres de aluminio y vidrio.
+              </p>
+            </div>
+
+            <div>
+              <h4>Navegación</h4>
+              <ul>
+                <li>
+                  <a
+                    href="#caracteristicas"
+                    onClick={(e) => goTo(e, "caracteristicas")}
+                  >
+                    Características
+                  </a>
+                </li>
+                <li>
+                  <a href="#sistemas" onClick={(e) => goTo(e, "sistemas")}>
+                    Sistemas
+                  </a>
+                </li>
+                <li>
+                  <Link to="/signup">Registro</Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4>Legal</h4>
+              <ul>
+                <li>
+                  <a
+                    href="/legal/PrivacyPolicy.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Política de privacidad
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/legal/TermsOfService.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Términos de servicio
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4>Soporte</h4>
+              <ul>
+                <li>
+                  <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    WhatsApp
+                  </a>
+                </li>
+                <li>
+                  <span>Versión 6.0.0</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="wl-footer-bottom">
+            <div>© 2026 Desglose Pro. Todos los derechos reservados.</div>
+            <div>Calcula. Organiza. Fabrica.</div>
           </div>
         </div>
       </footer>
