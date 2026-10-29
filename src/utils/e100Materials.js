@@ -48,7 +48,7 @@ export const calcularMaterialesVentanaE100 = ({ ancho, alto, hojas }) => {
   // 2 HOJAS
   // =========================
   if (hojas === 2) {
-    cabAlf = null, //ancho / 2 + 5 / 8;
+    cabAlf = ancho / 2 ;
     jambas = alto - (3 + 3 / 16);
     marco = ancho - 3 / 16;
     latMarco = alto - 3 / 16;
@@ -65,7 +65,7 @@ export const calcularMaterialesVentanaE100 = ({ ancho, alto, hojas }) => {
   // 3 HOJAS
   // =========================
   else if (hojas === 3) {
-    cabAlf = ancho / 3 + (1 + 4 / 16);
+    cabAlf = (ancho / 3) + (1 + 4/16);
     jambas = alto - (3 + 3 / 16);
     marco = ancho - 3 / 16;
     latMarco = alto - 3 / 16;
@@ -82,7 +82,7 @@ export const calcularMaterialesVentanaE100 = ({ ancho, alto, hojas }) => {
   // 4 HOJAS
   // =========================
   else if (hojas === 4) {
-    cabAlf = null, //ancho / 4 + (1 + 1 / 4);
+    cabAlf = (ancho / 4);
     jambas = alto - (3 + 3 / 16);
     marco = ancho - 3 / 16;
     latMarco = alto - 3 / 16;

@@ -15,12 +15,12 @@ import { calcularResumenMaterialesE100 } from "../../utils/e100Materials";
 const calcular = (ancho, alto, hojas) => {
   if (hojas === 2) {
     return {
-      cabAlf: null, //(ancho / 2) + (5/8),
+      cabAlf: ancho / 2, 
       jambas: alto - (3 + 3/16),
       marco: ancho - (3/16),
       latMarco: alto - (3/16),
-      vidrioAncho: null, //(ancho - (11 + 3/4)) / 2,
-      vidrioAlto: null, //alto - (9 + 3/16),
+      vidrioAncho: (ancho - (10 + 3/4)) / 2,
+      vidrioAlto: alto - (8 + 3/4),
       vidrioMedio: null
     }
   } else if (hojas === 3) {
@@ -29,19 +29,19 @@ const calcular = (ancho, alto, hojas) => {
       jambas: alto - (3 + 3/16),
       marco: ancho - (3/16),
       latMarco: alto - (3/16),
-      vidrioAncho: null, //(ancho / 3) - (4 + 13/16),
-      vidrioAlto: null, //alto - (9 + 3/16),
-      vidrioMedio: null //(ancho / 3) - (4 + 13/16)
+      vidrioAncho: (ancho / 3) - (4 + 3/16),
+      vidrioAlto: alto - (8 + 7/16),
+      vidrioMedio: (ancho / 3) - (4 + 3/16)
     }
   } else {
     // 4 hojas
     return {
-      cabAlf: null, //(ancho / 4) + (1 + 1/4),
+      cabAlf: (ancho / 4),
       jambas: alto - (3 + 3/16),
       marco: ancho - (3/16),
       latMarco: alto - (3/16),
-      vidrioAncho: null, //(ancho / 4) - (5 + 1/4),
-      vidrioAlto: null, //alto - (9 + 3/16),
+      vidrioAncho: (ancho / 4) - (4 + 1/4),
+      vidrioAlto:  alto - (8 + 7/16),
       vidrioMedio: null
     }
   }

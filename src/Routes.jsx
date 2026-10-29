@@ -27,6 +27,7 @@ import P65 from "./pages/desglose/P65";
 import Tradicional from "./pages/desglose/Tradicional";
 import E70 from "./pages/desglose/E70";
 import M100 from "./pages/desglose/M100";
+import E100 from "./pages/desglose/E100";
 import P40 from "./pages/desglose/P40";
 import PuertaComercial from "./pages/desglose/PuertaComercial";
 import PuertaP40 from "./pages/desglose/PuertaP40";
@@ -220,6 +221,19 @@ export default function AppRoutes() {
           element={
             <FullAccessRoute>
               <M100 />
+            </FullAccessRoute>
+          }
+        />
+
+        {/* -----------------------------------------
+            e-100
+        ----------------------------------------- */}
+
+        <Route
+          path="/desglose/e100"
+          element={
+            <FullAccessRoute>
+              <E100 />
             </FullAccessRoute>
           }
         />
