@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 
 Disallow: /admin
+Disallow: /dashboard
 
 Sitemap: https://desglose-pro.vercel.app/sitemap.xml
