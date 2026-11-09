@@ -20,6 +20,7 @@ import GlassOptimizer from "./pages/GlassOptimizer";
 import CroquisBarrasPage from "./pages/CroquisBarrasPage";
 import Historial from "./pages/HistorialPage";
 import PlanesPage from "./pages/PlanesPage";
+import CotizacionesPage from "./pages/cotizaciones/CotizacionesPage";
 // Desglose
 import DesgloseIndex from "./pages/desglose/DesgloseIndex";
 import P92 from "./pages/desglose/P92";
@@ -119,6 +120,19 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <PlanesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =========================================
+    COTIZACIONES
+========================================= */}
+
+        <Route
+          path="/cotizaciones"
+          element={
+            <ProtectedRoute>
+              <CotizacionesPage />
             </ProtectedRoute>
           }
         />

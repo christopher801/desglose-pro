@@ -1,0 +1,1742 @@
+/* ============================================================
+   DESGLOSE PRO — COTIZACIONES
+   Diseño minimalista y profesional
+   Compatible con los componentes actuales
+   ============================================================ */
+
+.cotizaciones-page {
+  min-width: 0;
+  padding-bottom: 48px;
+  color: var(--gray-800, #334155);
+}
+
+.cotizaciones-page *,
+.quote-editor *,
+.quote-preview-overlay * {
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   HEADER PRINCIPAL
+   ============================================================ */
+
+.quote-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.quote-page-header-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.quote-title-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--gray-50, #f8fafc);
+  color: var(--primary, #2563eb);
+  font-size: 18px;
+}
+
+.quote-page-header h1 {
+  margin: 0 0 2px;
+  color: var(--gray-900, #0f172a);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.quote-eyebrow {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--primary, #2563eb);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.quote-page-header p {
+  margin: 0;
+  color: var(--gray-500, #64748b);
+  font-size: 13px;
+}
+
+/* ============================================================
+   BOTONES GENERALES
+   ============================================================ */
+
+.cotizaciones-page .btn,
+.quote-editor .btn {
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.cotizaciones-page .btn-primary,
+.quote-editor .btn-primary {
+  background: var(--primary, #2563eb);
+  border-color: var(--primary, #2563eb);
+  color: #fff;
+}
+
+.cotizaciones-page .btn-primary:hover,
+.quote-editor .btn-primary:hover {
+  background: var(--primary-dark, #1e40af);
+  border-color: var(--primary-dark, #1e40af);
+}
+
+.cotizaciones-page .btn-outline-secondary,
+.quote-editor .btn-outline-secondary {
+  border-color: var(--gray-200, #e2e8f0);
+  background: #fff;
+  color: var(--gray-600, #475569);
+}
+
+.cotizaciones-page .btn-outline-secondary:hover,
+.quote-editor .btn-outline-secondary:hover {
+  border-color: var(--gray-300, #cbd5e1);
+  background: var(--gray-50, #f8fafc);
+  color: var(--gray-900, #0f172a);
+}
+
+.cotizaciones-page .btn:focus-visible,
+.quote-editor .btn:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   ESTADÍSTICAS
+   ============================================================ */
+
+.quote-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.quote-stat {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  background: #fff;
+}
+
+.quote-stat span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--gray-500, #64748b);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.quote-stat strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--gray-900, #0f172a);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.quote-stat-money {
+  grid-column: span 2;
+}
+
+.quote-stat-money strong {
+  color: var(--primary, #2563eb);
+  font-size: 17px;
+}
+
+/* ============================================================
+   PANEL PRINCIPAL
+   ============================================================ */
+
+.quote-panel {
+  overflow: hidden;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  background: #fff;
+}
+
+.quote-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--gray-100, #f1f5f9);
+}
+
+.quote-list-heading h2 {
+  margin: 0;
+  color: var(--gray-900, #0f172a);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.quote-list-heading > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ============================================================
+   FILTROS
+   ============================================================ */
+
+.quote-filters {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) repeat(2, minmax(130px, 180px));
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--gray-100, #f1f5f9);
+}
+
+.quote-filter-search {
+  position: relative;
+  min-width: 0;
+}
+
+.quote-filter-search input {
+  width: 100%;
+}
+
+.quote-filters input,
+.quote-filters select,
+.cotizaciones-page .form-control,
+.cotizaciones-page .form-select,
+.quote-editor .form-control,
+.quote-editor .form-select {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: 8px;
+  background-color: #fff;
+  color: var(--gray-800, #334155);
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.quote-filters input:focus,
+.quote-filters select:focus,
+.cotizaciones-page .form-control:focus,
+.cotizaciones-page .form-select:focus,
+.quote-editor .form-control:focus,
+.quote-editor .form-select:focus {
+  border-color: var(--primary, #2563eb);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.quote-editor .form-control.is-invalid,
+.quote-editor .form-select.is-invalid {
+  border-color: #dc2626;
+}
+
+.quote-editor .invalid-feedback {
+  font-size: 11px;
+}
+
+/* ============================================================
+   TABLA DE COTIZACIONES
+   ============================================================ */
+
+.quote-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: 9px;
+  background: #fff;
+}
+
+.quote-table {
+  width: 100%;
+  min-width: 900px;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  color: var(--gray-800, #1e293b);
+  font-size: 13px;
+}
+
+.quote-table thead th {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--gray-200, #e2e8f0);
+  background: #f8fafc;
+  color: var(--gray-500, #64748b);
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.quote-table tbody td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--gray-100, #f1f5f9);
+  background: #fff;
+  color: var(--gray-700, #334155);
+  vertical-align: middle;
+}
+
+.quote-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.quote-table tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.quote-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.quote-number {
+  display: inline-flex;
+  align-items: center;
+  color: #1e40af;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.quote-client {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 120px;
+}
+
+.quote-client-name {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.quote-client-detail {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.quote-project {
+  display: block;
+  max-width: 190px;
+  overflow: hidden;
+  color: #475569;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quote-date {
+  color: #64748b;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.quote-amount {
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Acciones */
+
+.quote-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.quote-row-actions button {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: 7px;
+  background: #fff;
+  color: #64748b;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quote-row-actions button:hover {
+  border-color: var(--primary, #2563eb);
+  background: #eff6ff;
+  color: var(--primary, #2563eb);
+}
+
+.quote-row-actions button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.16);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   ESTADOS
+   ============================================================ */
+
+.quote-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.quote-status-draft {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.quote-status-sent {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.quote-status-approved {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.quote-status-rejected {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.quote-status-expired {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+/* ============================================================
+   ESTADO VACÍO
+   ============================================================ */
+
+.quote-empty {
+  min-height: 230px;
+  padding: 35px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  text-align: center;
+}
+
+.quote-empty-icon {
+  width: 46px;
+  height: 46px;
+  margin-bottom: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 21px;
+}
+
+.quote-empty h3,
+.quote-empty strong {
+  margin: 0;
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.quote-empty p,
+.quote-empty span {
+  margin: 5px 0 0;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* ============================================================
+   EDITOR DE COTIZACIONES
+   ============================================================ */
+
+.quote-editor {
+  width: 100%;
+  min-width: 0;
+  padding-bottom: 32px;
+}
+
+.quote-editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.quote-editor-title {
+  min-width: 0;
+  margin: 0;
+  color: var(--gray-900, #0f172a);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.quote-editor-heading p {
+  margin: 5px 0 0;
+  color: var(--gray-500, #64748b);
+  font-size: 12px;
+}
+
+.quote-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--gray-600, #475569);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.quote-back-button:hover {
+  color: var(--primary, #2563eb);
+}
+
+
+.quote-editor-actions {
+  display: grid;
+  align-items: center;
+  justify-content: first baseline ;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quote-form-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  align-items: start;
+  gap: 18px;
+}
+
+.quote-panel.quote-form-section {
+  min-width: 0;
+  margin-bottom: 16px;
+  padding: 18px;
+}
+
+.quote-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+  color: var(--gray-900, #0f172a);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.quote-section-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: var(--primary, #2563eb);
+  font-size: 14px;
+}
+
+/* Campos de formulario */
+
+.quote-editor .form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--gray-600, #475569);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.quote-editor textarea.form-control {
+  min-height: 82px;
+  resize: vertical;
+}
+
+.quote-editor .form-control::placeholder {
+  color: var(--gray-400, #94a3b8);
+}
+
+.quote-editor .form-check-label {
+  color: var(--gray-700, #334155);
+  font-size: 12px;
+}
+
+.quote-editor .form-check-input {
+  cursor: pointer;
+}
+
+.quote-editor .form-check-input:checked {
+  background-color: var(--primary, #2563eb);
+  border-color: var(--primary, #2563eb);
+}
+
+.quote-tax-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   EDITOR DE ARTÍCULOS
+   ============================================================ */
+
+.quote-items {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.quote-items-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-100, #f1f5f9);
+}
+
+.quote-items-heading h3 {
+  margin: 0;
+  color: var(--gray-800, #1e293b);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.quote-items-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.quote-item {
+  min-width: 0;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-100, #f1f5f9);
+}
+
+.quote-item:last-child {
+  border-bottom: 0;
+}
+
+.quote-item-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.quote-item-top > div:first-child {
+  min-width: 0;
+}
+
+.quote-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.quote-item-actions button {
+  width: 29px;
+  height: 29px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--gray-500, #64748b);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.quote-item-actions button:hover {
+  border-color: var(--primary, #2563eb);
+  background: #eff6ff;
+  color: var(--primary, #2563eb);
+}
+
+.quote-item-total {
+  color: var(--gray-900, #0f172a);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.quote-items-empty {
+  padding: 24px 16px;
+  color: var(--gray-500, #64748b);
+  text-align: center;
+  font-size: 12px;
+}
+
+/* ============================================================
+   RESUMEN FINANCIERO
+   ============================================================ */
+
+.quote-form-summary {
+  min-width: 0;
+}
+
+.quote-sticky {
+  position: sticky;
+  margin-bottom: 16px;
+  top: 20px;
+}
+
+.quote-sidebar-summary {
+  padding: 18px;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.quote-sidebar-summary h3 {
+  margin: 0 0 16px;
+  color: var(--gray-900, #0f172a);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.quote-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.quote-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--gray-600, #475569);
+  font-size: 12px;
+}
+
+.quote-summary-row span {
+  min-width: 0;
+}
+
+.quote-summary-row strong {
+  color: var(--gray-800, #1e293b);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.quote-summary-discount strong {
+  color: #059669;
+}
+
+.quote-summary-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 5px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gray-200, #e2e8f0);
+  color: var(--gray-900, #0f172a);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.quote-summary-total strong {
+  color: var(--primary, #2563eb);
+  font-size: 19px;
+  white-space: nowrap;
+}
+
+.quote-sidebar-summary .btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* ============================================================
+   QUOTE PREVIEW — PROFESSIONAL DOCUMENT
+   ============================================================ */
+
+.quote-preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(3px);
+}
+
+.quote-preview-dialog {
+  width: 100%;
+  max-width: 920px;
+  max-height: 94vh;
+  overflow-y: auto;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #f1f5f9;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.2);
+}
+
+.quote-preview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.quote-preview-action {
+  flex: 0 0 auto;
+}
+
+/* DOCUMENT */
+
+.quote-document {
+  width: 100%;
+  max-width: 800px;
+  min-height: 900px;
+  margin: 0 auto;
+  padding: 42px;
+  background: #fff;
+  color: #1e293b;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  box-shadow: 0 3px 15px rgba(15, 23, 42, 0.07);
+}
+
+/* HEADER */
+
+.quote-doc-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 25px;
+  border-bottom: 2px solid #1e3a8a;
+}
+
+.quote-doc-brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.quote-doc-brand-mark {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #1e3a8a;
+  color: #fff;
+  font-size: 22px;
+}
+
+.quote-doc-brand-info {
+  min-width: 0;
+}
+
+.quote-doc-overline {
+  display: block;
+  margin-bottom: 4px;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.quote-doc-brand h1 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+}
+
+.quote-doc-brand p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 10px;
+}
+
+.quote-doc-number {
+  min-width: 160px;
+  padding: 11px 13px;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background: #f8fafc;
+  text-align: right;
+}
+
+.quote-doc-number > span {
+  display: block;
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.quote-doc-number > strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #1e3a8a;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.quote-doc-number small {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 7px;
+  color: #64748b;
+  font-size: 9px;
+}
+
+.quote-doc-number small i {
+  color: #2563eb;
+  font-size: 6px;
+}
+
+/* DATES */
+
+.quote-doc-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 20px 0 26px;
+}
+
+.quote-doc-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 11px 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.quote-doc-meta-item span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.quote-doc-meta-item span i {
+  color: #2563eb;
+  font-size: 12px;
+}
+
+.quote-doc-meta-item strong {
+  color: #1e293b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* PROPOSAL TITLE */
+
+.quote-doc-title {
+  margin-bottom: 25px;
+}
+
+.quote-doc-section-label {
+  display: block;
+  margin-bottom: 6px;
+  color: #64748b;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
+
+.quote-doc-title h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.quote-doc-title p {
+  margin: 7px 0 0;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+/* SECTION HEADINGS */
+
+.quote-doc-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.quote-doc-section-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1e40af;
+  font-size: 14px;
+}
+
+.quote-doc-section-heading .quote-doc-section-label {
+  margin-bottom: 2px;
+}
+
+.quote-doc-section-heading h3 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* CLIENT */
+
+.quote-doc-client {
+  margin-bottom: 27px;
+  padding: 17px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+
+.quote-doc-client-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 13px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.quote-doc-client-main span,
+.quote-doc-client-grid span {
+  color: #64748b;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.quote-doc-client-main strong {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.quote-doc-client-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px 20px;
+}
+
+.quote-doc-client-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.quote-doc-client-grid strong {
+  overflow-wrap: anywhere;
+  color: #334155;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* ITEMS */
+
+.quote-doc-items {
+  margin-bottom: 20px;
+}
+
+.quote-doc-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.quote-doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+.quote-doc-table thead th {
+  padding: 11px 9px;
+  border-top: 1px solid #cbd5e1;
+  border-bottom: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #475569;
+  text-align: left;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quote-doc-table tbody td {
+  padding: 12px 9px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+  vertical-align: top;
+}
+
+.quote-doc-description strong {
+  display: block;
+  color: #1e293b;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.quote-doc-description small {
+  display: block;
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 9px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.quote-doc-item-total {
+  color: #0f172a !important;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.quote-doc-empty {
+  padding: 25px !important;
+  color: #94a3b8 !important;
+  text-align: center;
+}
+
+.quote-doc-item-count {
+  padding: 9px 0;
+  color: #94a3b8;
+  text-align: right;
+  font-size: 9px;
+}
+
+/* FINANCIAL SUMMARY */
+
+.quote-doc-financial {
+  display: flex;
+  justify-content: flex-end;
+  margin: 12px 0 28px;
+}
+
+.quote-doc-financial .quote-summary {
+  width: 100%;
+  max-width: 310px;
+  padding: 17px;
+  border: 1px solid #dbeafe;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+
+.quote-doc-financial .quote-summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  color: #64748b;
+  font-size: 10px;
+}
+
+.quote-doc-financial .quote-summary-row strong {
+  color: #334155;
+  font-weight: 700;
+}
+
+.quote-doc-financial .quote-summary-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.quote-doc-financial .quote-summary-total strong {
+  color: #1e40af;
+  font-size: 19px;
+}
+
+/* NOTES AND TERMS */
+
+.quote-doc-extra {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.quote-doc-extra-block {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.quote-doc-extra-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  color: #1e293b;
+  font-size: 10px;
+}
+
+.quote-doc-extra-title i {
+  color: #2563eb;
+  font-size: 12px;
+}
+
+.quote-doc-extra-block p {
+  margin: 0;
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.7;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* FOOTER AND SIGNATURES */
+
+.quote-doc-footer {
+  margin-top: 55px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.quote-doc-signatures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 45px;
+}
+
+.quote-doc-signature {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 9px;
+  border-top: 1px solid #94a3b8;
+  color: #334155;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.quote-doc-signature small {
+  color: #94a3b8;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.quote-doc-footer-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 35px;
+  color: #94a3b8;
+  font-size: 9px;
+}
+
+.quote-doc-footer-note i {
+  color: #16a34a;
+  font-size: 11px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 600px) {
+  .quote-preview-overlay {
+    padding: 8px;
+  }
+
+  .quote-preview-dialog {
+    max-height: 96vh;
+    padding: 10px;
+  }
+
+  .quote-document {
+    min-height: auto;
+    padding: 20px 14px;
+  }
+
+  .quote-doc-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quote-doc-number {
+    width: 100%;
+    text-align: left;
+  }
+
+  .quote-doc-meta {
+    gap: 8px;
+  }
+
+  .quote-doc-meta-item {
+    padding: 9px;
+  }
+
+  .quote-doc-client-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-doc-extra {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-doc-table {
+    min-width: 520px;
+  }
+
+  .quote-doc-signatures {
+    gap: 20px;
+  }
+}
+
+/* PRINT */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  .quote-preview-overlay {
+    position: static !important;
+    display: block !important;
+    padding: 0 !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+
+  .quote-preview-dialog {
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .quote-preview-actions,
+  .no-print {
+    display: none !important;
+  }
+
+  .quote-document {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .quote-doc-client,
+  .quote-doc-financial,
+  .quote-doc-extra,
+  .quote-doc-signatures,
+  .quote-doc-table tr {
+    break-inside: avoid;
+  }
+
+  .quote-doc-table {
+    min-width: 0 !important;
+  }
+}
+
+/* ============================================================
+   ALERTAS
+   ============================================================ */
+
+.cotizaciones-page .alert,
+.quote-editor .alert {
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET
+   ============================================================ */
+
+@media (max-width: 1000px) {
+  .quote-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .quote-filters {
+    grid-template-columns: minmax(0, 1fr) minmax(130px, 180px);
+  }
+
+  .quote-filter-search {
+    grid-column: 1 / -1;
+  }
+
+  .quote-form-layout {
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cotizaciones-page {
+    padding-bottom: 72px;
+  }
+
+  .quote-page-header {
+    align-items: flex-start;
+  }
+
+  .quote-page-header h1 {
+    font-size: 18px;
+  }
+
+  .quote-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .quote-stat {
+    padding: 13px;
+  }
+
+  .quote-stat strong {
+    font-size: 17px;
+  }
+
+  .quote-list-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .quote-filters {
+    padding: 14px 16px;
+  }
+
+  .quote-table {
+    min-width: 850px;
+  }
+
+  .quote-table thead th,
+  .quote-table tbody td {
+    padding: 11px 12px;
+  }
+
+  .quote-form-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-sticky {
+    position: static;
+  }
+
+  .quote-panel.quote-form-section {
+    padding: 15px;
+  }
+
+  .quote-editor-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .quote-editor-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .quote-preview-dialog {
+    padding: 16px;
+  }
+
+  .quote-document {
+    padding: 20px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — MÓVIL
+   ============================================================ */
+
+@media (max-width: 576px) {
+  .quote-page-header {
+    flex-direction: column;
+  }
+
+  .quote-page-header > button {
+    width: 100%;
+  }
+
+  .quote-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-filter-search {
+    grid-column: auto;
+  }
+
+  .quote-stat-money {
+    grid-column: span 1;
+  }
+
+  .quote-editor-title {
+    font-size: 19px;
+  }
+
+  .quote-editor-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quote-editor-actions .btn {
+    width: 100%;
+  }
+
+  .quote-panel.quote-form-section {
+    padding: 13px;
+  }
+
+  .quote-section-heading {
+    font-size: 12px;
+  }
+
+  .quote-item {
+    padding: 12px;
+  }
+
+  .quote-items-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .quote-items-heading button {
+    width: 100%;
+  }
+
+  .quote-preview-overlay {
+    padding: 8px;
+  }
+
+  .quote-preview-dialog {
+    max-height: 94vh;
+    padding: 12px;
+  }
+
+  .quote-document {
+    padding: 12px;
+    font-size: 10px;
+  }
+
+  .quote-document-header {
+    gap: 10px;
+  }
+
+  .quote-document-header h1 {
+    font-size: 19px;
+  }
+
+  .quote-document-heading h2 {
+    font-size: 16px;
+  }
+
+  .quote-document-table {
+    font-size: 9px;
+  }
+
+  .quote-document-table th,
+  .quote-document-table td {
+    padding: 7px 5px;
+  }
+
+  .quote-document-bottom .quote-summary {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .quote-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quote-stat {
+    padding: 10px;
+  }
+
+  .quote-stat strong {
+    font-size: 15px;
+  }
+
+  .quote-editor-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-document-header {
+    flex-direction: column;
+  }
+
+  .quote-document-dates {
+    text-align: left;
+  }
+}
+
+/* ============================================================
+   IMPRESIÓN
+   ============================================================ */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  .cotizaciones-page,
+  .quote-editor {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .no-print,
+  .quote-page-header,
+  .quote-stats,
+  .quote-list-heading,
+  .quote-filters,
+  .quote-row-actions,
+  .quote-editor-actions,
+  .quote-preview-actions,
+  .quote-back-button {
+    display: none !important;
+  }
+
+  .quote-preview-overlay {
+    position: static !important;
+    display: block !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .quote-preview-dialog {
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .quote-document {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #000 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .quote-panel,
+  .quote-table-wrap {
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .quote-table {
+    min-width: 0 !important;
+    font-size: 9px !important;
+  }
+
+  .quote-table thead th,
+  .quote-table tbody td {
+    padding: 7px !important;
+  }
+
+  .quote-document-table tr,
+  .quote-document-client,
+  .quote-document-bottom {
+    break-inside: avoid;
+  }
+}

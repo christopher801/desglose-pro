@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { logoutUser } from "../services/authService";
-import {
-  getUserUnreadCount,
-} from "../services/notificationService";
+import { getUserUnreadCount } from "../services/notificationService";
 import InstallButton from "./InstallButton";
 import ShowNotificacionModal from "./ShowNotificacionModal";
 
@@ -12,6 +10,8 @@ const navItems = [
   { path: "/dashboard", icon: "bi-grid", label: "Inicio" },
   { path: "/glass-optimizer", icon: "bi-square-half", label: "Vidrios" },
   { path: "/croquis-barras", icon: "bi bi-scissors", label: "Barras" },
+  {
+    path: "/cotizaciones", icon: "bi-file-earmark-text", label: "Cotizaciones"},
   { path: "/historial", icon: "bi-clock", label: "Historial" },
 ];
 
@@ -22,20 +22,24 @@ const NAV_CALCULO = [
     icon: "bi-square-half",
     label: "Croquis de vidrios",
   },
-  { path: "/croquis-barras", icon: "bi bi-scissors", label: "Croquis de Barras" },
+  {
+    path: "/croquis-barras",
+    icon: "bi bi-scissors",
+    label: "Croquis de Barras",
+  },
 ];
 
 const NAV_GESTION = [
-  {
-    path: "/cotizaciones",
-    icon: "bi-file-earmark-text",
-    label: "Cotizaciones",
-  },
   { path: "/gastos", icon: "bi-credit-card", label: "Gastos" },
   { path: "/facturas", icon: "bi-receipt", label: "Facturas" },
 ];
 
 const NAV_HISTORY = [
+  {
+    path: "/cotizaciones",
+    icon: "bi-file-earmark-text",
+    label: "Cotizaciones",
+  },
   { path: "/historial", icon: "bi-clock", label: "Historial" },
 ];
 
@@ -62,7 +66,7 @@ export default function Layout({ children, unreadCount = 0 }) {
   } y me comunico desde Desglose Pro v5.1.0. Me gustaría recibir asistencia técnica.`;
 
   const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    WHATSAPP_MESSAGE
+    WHATSAPP_MESSAGE,
   )}`;
 
   const location = useLocation();
@@ -70,8 +74,7 @@ export default function Layout({ children, unreadCount = 0 }) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
-  const [showNotificacionModal, setShowNotificacionModal] =
-    useState(false);
+  const [showNotificacionModal, setShowNotificacionModal] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [userUnreadCount, setUserUnreadCount] = useState(0);
 
@@ -96,10 +99,7 @@ export default function Layout({ children, unreadCount = 0 }) {
         setUserUnreadCount(0);
       }
     } catch (error) {
-      console.error(
-        "Error cargando contador de notificaciones:",
-        error
-      );
+      console.error("Error cargando contador de notificaciones:", error);
 
       setUserUnreadCount(0);
     }
@@ -142,8 +142,7 @@ export default function Layout({ children, unreadCount = 0 }) {
    */
 
   const isActive = (path) =>
-    location.pathname === path ||
-    location.pathname.startsWith(path + "/");
+    location.pathname === path || location.pathname.startsWith(path + "/");
 
   /*
    * ============================================================
@@ -185,18 +184,12 @@ export default function Layout({ children, unreadCount = 0 }) {
           SIDEBAR — DESKTOP
       ====================================================== */}
 
-      <aside
-        className={`sidebar ${
-          sidebarOpen ? "sidebar-open" : ""
-        }`}
-      >
+      <aside className={`sidebar ${sidebarOpen ? "sidebar-open" : ""}`}>
         {/* LOGO */}
 
         <div className="sidebar-logo">
           <div>
-            <div className="sidebar-logo-name">
-              DESGLOSE PRO
-            </div>
+            <div className="sidebar-logo-name">DESGLOSE PRO</div>
           </div>
         </div>
 
@@ -208,66 +201,50 @@ export default function Layout({ children, unreadCount = 0 }) {
           <Link
             to="/dashboard"
             className={`sidebar-item ${
-              isActive("/dashboard")
-                ? "sidebar-item-active"
-                : ""
+              isActive("/dashboard") ? "sidebar-item-active" : ""
             }`}
             onClick={() => setSidebarOpen(false)}
           >
             <i className="bi bi-grid"></i>
 
-            <span className="sidebar-item-label">
-              Inicio
-            </span>
+            <span className="sidebar-item-label">Inicio</span>
           </Link>
 
           {/* Herramientas */}
 
-          <div className="sidebar-section">
-            Herramientas
-          </div>
+          <div className="sidebar-section">Herramientas</div>
 
           {NAV_CALCULO.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               className={`sidebar-item ${
-                isActive(item.path)
-                  ? "sidebar-item-active"
-                  : ""
+                isActive(item.path) ? "sidebar-item-active" : ""
               }`}
               onClick={() => setSidebarOpen(false)}
             >
               <i className={`bi ${item.icon}`}></i>
 
-              <span className="sidebar-item-label">
-                {item.label}
-              </span>
+              <span className="sidebar-item-label">{item.label}</span>
             </Link>
           ))}
 
           {/* Gestión */}
 
-          <div className="sidebar-section">
-            GESTIÓN
-          </div>
+          <div className="sidebar-section">GESTIÓN</div>
 
           {NAV_HISTORY.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               className={`sidebar-item ${
-                isActive(item.path)
-                  ? "sidebar-item-active"
-                  : ""
+                isActive(item.path) ? "sidebar-item-active" : ""
               }`}
               onClick={() => setSidebarOpen(false)}
             >
               <i className={`bi ${item.icon}`}></i>
 
-              <span className="sidebar-item-label">
-                {item.label}
-              </span>
+              <span className="sidebar-item-label">{item.label}</span>
             </Link>
           ))}
 
@@ -275,29 +252,21 @@ export default function Layout({ children, unreadCount = 0 }) {
 
           {isAdmin && (
             <>
-              <div className="sidebar-section">
-                Admin
-              </div>
+              <div className="sidebar-section">Admin</div>
 
               <Link
                 to="/admin"
                 className={`sidebar-item ${
-                  isActive("/admin")
-                    ? "sidebar-item-active"
-                    : ""
+                  isActive("/admin") ? "sidebar-item-active" : ""
                 }`}
                 onClick={() => setSidebarOpen(false)}
               >
                 <i className="bi bi-shield-lock"></i>
 
-                <span className="sidebar-item-label">
-                  Panel admin
-                </span>
+                <span className="sidebar-item-label">Panel admin</span>
 
                 {unreadCount > 0 && (
-                  <span className="sidebar-badge">
-                    {unreadCount}
-                  </span>
+                  <span className="sidebar-badge">{unreadCount}</span>
                 )}
               </Link>
             </>
@@ -326,9 +295,7 @@ export default function Layout({ children, unreadCount = 0 }) {
               </div>
 
               <div className="sidebar-user-role">
-                {isAdmin
-                  ? "Administrador"
-                  : "Usuario"}
+                {isAdmin ? "Administrador" : "Usuario"}
               </div>
             </div>
           </Link>
@@ -367,16 +334,12 @@ export default function Layout({ children, unreadCount = 0 }) {
           {/* Desktop */}
 
           <div className="topbar-title topbar-title-desktop">
-            {allNavItems.find((i) =>
-              isActive(i.path)
-            )?.label || "Desglose Pro"}
+            {allNavItems.find((i) => isActive(i.path))?.label || "Desglose Pro"}
           </div>
 
           {/* Mobile */}
 
-          <div className="topbar-title topbar-title-mobile">
-            Desglose Pro
-          </div>
+          <div className="topbar-title topbar-title-mobile">Desglose Pro</div>
 
           <div className="topbar-right">
             {/* ==================================================
@@ -392,9 +355,7 @@ export default function Layout({ children, unreadCount = 0 }) {
                 <i className="bi bi-bell"></i>
 
                 {unreadCount > 0 && (
-                  <span className="topbar-notif-dot">
-                    {unreadCount}
-                  </span>
+                  <span className="topbar-notif-dot">{unreadCount}</span>
                 )}
               </Link>
             )}
@@ -408,16 +369,12 @@ export default function Layout({ children, unreadCount = 0 }) {
                 type="button"
                 className="topbar-notif-btn"
                 title="Notificaciones"
-                onClick={() =>
-                  setShowNotificacionModal(true)
-                }
+                onClick={() => setShowNotificacionModal(true)}
               >
                 <i className="bi bi-bell"></i>
 
                 {userUnreadCount > 0 && (
-                  <span className="topbar-notif-dot">
-                    {userUnreadCount}
-                  </span>
+                  <span className="topbar-notif-dot">{userUnreadCount}</span>
                 )}
               </button>
             )}
@@ -462,9 +419,7 @@ export default function Layout({ children, unreadCount = 0 }) {
 
                   <div
                     className="dropdown-overlay"
-                    onClick={() =>
-                      setUserDropdownOpen(false)
-                    }
+                    onClick={() => setUserDropdownOpen(false)}
                     style={{
                       position: "fixed",
                       inset: 0,
@@ -483,13 +438,11 @@ export default function Layout({ children, unreadCount = 0 }) {
                       right: 0,
                       background: "white",
                       borderRadius: "12px",
-                      boxShadow:
-                        "0 8px 24px rgba(0,0,0,0.15)",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
                       minWidth: "240px",
                       padding: "0.5rem",
                       zIndex: 1000,
-                      border:
-                        "1px solid var(--gray-200)",
+                      border: "1px solid var(--gray-200)",
                     }}
                   >
                     {/* USER INFO */}
@@ -497,10 +450,8 @@ export default function Layout({ children, unreadCount = 0 }) {
                     <div
                       className="user-dropdown-header"
                       style={{
-                        padding:
-                          "0.5rem 0.75rem",
-                        borderBottom:
-                          "1px solid var(--gray-100)",
+                        padding: "0.5rem 0.75rem",
+                        borderBottom: "1px solid var(--gray-100)",
                       }}
                     >
                       <div
@@ -508,46 +459,38 @@ export default function Layout({ children, unreadCount = 0 }) {
                         style={{
                           fontWeight: 600,
                           fontSize: "0.95rem",
-                          color:
-                            "var(--gray-700)",
+                          color: "var(--gray-700)",
                         }}
                       >
-                        {userData?.nombre ||
-                          "Usuario"}
+                        {userData?.nombre || "Usuario"}
                       </div>
 
                       <div
                         className="dropdown-email"
                         style={{
                           fontSize: "0.8rem",
-                          color:
-                            "var(--gray-500)",
+                          color: "var(--gray-500)",
                         }}
                       >
-                        {userData?.email ||
-                          "usuario@email.com"}
+                        {userData?.email || "usuario@email.com"}
                       </div>
 
                       <span
                         className="dropdown-role"
                         style={{
-                          display:
-                            "inline-block",
+                          display: "inline-block",
                           marginTop: "0.3rem",
                           background: isAdmin
                             ? "var(--primary, #0d6efd)"
                             : "var(--gray-400)",
                           color: "white",
                           fontSize: "0.65rem",
-                          padding:
-                            "0.15rem 0.6rem",
+                          padding: "0.15rem 0.6rem",
                           borderRadius: "20px",
                           fontWeight: 500,
                         }}
                       >
-                        {isAdmin
-                          ? "Administrador"
-                          : "Usuario"}
+                        {isAdmin ? "Administrador" : "Usuario"}
                       </span>
                     </div>
 
@@ -562,34 +505,23 @@ export default function Layout({ children, unreadCount = 0 }) {
                       <Link
                         to="/perfil"
                         className="dropdown-link"
-                        onClick={() =>
-                          setUserDropdownOpen(
-                            false
-                          )
-                        }
+                        onClick={() => setUserDropdownOpen(false)}
                         style={{
                           display: "flex",
-                          alignItems:
-                            "center",
+                          alignItems: "center",
                           gap: "0.75rem",
-                          padding:
-                            "0.5rem 0.75rem",
+                          padding: "0.5rem 0.75rem",
                           borderRadius: "8px",
-                          textDecoration:
-                            "none",
-                          color:
-                            "var(--gray-700)",
+                          textDecoration: "none",
+                          color: "var(--gray-700)",
                           fontSize: "0.9rem",
-                          transition:
-                            "background 0.15s",
+                          transition: "background 0.15s",
                         }}
                         onMouseEnter={(e) =>
-                          (e.currentTarget.style.background =
-                            "var(--gray-50)")
+                          (e.currentTarget.style.background = "var(--gray-50)")
                         }
                         onMouseLeave={(e) =>
-                          (e.currentTarget.style.background =
-                            "transparent")
+                          (e.currentTarget.style.background = "transparent")
                         }
                       >
                         <i
@@ -598,7 +530,6 @@ export default function Layout({ children, unreadCount = 0 }) {
                             fontSize: "1rem",
                           }}
                         ></i>
-
                         Mi perfil
                       </Link>
                     </div>
@@ -608,8 +539,7 @@ export default function Layout({ children, unreadCount = 0 }) {
                     <div
                       className="dropdown-logout"
                       style={{
-                        borderTop:
-                          "1px solid var(--gray-100)",
+                        borderTop: "1px solid var(--gray-100)",
                         paddingTop: "0.3rem",
                       }}
                     >
@@ -617,39 +547,31 @@ export default function Layout({ children, unreadCount = 0 }) {
                         type="button"
                         className="dropdown-link"
                         onClick={() => {
-                          setUserDropdownOpen(
-                            false
-                          );
+                          setUserDropdownOpen(false);
 
                           handleLogout();
                         }}
                         style={{
                           display: "flex",
-                          alignItems:
-                            "center",
+                          alignItems: "center",
                           gap: "0.75rem",
-                          padding:
-                            "0.5rem 0.75rem",
+                          padding: "0.5rem 0.75rem",
                           borderRadius: "8px",
                           border: "none",
-                          background:
-                            "transparent",
+                          background: "transparent",
                           width: "100%",
                           textAlign: "left",
-                          color:
-                            "var(--danger, #dc3545)",
+                          color: "var(--danger, #dc3545)",
                           fontSize: "0.9rem",
                           cursor: "pointer",
-                          transition:
-                            "background 0.15s",
+                          transition: "background 0.15s",
                         }}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.background =
                             "rgba(220, 53, 69, 0.08)")
                         }
                         onMouseLeave={(e) =>
-                          (e.currentTarget.style.background =
-                            "transparent")
+                          (e.currentTarget.style.background = "transparent")
                         }
                       >
                         <i
@@ -658,7 +580,6 @@ export default function Layout({ children, unreadCount = 0 }) {
                             fontSize: "1rem",
                           }}
                         ></i>
-
                         Cerrar sesión
                       </button>
                     </div>
@@ -673,9 +594,7 @@ export default function Layout({ children, unreadCount = 0 }) {
             CONTENT
         ==================================================== */}
 
-        <main className="layout-content">
-          {children}
-        </main>
+        <main className="layout-content">{children}</main>
 
         {/* ====================================================
             BOTTOM NAV — MOBILE
@@ -687,22 +606,14 @@ export default function Layout({ children, unreadCount = 0 }) {
               key={item.path}
               to={item.path}
               className={`bottom-nav-item ${
-                isActive(item.path)
-                  ? "bottom-nav-item-active"
-                  : ""
+                isActive(item.path) ? "bottom-nav-item-active" : ""
               }`}
             >
-              <i
-                className={`bi ${item.icon}`}
-              ></i>
+              <i className={`bi ${item.icon}`}></i>
 
-              <span className="bottom-nav-label">
-                {item.label}
-              </span>
+              <span className="bottom-nav-label">{item.label}</span>
 
-              {item.badge > 0 && (
-                <span className="bottom-nav-dot" />
-              )}
+              {item.badge > 0 && <span className="bottom-nav-dot" />}
             </Link>
           ))}
         </nav>
@@ -724,9 +635,7 @@ export default function Layout({ children, unreadCount = 0 }) {
             justifyContent: "center",
             padding: "1rem",
           }}
-          onClick={() =>
-            setShowAboutModal(false)
-          }
+          onClick={() => setShowAboutModal(false)}
         >
           <div
             style={{
@@ -736,15 +645,12 @@ export default function Layout({ children, unreadCount = 0 }) {
               maxWidth: "420px",
               width: "100%",
             }}
-            onClick={(e) =>
-              e.stopPropagation()
-            }
+            onClick={(e) => e.stopPropagation()}
           >
             <div
               style={{
                 display: "flex",
-                justifyContent:
-                  "space-between",
+                justifyContent: "space-between",
                 alignItems: "center",
                 marginBottom: "1rem",
               }}
@@ -761,16 +667,13 @@ export default function Layout({ children, unreadCount = 0 }) {
 
               <button
                 type="button"
-                onClick={() =>
-                  setShowAboutModal(false)
-                }
+                onClick={() => setShowAboutModal(false)}
                 style={{
                   background: "none",
                   border: "none",
                   fontSize: "1.2rem",
                   cursor: "pointer",
-                  color:
-                    "var(--gray-500)",
+                  color: "var(--gray-500)",
                 }}
                 aria-label="Cerrar"
               >
@@ -781,25 +684,21 @@ export default function Layout({ children, unreadCount = 0 }) {
             <p
               style={{
                 fontSize: "0.85rem",
-                color:
-                  "var(--gray-500)",
+                color: "var(--gray-500)",
                 marginBottom: "1rem",
               }}
             >
-              Software profesional para
-              talleres de aluminio.
+              Software profesional para talleres de aluminio.
             </p>
 
             <div
               style={{
                 display: "flex",
-                justifyContent:
-                  "center",
+                justifyContent: "center",
                 gap: "1.5rem",
                 flexWrap: "wrap",
                 paddingTop: "1.5rem",
-                borderTop:
-                  "1px solid var(--gray-200)",
+                borderTop: "1px solid var(--gray-200)",
               }}
             >
               {legalLinks.map((link) => (
@@ -808,20 +707,14 @@ export default function Layout({ children, unreadCount = 0 }) {
                   href={link.path}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() =>
-                    setShowAboutModal(false)
-                  }
+                  onClick={() => setShowAboutModal(false)}
                   style={{
                     fontSize: "0.85rem",
-                    color:
-                      "var(--gray-500)",
-                    textDecoration:
-                      "none",
+                    color: "var(--gray-500)",
+                    textDecoration: "none",
                   }}
                 >
-                  <i
-                    className={`bi ${link.icon} me-1`}
-                  ></i>
+                  <i className={`bi ${link.icon} me-1`}></i>
 
                   {link.label}
                 </a>
@@ -838,9 +731,7 @@ export default function Layout({ children, unreadCount = 0 }) {
       {!isAdmin && (
         <ShowNotificacionModal
           show={showNotificacionModal}
-          onClose={() =>
-            setShowNotificacionModal(false)
-          }
+          onClose={() => setShowNotificacionModal(false)}
           onUnreadChange={loadUserUnreadCount}
         />
       )}
