@@ -36,12 +36,6 @@ const systems = [
     locked: true,
   },
   {
-    name: "Ventanas E-100",
-    icon: "bi-window",
-    path: "/desglose/e100",
-    locked: true,
-  },
-  {
     name: "Ventanas Proyectadas P-40",
     icon: "bi-window",
     path: "/desglose/p40",
